@@ -188,7 +188,7 @@ header {
 /* MODAL */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
 .modal-overlay.open { display: flex; }
-.modal.modal-wide { width: 760px; }
+.modal.modal-wide { width: 600px; }
 .modal { background: #fff; border: 1px solid var(--border); padding: 28px; width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
 .modal h2 { font-family: var(--font-display); font-size: 20px; letter-spacing: 3px; color: #1a1a1a; margin-bottom: 18px; }
 .modal .form-group { margin-bottom: 12px; margin-top: 0; }
@@ -254,7 +254,8 @@ header {
 .tarifs-table input.loss { border-color: var(--red); color: var(--red); font-weight: 700; }
 .tarifs-table td.sep { border-left: 2px solid var(--border); }
 .grille-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
-.grille-btn { cursor: pointer; flex: 1; text-align: center; padding: 10px; }
+.grille-btn { cursor: pointer; flex: 1 1 30%; text-align: center; padding: 10px; }
+.tarifs-table .pays-name span { display: block; color: #999; font-size: 9px; font-weight: 400; }
 
 /* DEVISE SELECTOR */
 .devise-row { display: flex; gap: 8px; }
@@ -470,7 +471,8 @@ details.more-fields[open] { padding-bottom: 12px; }
   .tarifs-table input { width: 66px; font-size: 12px; padding: 5px 3px; -moz-appearance: textfield; }
   .tarifs-table input::-webkit-outer-spin-button, .tarifs-table input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .tarifs-table .pays-name { min-width: 80px; max-width: 86px; }
-  .tarifs-table .pays-name span { display: none; }
+  .tarifs-table .pays-name { min-width: 84px; max-width: 96px; }
+  .tarifs-table input { width: 54px; }
 
   /* ── FINANCES MOBILE ── */
   .finances-panel { padding: 16px; }
@@ -802,14 +804,15 @@ details.more-fields[open] { padding-bottom: 12px; }
     <div class="modal-section">Frais de port par pays</div>
     <div class="grille-actions">
       <label class="btn-clear grille-btn">IMPORTER UNE GRILLE (EXCEL / CSV)<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importGrille(event)" /></label>
-      <button class="btn-clear grille-btn" onclick="exportGrille()">TÉLÉCHARGER LA GRILLE ACTUELLE</button>
+      <button class="btn-clear grille-btn" onclick="exportGrille('mr')">TÉLÉCHARGER : MONDIAL RELAY</button>
+      <button class="btn-clear grille-btn" onclick="exportGrille('laposte')">TÉLÉCHARGER : LA POSTE</button>
     </div>
-    <div class="devis-hint" id="grille-hint">Coût = ce que tu paies · Facturé = ce que paie le client. Case rouge = tu perds de l'argent.</div>
+    <div class="devis-hint" id="grille-hint">0,5 kg = tapes et CD · 1 kg = LP. Coût = ce que tu paies, Facturé = ce que paie le client (rouge = perte). Un import ne modifie que les pays présents dans le fichier.</div>
     <div class="tarifs-scroll">
       <table class="tarifs-table">
         <thead>
-          <tr><th rowspan="2">Pays</th><th colspan="4" class="grp">Coût</th><th colspan="4" class="grp">Facturé client</th></tr>
-          <tr><th>Tape</th><th>CD</th><th>1 LP</th><th>2 LP</th><th>Tape</th><th>CD</th><th>1 LP</th><th>2 LP</th></tr>
+          <tr><th rowspan="2">Pays</th><th colspan="2" class="grp">Coût</th><th colspan="2" class="grp">Facturé client</th><th rowspan="2"></th></tr>
+          <tr><th>0,5 kg</th><th>1 kg</th><th>0,5 kg</th><th>1 kg</th></tr>
         </thead>
         <tbody id="tarifs-tbody"></tbody>
       </table>
@@ -1035,8 +1038,9 @@ details.more-fields[open] { padding-bottom: 12px; }
 
 <script>
 // ── TARIFS FDP ──────────────────────────────────────────────────
-// Une ligne par pays. 4 tranches de poids :
-//   100g = tape · 250g = CD · 500g = 1 LP · 1kg = 2 LP (ou 2LP / plusieurs LP)
+// Une ligne par pays. Deux tranches affichées : 0,5 kg (tapes, CD) et 1 kg (LP).
+// En interne 4 champs (100g/250g = tranche 0,5 kg, 500g/1kg = tranche 1 kg),
+// ce qui permet aussi de lire une grille plus détaillée.
 // fdpPayXXX = ce que tu paies · fdpEncXXX = ce que tu factures au client
 // Se met à jour en important une grille Excel/CSV (Paramètres > Importer une grille).
 // Valeurs par défaut = grille 2026 (Mondial Relay 2026 + La Poste 2026).
@@ -2049,21 +2053,51 @@ function openModal() {
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
 const TIER_LABEL = { '100g': 'Tape', '250g': 'CD', '500g': '1 LP', '1kg': '2 LP' };
+// Tranches affichées : chaque colonne écrit ses deux champs internes
+const GROUPS = [
+  { key: '05', label: '0,5 kg', main: '250g', tiers: ['100g', '250g'] },
+  { key: '1',  label: '1 kg',   main: '500g', tiers: ['500g', '1kg'] },
+];
 function renderTarifsTable() {
   const v = x => x == null || x === '' ? '' : x;
   document.getElementById('tarifs-tbody').innerHTML = TARIFS.map((t, i) => `
     <tr>
-      <td class="pays-name" style="font-size:10px">${esc(t.pays)}<br><span style="color:#999;font-size:9px;font-weight:400">${esc(t.transporteur||'')}${t.mode ? ' · ' + esc(t.mode) : ''}</span></td>
-      ${TIERS.map((k, n) => `<td${n === 0 ? ' class="sep"' : ''}><input type="number" step="0.01" value="${v(t['fdpPay'+k])}" placeholder="?" id="t-pay${k}-${i}" oninput="markLosses()" /></td>`).join('')}
-      ${TIERS.map((k, n) => `<td${n === 0 ? ' class="sep"' : ''}><input class="enc" type="number" step="0.01" value="${v(t['fdpEnc'+k])}" placeholder="—" id="t-enc${k}-${i}" oninput="markLosses()" /></td>`).join('')}
+      <td class="pays-name" style="font-size:10px">${esc(t.pays)}<span>${esc(t.transporteur||'')}${t.mode ? ' · ' + esc(t.mode) : ''}${t.source ? `<br>grille du ${fmtDateFr(t.source.date)}` : ''}</span></td>
+      ${GROUPS.map((g, n) => `<td${n === 0 ? ' class="sep"' : ''}><input type="number" step="0.01" value="${v(t['fdpPay' + g.main])}" placeholder="?" id="t-pay${g.key}-${i}" oninput="markLosses()" /></td>`).join('')}
+      ${GROUPS.map((g, n) => `<td${n === 0 ? ' class="sep"' : ''}><input class="enc" type="number" step="0.01" value="${v(t['fdpEnc' + g.main])}" placeholder="—" id="t-enc${g.key}-${i}" oninput="markLosses()" /></td>`).join('')}
+      <td><button class="del-btn" title="Retirer ce pays" onclick="removePays(${i})">✕</button></td>
     </tr>`).join('');
   markLosses();
 }
+function removePays(i) {
+  const t = TARIFS[i];
+  if (!t) return;
+  let n = 0;
+  getReleaseIds(true).forEach(id => (allCommandes[id] || []).forEach(c => { if (c.pays === t.pays) n++; }));
+  if (!confirm(`Retirer ${t.pays} de la grille ?` + (n ? `\n${n} commande(s) vers ce pays n'auront plus de port estimé.` : ''))) return;
+  readTarifsInputs();
+  TARIFS.splice(i, 1);
+  saveTarifsLocal(); saveAll();
+  renderTarifsTable(); refreshPaysSelects(); updateStats(); renderHistory();
+}
+// Lit la table (une colonne = ses deux champs internes)
+function readTarifsInputs() {
+  TARIFS = TARIFS.map((t, i) => {
+    const n = { ...t };
+    GROUPS.forEach(g => {
+      const pay = numOrNull('t-pay' + g.key + '-' + i), enc = numOrNull('t-enc' + g.key + '-' + i);
+      // On ne réécrit que si la valeur affichée a changé (préserve une grille détaillée)
+      if (pay !== (t['fdpPay' + g.main] ?? null)) g.tiers.forEach(k => n['fdpPay' + k] = pay);
+      if (enc !== (t['fdpEnc' + g.main] ?? null)) g.tiers.forEach(k => n['fdpEnc' + k] = enc);
+    });
+    return n;
+  });
+}
 // Repère en rouge les cas où le client paie moins que l'envoi
 function markLosses() {
-  TARIFS.forEach((t, i) => TIERS.forEach(k => {
-    const pay = numOrNull('t-pay' + k + '-' + i), enc = numOrNull('t-enc' + k + '-' + i);
-    const el = document.getElementById('t-enc' + k + '-' + i);
+  TARIFS.forEach((t, i) => GROUPS.forEach(g => {
+    const pay = numOrNull('t-pay' + g.key + '-' + i), enc = numOrNull('t-enc' + g.key + '-' + i);
+    const el = document.getElementById('t-enc' + g.key + '-' + i);
     if (el) {
       const loss = pay != null && enc != null && enc < pay;
       el.classList.toggle('loss', loss);
@@ -2101,6 +2135,7 @@ function loadSheetJS() {
 }
 
 function normHeader(h) { return String(h || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim(); }
+// Retourne 'pays' / 'iso' / … ou { kind: 'Pay'|'Enc', tiers: [...] } pour une colonne de prix
 function headerKey(h) {
   const n = normHeader(h);
   if (!n) return null;
@@ -2109,11 +2144,20 @@ function headerKey(h) {
   if (n.startsWith('transporteur')) return 'transporteur';
   if (n.startsWith('mode')) return 'mode';
   if (n.startsWith('remarque') || n === 'note' || n === 'notes') return 'remarque';
-  const tier = /tape|k7|cassette/.test(n) ? '100g' : /\bcd\b/.test(n) ? '250g' : /2 ?lp|1 ?kg/.test(n) ? '1kg' : /1 ?lp|500 ?g/.test(n) ? '500g' : null;
-  if (!tier) return n.startsWith('encaiss') ? 'encAll' : null;
-  if (n.startsWith('cout') || n.startsWith('paye')) return 'fdpPay' + tier;
-  if (n.startsWith('factur') || n.startsWith('encaiss')) return 'fdpEnc' + tier;
-  return null;
+  if (n.startsWith('marge')) return null;
+  // Tranche : d'abord le format écrit, sinon le poids
+  let tiers = null;
+  if (/tape|k7|cassette/.test(n)) tiers = ['100g'];
+  else if (/\bcd\b/.test(n)) tiers = ['250g'];
+  else if (/2 ?lp/.test(n)) tiers = ['1kg'];
+  else if (/1 ?lp|\blp\b|vinyle?/.test(n)) tiers = ['500g'];
+  else if (/0[,.]5|500 ?g|1\/2/.test(n)) tiers = ['100g', '250g'];          // 0,5 kg = tapes et CD
+  else if (/1 ?kg|1000 ?g/.test(n)) tiers = ['500g', '1kg'];                  // 1 kg = LP
+  else if (/250 ?g/.test(n)) tiers = ['250g'];
+  else if (/100 ?g/.test(n)) tiers = ['100g'];
+  if (!tiers) return n.startsWith('encaiss') || n.startsWith('factur') ? { kind: 'Enc', tiers: TIERS } : null;
+  const kind = /^(factur|encaiss|prix client|client)/.test(n) ? 'Enc' : 'Pay';   // "Coût …" ou poids seul = ce que tu paies
+  return { kind, tiers };
 }
 function cellNum(v) {
   if (v == null || v === '') return null;
@@ -2125,22 +2169,26 @@ function parseGrilleRows(rows) {
   const hi = rows.findIndex(r => r.some(c => headerKey(c) === 'pays'));
   if (hi < 0) throw new Error('colonne "Pays" introuvable');
   const keys = rows[hi].map(headerKey);
-  if (!keys.some(k => k && k.startsWith('fdpPay'))) throw new Error('aucune colonne "Coût …" trouvée');
+  if (!keys.some(k => k && k.kind === 'Pay')) throw new Error('aucune colonne de coût trouvée (ex. "0,5 kg", "1 kg")');
   const out = [];
   for (const r of rows.slice(hi + 1)) {
-    const o = {};
-    keys.forEach((k, i) => { if (k) o[k] = r[i]; });
-    const pays = String(o.pays ?? '').trim();
+    const pays = String(r[keys.indexOf('pays')] ?? '').trim();
     if (!pays) continue;
     if (/^l[ée]gende$/i.test(pays)) break;
     const t = { pays };
-    ['iso', 'transporteur', 'mode', 'remarque'].forEach(k => { const v = String(o[k] ?? '').trim(); if (v) t[k] = k === 'iso' ? v.toUpperCase() : v; });
     let any = false;
-    TIERS.forEach(k => {
-      const pay = cellNum(o['fdpPay' + k]);
-      const enc = keys.includes('fdpEnc' + k) ? cellNum(o['fdpEnc' + k]) : cellNum(o.encAll);
-      t['fdpPay' + k] = pay; t['fdpEnc' + k] = enc;
-      if (pay != null || enc != null) any = true;
+    keys.forEach((k, i) => {
+      if (!k) return;
+      if (typeof k === 'string') {
+        if (k === 'pays') return;
+        const v = String(r[i] ?? '').trim();
+        if (v) t[k] = k === 'iso' ? v.toUpperCase() : v;
+        return;
+      }
+      const v = cellNum(r[i]);
+      if (v == null) return;
+      k.tiers.forEach(tier => { if (t['fdp' + k.kind + tier] == null) t['fdp' + k.kind + tier] = v; });
+      any = true;
     });
     if (any) out.push(t);
   }
@@ -2148,37 +2196,39 @@ function parseGrilleRows(rows) {
   return out;
 }
 
-// Fusionne la grille importée : une case vide garde la valeur actuelle
-function mergeGrille(imported) {
-  const old = new Map(TARIFS.map(t => [t.pays.toLowerCase(), t]));
-  const used = new Set();
-  getReleaseIds(true).forEach(id => (allCommandes[id] || []).forEach(c => c.pays && used.add(c.pays.toLowerCase())));
-  const res = [], added = [], changed = [];
+// Fusionne la grille importée : seuls les pays du fichier sont mis à jour,
+// et une case vide garde la valeur actuelle. Les autres pays ne bougent pas
+// (on peut donc importer la grille Mondial Relay et la grille La Poste séparément).
+function mergeGrille(imported, fileName) {
+  const res = TARIFS.map(t => ({ ...t }));
+  const idx = new Map(res.map((t, i) => [t.pays.toLowerCase(), i]));
+  const added = [], changed = [], same = [];
+  const source = { file: fileName, date: new Date().toISOString().slice(0, 10) };
   imported.forEach(t => {
-    const o = old.get(t.pays.toLowerCase());
-    const n = { ...(o || {}), pays: t.pays };
+    const i = idx.get(t.pays.toLowerCase());
+    const o = i != null ? res[i] : null;
+    const n = { ...(o || {}), pays: o ? o.pays : t.pays, source };
     ['iso', 'transporteur', 'mode', 'remarque'].forEach(k => { if (t[k]) n[k] = t[k]; });
-    let diff = false;
-    TIERS.forEach(k => {
-      ['fdpPay', 'fdpEnc'].forEach(pre => {
-        const v = t[pre + k];
-        if (v != null) { if (o && o[pre + k] != v) diff = true; n[pre + k] = v; }
-        else if (!o) n[pre + k] = null;
-      });
-    });
-    if (!o) added.push(t.pays); else if (diff) changed.push(t.pays);
-    res.push(n);
-    old.delete(t.pays.toLowerCase());
+    let diff = !o;
+    TIERS.forEach(k => ['fdpPay', 'fdpEnc'].forEach(pre => {
+      const v = t[pre + k];
+      if (v != null) { if (o && Number(o[pre + k]) !== v) diff = true; n[pre + k] = v; }
+      else if (!o) n[pre + k] = null;
+    }));
+    if (o && o.transporteur !== n.transporteur) diff = true;
+    if (!o) { added.push(n.pays); res.push(n); idx.set(n.pays.toLowerCase(), res.length - 1); }
+    else { res[i] = n; (diff ? changed : same).push(n.pays); }
   });
-  const kept = [], removed = [];
-  old.forEach(t => { if (used.has(t.pays.toLowerCase())) { kept.push(t.pays); res.push(t); } else removed.push(t.pays); });
   const losses = [];
-  res.forEach(t => TIERS.forEach(k => {
-    const p = t['fdpPay' + k], e = t['fdpEnc' + k];
-    if (p != null && e != null && e < p) losses.push(`${t.pays} ${TIER_LABEL[k]} (−${fmt(p - e)})`);
-  }));
-  const noEnc = res.filter(t => TIERS.every(k => t['fdpEnc' + k] == null)).map(t => t.pays);
-  return { res, added, changed, kept, removed, losses, noEnc };
+  imported.forEach(t => {
+    const n = res[idx.get(t.pays.toLowerCase())];
+    GROUPS.forEach(g => {
+      const p = n['fdpPay' + g.main], e = n['fdpEnc' + g.main];
+      if (p != null && e != null && e < p) losses.push(`${n.pays} ${g.label} (−${fmt(p - e)})`);
+    });
+  });
+  const noEnc = imported.map(t => res[idx.get(t.pays.toLowerCase())]).filter(n => GROUPS.every(g => n['fdpEnc' + g.main] == null)).map(n => n.pays);
+  return { res, added, changed, same, losses, noEnc, count: imported.length };
 }
 
 async function importGrille(event) {
@@ -2191,13 +2241,13 @@ async function importGrille(event) {
     const X = await loadSheetJS();
     const wb = X.read(await file.arrayBuffer(), { type: 'array' });
     const sh = wb.Sheets['Grille'] || wb.Sheets[wb.SheetNames[0]];
-    const m = mergeGrille(parseGrilleRows(X.utils.sheet_to_json(sh, { header: 1, raw: true, defval: '' })));
-    const lines = [`Grille "${file.name}" : ${m.res.length} pays`];
-    lines.push(`• Tarifs modifiés : ${m.changed.length ? m.changed.join(', ') : 'aucun'}`);
-    if (m.added.length)   lines.push(`• Nouveaux pays : ${m.added.join(', ')}`);
-    if (m.removed.length) lines.push(`• Retirés : ${m.removed.join(', ')}`);
-    if (m.kept.length)    lines.push(`• Absents du fichier mais gardés (utilisés dans des commandes) : ${m.kept.join(', ')}`);
-    if (m.noEnc.length)   lines.push(`• Sans prix facturé (à remplir) : ${m.noEnc.join(', ')}`);
+    const m = mergeGrille(parseGrilleRows(X.utils.sheet_to_json(sh, { header: 1, raw: true, defval: '' })), file.name);
+    const lines = [`Grille "${file.name}" : ${m.count} pays`];
+    lines.push(`• Modifiés : ${m.changed.length ? m.changed.join(', ') : 'aucun'}`);
+    if (m.added.length) lines.push(`• Nouveaux pays : ${m.added.join(', ')}`);
+    if (m.same.length)  lines.push(`• Inchangés : ${m.same.length}`);
+    lines.push(`• Les autres pays du tracker ne bougent pas.`);
+    if (m.noEnc.length) lines.push(`• Sans prix facturé (à remplir) : ${m.noEnc.join(', ')}`);
     if (m.losses.length)  lines.push(`• ATTENTION, facturé < coût : ${m.losses.slice(0, 8).join(', ')}${m.losses.length > 8 ? ` (+${m.losses.length - 8})` : ''}`);
     lines.push('', 'Les commandes dont le port est estimé seront recalculées. Appliquer ?');
     if (!confirm(lines.join('\n'))) { hint.textContent = 'Import annulé.'; return; }
@@ -2207,31 +2257,31 @@ async function importGrille(event) {
     renderTarifsTable();
     refreshPaysSelects();
     updateStats(); renderHistory(); updatePreview();
-    hint.textContent = `Grille importée et enregistrée (${m.res.length} pays).`; hint.className = 'devis-hint ok';
+    hint.textContent = `Grille "${file.name}" importée : ${m.count} pays mis à jour.`; hint.className = 'devis-hint ok';
     showToast('GRILLE FRAIS DE PORT À JOUR');
   } catch (e) {
     hint.textContent = 'Import impossible : ' + e.message; hint.className = 'devis-hint warn';
   }
 }
 
-async function exportGrille() {
+async function exportGrille(which) {
   try {
     const X = await loadSheetJS();
-    const aoa = [GRILLE_HEADERS];
-    TARIFS.forEach(t => aoa.push([t.pays, t.iso || '', t.transporteur || '', t.mode || '',
-      ...TIERS.map(k => t['fdpPay' + k] ?? ''), ...TIERS.map(k => t['fdpEnc' + k] ?? ''), '', '', '', '', t.remarque || '']));
+    const isMR = t => /mondial/i.test(t.transporteur || '');
+    const rows = TARIFS.filter(t => which === 'mr' ? isMR(t) : !isMR(t));
+    const head = ['Pays', 'Code ISO', 'Transporteur', 'Mode', '0,5 kg', '1 kg', 'Facturé 0,5 kg', 'Facturé 1 kg', 'Marge 0,5 kg', 'Marge 1 kg', 'Remarque'];
+    const aoa = [head, ...rows.map(t => [t.pays, t.iso || '', t.transporteur || '', t.mode || '',
+      t.fdpPay250g ?? '', t.fdpPay500g ?? '', t.fdpEnc250g ?? '', t.fdpEnc500g ?? '', '', '', t.remarque || ''])];
     const ws = X.utils.aoa_to_sheet(aoa);
-    TARIFS.forEach((t, i) => {
+    rows.forEach((t, i) => {
       const r = i + 2;
-      ['E', 'F', 'G', 'H'].forEach((c, k) => {
-        const f = 'IJKL'[k];
-        ws['MNOP'[k] + r] = { t: 'n', f: `IF(OR(${f}${r}="",${c}${r}=""),"",${f}${r}-${c}${r})` };
-      });
+      ws['I' + r] = { t: 'n', f: `IF(OR(G${r}="",E${r}=""),"",G${r}-E${r})` };
+      ws['J' + r] = { t: 'n', f: `IF(OR(H${r}="",F${r}=""),"",H${r}-F${r})` };
     });
-    ws['!cols'] = [20, 9, 15, 20, 12, 12, 12, 12, 11, 11, 11, 11, 11, 11, 11, 11, 60].map(w => ({ wch: w }));
+    ws['!cols'] = [20, 9, 15, 20, 10, 10, 13, 13, 12, 12, 50].map(w => ({ wch: w }));
     const wb = X.utils.book_new();
     X.utils.book_append_sheet(wb, ws, 'Grille');
-    X.writeFile(wb, 'Grille_FdP_BDC_' + new Date().toISOString().slice(0, 10) + '.xlsx');
+    X.writeFile(wb, `Grille_FdP_BDC_${which === 'mr' ? 'MR' : 'LaPoste'}_${new Date().toISOString().slice(0, 10)}.xlsx`);
   } catch (e) { alert('Export impossible : ' + e.message); }
 }
 
@@ -2248,14 +2298,7 @@ function saveParams() {
   allParams[currentRelease] = params;
 
   // Sauver tarifs modifiés
-  TARIFS = TARIFS.map((t, i) => {
-    const n = { ...t };
-    TIERS.forEach(k => {
-      n['fdpPay' + k] = numOrNull('t-pay' + k + '-' + i);
-      n['fdpEnc' + k] = numOrNull('t-enc' + k + '-' + i);
-    });
-    return n;
-  });
+  readTarifsInputs();
   saveTarifsLocal();
 
   saveAll();
