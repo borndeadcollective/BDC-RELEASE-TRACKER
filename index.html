@@ -311,6 +311,14 @@ details.more-fields[open] { padding-bottom: 12px; }
 .devis-file { font-size: 11px; background: #f8f8f8; border: 1px solid var(--border); padding: 10px 12px; margin-bottom: 4px; word-break: break-all; }
 .devis-hint { font-size: 10px; color: var(--muted); margin-top: 4px; min-height: 14px; }
 .devis-hint.ok { color: var(--green); }
+.devis-hint.warn { color: #c47a00; }
+.devis-detect { font-size: 10px; color: #444; line-height: 1.6; margin: 6px 0 2px; }
+.devis-detect b { color: #1a1a1a; }
+.dv-apply { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
+.dv-apply input { width: 18px; height: 18px; accent-color: #1a1a1a; }
+.dv-change { margin-left: auto; font-size: 11px; color: var(--muted); white-space: nowrap; }
+.dv-change b { color: #1a1a1a; }
+.nr-import { display: block; text-align: center; padding: 12px; margin-bottom: 6px; cursor: pointer; }
 
 /* Vues plein écran (merch, stock) */
 .view-panel { display: none; padding: 24px 32px; }
@@ -426,6 +434,7 @@ details.more-fields[open] { padding-bottom: 12px; }
   .history-table td:first-child { white-space: nowrap; }
 
   .devis-bar { padding: 12px 16px; gap: 10px; }
+  #dv-new-fields .form-row-2 { grid-template-columns: 1fr; gap: 0; }
   .devis-title { padding-top: 0; width: 100%; }
   .devis-side { text-align: left; align-items: flex-start; width: 100%; flex-direction: row; justify-content: space-between; align-items: center; }
   .devis-item { gap: 8px; }
@@ -794,6 +803,8 @@ details.more-fields[open] { padding-bottom: 12px; }
 <div class="modal-overlay" id="modal-new-release">
   <div class="modal">
     <h2>NOUVELLE RELEASE</h2>
+    <label class="btn-clear nr-import">REMPLIR DEPUIS UN DEVIS PDF<input type="file" accept="application/pdf" style="display:none" onchange="pickDevisForNewRelease(event)" /></label>
+    <div class="devis-hint" id="nr-devis-hint"></div>
     <div class="form-row-2">
       <div class="form-group"><label>Référence</label><input type="text" id="nr-nom" placeholder="BDC-017" /></div>
       <div class="form-group"><label>Format</label><select id="nr-format" class="format-select"></select></div>
@@ -821,14 +832,32 @@ details.more-fields[open] { padding-bottom: 12px; }
   <div class="modal">
     <h2 id="devis-modal-title">NOUVEAU DEVIS</h2>
     <div class="devis-file" id="devis-file-name"></div>
-    <div class="form-row-2">
-      <div class="form-group"><label>Total TTC (€)</label><input type="number" step="0.01" id="dv-total" oninput="updateDevisUnit()" /></div>
-      <div class="form-group"><label>Exemplaires</label><input type="number" id="dv-qty" oninput="updateDevisUnit()" /></div>
-    </div>
+    <div class="devis-detect" id="dv-detect"></div>
     <div class="devis-hint" id="dv-hint"></div>
-    <div class="form-group"><label>Note (optionnel)</label><input type="text" id="dv-note" placeholder="ex: régul 20 ex., part UK incluse…" /></div>
+    <div id="dv-new-fields">
+      <div class="form-row-2">
+        <div class="form-group"><label>Release</label><select id="dv-release" onchange="updateDevisApply()"></select></div>
+        <div class="form-group"><label>Ce document est…</label>
+          <select id="dv-mode" onchange="updateDevisApply()">
+            <option value="replace">le devis principal</option>
+            <option value="add">un complément / une régul</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-row-2">
+      <div class="form-group"><label>Total TTC (€)</label><input type="number" step="0.01" id="dv-total" oninput="updateDevisApply()" /></div>
+      <div class="form-group"><label>Exemplaires</label><input type="number" id="dv-qty" oninput="updateDevisApply()" /></div>
+    </div>
+    <div class="form-group"><label>Note (optionnel)</label><input type="text" id="dv-note" placeholder="ex: part UK incluse…" /></div>
     <div class="calc-preview" style="margin-top:12px">
-      <div class="calc-row"><span class="clabel">Prix par exemplaire</span><span class="cval" id="dv-unit">—</span></div>
+      <div class="calc-row"><span class="clabel">Prix de revient par exemplaire</span><span class="cval" id="dv-unit">—</span></div>
+    </div>
+    <div id="dv-apply-box">
+      <div class="modal-section">Mettre à jour la release</div>
+      <label class="dv-apply"><input type="checkbox" id="dv-apply-invest" onchange="updateDevisApply()" /> <span>Investissement</span> <span class="dv-change" id="dv-change-invest"></span></label>
+      <label class="dv-apply"><input type="checkbox" id="dv-apply-stock" onchange="updateDevisApply()" /> <span>Stock initial</span> <span class="dv-change" id="dv-change-stock"></span></label>
+      <div class="devis-hint" id="dv-apply-hint"></div>
     </div>
     <div class="modal-btns">
       <button class="btn-save" id="dv-save" onclick="saveDevis()">ENREGISTRER</button>
@@ -2002,18 +2031,20 @@ function saveParams() {
 }
 
 // ── NOUVELLE RELEASE ─────────────────────────────────────────────
-function openNewReleaseModal() {
+function openNewReleaseModal(keepDevis) {
   const nums = getReleaseIds(true).map(releaseNum);
   const next = (nums.length ? Math.max(...nums) : 0) + 1;
   document.getElementById('nr-nom').value = 'BDC-' + String(next).padStart(3, '0');
   ['nr-groupe','nr-titre','nr-stock','nr-invest','nr-prix','nr-prix-groupe','nr-prix-distro'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('nr-format').value = 'LP';
+  document.getElementById('nr-devis-hint').textContent = '';
+  if (!keepDevis) nrDevis = null;
   document.getElementById('modal-new-release').classList.add('open');
   setTimeout(() => document.getElementById('nr-groupe').focus(), 50);
 }
-function closeNewReleaseModal() { document.getElementById('modal-new-release').classList.remove('open'); }
+function closeNewReleaseModal() { document.getElementById('modal-new-release').classList.remove('open'); nrDevis = null; }
 
-function createRelease() {
+async function createRelease() {
   const nom    = document.getElementById('nr-nom').value.trim().toUpperCase();
   const groupe = document.getElementById('nr-groupe').value.trim();
   const num    = releaseNum(nom);
@@ -2032,11 +2063,25 @@ function createRelease() {
     invest:     numOr('nr-invest', 0),
   };
   allCommandes[id] = allCommandes[id] || [];
+  // Devis utilisé pour remplir la release : on le joint
+  let devisMsg = '';
+  if (nrDevis) {
+    try {
+      const up = await uploadDevisFile(nrDevis.pending);
+      const p = allParams[id];
+      const t = nrDevis.total, q = nrDevis.qty;
+      const applied = { invest: t != null && p.invest === t, stock: !!q && p.stock === q, mode: 'replace', prevInvest: 0, prevStock: 0 };
+      if (applied.invest) p.investFromDevis = true;
+      if (applied.stock)  p.stockFromDevis = true;
+      p.devis = [devisMeta(up, nrDevis.pending, nrDevis.info, t, q, nrDevis.note || '', applied)];
+      devisMsg = ' + DEVIS';
+    } catch (e) { alert('Release créée, mais le devis n\'a pas pu être enregistré : ' + e.message); }
+  }
   saveAll();
   closeNewReleaseModal();
   renderGroupedRows();
   switchRelease(id);
-  showToast(nom + ' CRÉÉE');
+  showToast(nom + ' CRÉÉE' + devisMsg);
 }
 
 function deleteRelease() {
@@ -2458,11 +2503,13 @@ function renderDevis() {
     const pu = d.total && d.qty ? d.total / d.qty : null;
     return `<div class="devis-item">
       <span class="devis-tag">${d.type && d.type.startsWith('image/') ? 'IMG' : 'PDF'}</span>
-      <button class="devis-open" onclick="openDevis('${d.id}')" title="Ouvrir ${esc(d.nom)}">${esc(d.nom)}</button>
+      <button class="devis-open" onclick="openDevis('${d.id}')" title="Ouvrir ${esc(d.nom)}">${d.docType ? esc(d.docType + (d.docNum ? ' ' + d.docNum : '')) : esc(d.nom)}</button>
+      ${d.docDate ? `<span class="devis-note">${fmtDateFr(d.docDate)}</span>` : ''}
       <span class="devis-num">${d.total != null ? 'Total <b>' + fmt(d.total) + '</b>' : 'Total ?'}</span>
       <span class="devis-num">${d.qty ? d.qty + ' ex.' : '? ex.'}</span>
       <span class="devis-unit">${pu != null ? fmt(pu) + '/ex.' : '—'}</span>
       ${d.note ? `<span class="devis-note">${esc(d.note)}</span>` : ''}
+      ${d.applied && (d.applied.invest || d.applied.stock) ? `<span class="devis-note" title="Ce devis a mis à jour l'investissement / le stock">✓ ${[d.applied.invest && 'invest.', d.applied.stock && 'stock'].filter(Boolean).join(' + ')}${d.applied.mode === 'add' ? ' (ajouté)' : ''}</span>` : ''}
       <span class="devis-actions">
         <button class="edit-btn" onclick="editDevis('${d.id}')">edit</button>
         <button class="del-btn" onclick="deleteDevis('${d.id}')">✕</button>
@@ -2519,91 +2566,213 @@ function openDevis(id) {
   });
 }
 
-function pickDevis(event) {
+// ── Ajout d'un devis : lecture du PDF puis vérification ──
+let devisInfo = null;       // ce qui a été lu dans le PDF
+let nrDevis = null;         // devis choisi depuis "Nouvelle release" : { pending, info }
+
+function readFileAsDataUrl(file) {
+  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+}
+function isPdf(file) { return file.type === 'application/pdf' || /\.pdf$/i.test(file.name); }
+function releaseIdFromRef(ref) {
+  if (!ref) return null;
+  const id = 'bdc' + String(releaseNum(ref)).padStart(3, '0');
+  return getReleaseIds().includes(id) ? id : null;
+}
+function fmtDateFr(iso) { if (!iso) return ''; const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; }
+
+async function pickDevis(event) {
   const file = event.target.files[0];
   event.target.value = '';
   if (!file) return;
   if (file.size > DEVIS_MAX_MB * 1024 * 1024) { alert('Fichier trop lourd (max ' + DEVIS_MAX_MB + ' Mo).'); return; }
-  const reader = new FileReader();
-  reader.onload = () => {
-    devisPending = { nom: file.name, dataUrl: reader.result, size: file.size, type: file.type || 'application/pdf' };
-    devisEditId = null;
-    openDevisModal({ nom: file.name, total: null, qty: params.stock || '', note: '' }, 'NOUVEAU DEVIS');
-    if (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) {
-      setDevisHint('Lecture du total dans le PDF…', false);
-      devisExtract = file.arrayBuffer().then(extractPdfTotal).catch(() => null);
-      devisExtract.then(total => {
-        if (!devisPending || devisPending.nom !== file.name) return;
-        if (total != null) {
-          if (document.getElementById('dv-total').value === '') document.getElementById('dv-total').value = total;
-          setDevisHint('Total trouvé dans le PDF — vérifie-le', true);
-          updateDevisUnit();
-        } else setDevisHint('Total non trouvé — saisis-le', false);
-      });
-    } else devisExtract = null;
-  };
-  reader.readAsDataURL(file);
+  devisPending = { nom: file.name, dataUrl: await readFileAsDataUrl(file), size: file.size, type: file.type || 'application/pdf' };
+  devisEditId = null; devisInfo = null;
+  openDevisModal({ nom: file.name, total: null, qty: null, note: '' }, 'NOUVEAU DEVIS');
+  if (!isPdf(file)) { setDevisHint('Image : saisis le total et les exemplaires', false); return; }
+  setDevisHint('Lecture du devis…', false);
+  devisExtract = file.arrayBuffer().then(b => extractPdfInfo(b)).then(info => { info && (info.isRegul = info.isRegul || /r[ée]_?gul/i.test(file.name)); return info; }).catch(() => null);
+  const info = await devisExtract;
+  if (!devisPending || devisPending.nom !== file.name) return;
+  applyDevisInfo(info);
+}
+
+// Remplit le formulaire avec ce qui a été lu
+function applyDevisInfo(info) {
+  devisInfo = info;
+  if (!info || (info.total == null && !info.qty)) { setDevisHint('Rien trouvé dans ce PDF — saisis le total et les exemplaires', true, 'warn'); updateDevisApply(); return; }
+  const detected = [];
+  if (info.docType) detected.push(`<b>${esc(info.docType)}${info.docNum ? ' ' + esc(info.docNum) : ''}</b>`);
+  if (info.date) detected.push(fmtDateFr(info.date));
+  if (info.fournisseur) detected.push(esc(info.fournisseur));
+  if (info.ref) detected.push('réf. <b>' + esc(info.ref) + '</b>');
+  if (info.format) detected.push(esc(info.format));
+  if (info.isRegul) detected.push('<b>régularisation</b>');
+  let html = detected.join(' · ');
+  if (info.main) html += `<br>Ligne pressage : ${esc(info.main.desc.slice(0, 60))} — <b>${info.main.qty} ex.</b>`;
+  if (info.totalHT != null && info.total != null && info.totalHT !== info.total) html += `<br>HT ${fmt(info.totalHT)} · TVA ${fmt(info.total - info.totalHT)} · <b>TTC ${fmt(info.total)}</b>`;
+  document.getElementById('dv-detect').innerHTML = html;
+  if (info.total != null) document.getElementById('dv-total').value = info.total;
+  if (info.qty) document.getElementById('dv-qty').value = info.qty;
+  const rid = releaseIdFromRef(info.ref);
+  if (rid) document.getElementById('dv-release').value = rid;
+  else if (info.ref) {
+    // Réf. inconnue : proposer de créer la release
+    const sel = document.getElementById('dv-release');
+    if (![...sel.options].some(o => o.value === '__new')) sel.insertAdjacentHTML('beforeend', `<option value="__new">+ Créer ${esc(info.ref)}</option>`);
+    sel.value = '__new';
+  }
+  setDevisHint(info.total != null && info.qty ? 'Lu dans le PDF — vérifie avant d\'enregistrer' : 'Lecture partielle — complète ce qui manque', true, info.total != null && info.qty ? 'ok' : 'warn');
+  defaultDevisMode();
+  updateDevisApply();
+}
+
+function defaultDevisMode() {
+  const rid = document.getElementById('dv-release').value;
+  const p = allParams[rid];
+  const hasDevis = p && (p.devis || []).length > 0;
+  document.getElementById('dv-mode').value = (devisInfo && devisInfo.isRegul) || hasDevis ? 'add' : 'replace';
+  if (p) {
+    document.getElementById('dv-apply-invest').checked = !(p.invest > 0) || !!p.investFromDevis;
+    document.getElementById('dv-apply-stock').checked  = !(p.stock > 0)  || !!p.stockFromDevis;
+  }
 }
 
 function openDevisModal(d, title) {
+  const isNew = !devisEditId;
   document.getElementById('devis-modal-title').textContent = title;
   document.getElementById('devis-file-name').textContent = d.nom;
+  document.getElementById('dv-detect').innerHTML = '';
   document.getElementById('dv-total').value = d.total ?? '';
   document.getElementById('dv-qty').value   = d.qty ?? '';
   document.getElementById('dv-note').value  = d.note || '';
   document.getElementById('dv-save').disabled = false;
+  document.getElementById('dv-new-fields').style.display = isNew ? '' : 'none';
+  document.getElementById('dv-apply-box').style.display  = isNew ? '' : 'none';
+  if (isNew) {
+    const sel = document.getElementById('dv-release');
+    sel.innerHTML = getReleaseIds().map(id => `<option value="${id}">${esc(relLabel(id))}</option>`).join('');
+    sel.value = currentRelease;
+    defaultDevisMode();
+  }
   setDevisHint('', false);
-  updateDevisUnit();
+  updateDevisApply();
   document.getElementById('modal-devis').classList.add('open');
 }
 function closeDevisModal() {
   document.getElementById('modal-devis').classList.remove('open');
-  devisPending = null; devisEditId = null;
+  devisPending = null; devisEditId = null; devisInfo = null; devisExtract = null;
 }
-function setDevisHint(txt, ok) {
+function setDevisHint(txt, show, cls) {
   const h = document.getElementById('dv-hint');
-  h.textContent = txt; h.className = 'devis-hint' + (ok ? ' ok' : '');
+  h.textContent = txt; h.className = 'devis-hint' + (cls ? ' ' + cls : (show ? ' ok' : ''));
 }
-function updateDevisUnit() {
+
+// Calcule ce que deviendront l'investissement et le stock
+function devisApplyPlan() {
+  const rid  = document.getElementById('dv-release').value;
+  const mode = document.getElementById('dv-mode').value;
+  const total = numOrNull('dv-total'), qty = numOrNull('dv-qty');
+  const p = allParams[rid] || { invest: 0, stock: 0 };
+  const curI = p.invest || 0, curS = p.stock || 0;
+  return {
+    rid, mode, total, qty, curI, curS,
+    newI: total == null ? curI : (mode === 'add' ? Math.round((curI + total) * 100) / 100 : total),
+    newS: qty == null ? curS : (mode === 'add' ? curS + qty : qty),
+    doI: document.getElementById('dv-apply-invest').checked && total != null,
+    doS: document.getElementById('dv-apply-stock').checked && qty != null,
+  };
+}
+function updateDevisApply() {
   const t = numOrNull('dv-total'), q = numOrNull('dv-qty');
   document.getElementById('dv-unit').textContent = t && q ? fmt(t / q) : '—';
+  if (devisEditId) return;
+  const plan = devisApplyPlan();
+  const isNewRel = plan.rid === '__new';
+  ['dv-apply-invest', 'dv-apply-stock'].forEach(id => {
+    const cb = document.getElementById(id);
+    if (isNewRel) cb.checked = true;
+    cb.disabled = isNewRel;
+  });
+  document.getElementById('dv-mode').disabled = isNewRel;
+  document.getElementById('dv-change-invest').innerHTML = isNewRel ? `<b>${plan.total != null ? fmt(plan.total) : '—'}</b>` : `${fmt(plan.curI)} → <b>${fmt(plan.newI)}</b>`;
+  document.getElementById('dv-change-stock').innerHTML  = isNewRel ? `<b>${plan.qty ?? '—'} ex.</b>` : `${plan.curS} → <b>${plan.newS} ex.</b>`;
+  const p = allParams[plan.rid];
+  let hint = '';
+  if (isNewRel) hint = 'La release sera créée avec ces valeurs (tu complètes le groupe, le titre et les prix).';
+  else if (p && p.invest > 0 && !p.investFromDevis && plan.doI && plan.mode === 'replace' && Math.abs(p.invest - plan.total) > 0.01)
+    hint = `Ton investissement actuel (${fmt(p.invest)}) sera remplacé. Décoche si d'autres frais y sont inclus, ou pour une coprod.`;
+  document.getElementById('dv-apply-hint').textContent = hint;
+  document.getElementById('dv-apply-hint').className = 'devis-hint' + (hint && !isNewRel ? ' warn' : '');
+}
+
+async function uploadDevisFile(pending) {
+  if (!window._fbSaveFile) throw new Error('pas de connexion à Firebase');
+  const id = 'dv' + Date.now();
+  const chunks = await window._fbSaveFile(id, pending.dataUrl);
+  fileUrls[id] = URL.createObjectURL(dataUrlToBlob(pending.dataUrl));
+  return { id, chunks };
+}
+function devisMeta(up, pending, info, total, qty, note, applied) {
+  return { id: up.id, nom: pending.nom, type: pending.type, size: pending.size, chunks: up.chunks,
+           total, qty, note, date: new Date().toISOString().slice(0, 10),
+           docType: info?.docType || null, docNum: info?.docNum || null, docDate: info?.date || null, applied };
 }
 
 async function saveDevis() {
-  if (!devisEditId && devisPending && devisExtract && numOrNull('dv-total') == null) {
-    setDevisHint('Lecture du total dans le PDF…', false);
-    const t = await devisExtract;
-    if (t != null && document.getElementById('dv-total').value === '') document.getElementById('dv-total').value = t;
+  if (!devisEditId && devisPending && devisExtract && (numOrNull('dv-total') == null || numOrNull('dv-qty') == null)) {
+    setDevisHint('Lecture du devis…', false);
+    const info = await devisExtract;
+    if (info && !devisInfo) applyDevisInfo(info);
   }
   const total = numOrNull('dv-total');
   const qty   = numOrNull('dv-qty');
   const note  = document.getElementById('dv-note').value.trim();
-  const rid = currentRelease;
+
+  // Modification d'un devis existant : on ajuste la release si le devis y avait été appliqué
   if (devisEditId) {
-    const d = (allParams[rid].devis || []).find(x => x.id === devisEditId);
-    if (d) Object.assign(d, { total, qty, note });
-    params = allParams[rid];
-    saveAll(); closeDevisModal(); renderDevis();
+    const p = params;
+    const d = (p.devis || []).find(x => x.id === devisEditId);
+    if (d) {
+      if (d.applied?.invest && d.total != null && total != null) p.invest = Math.round(((p.invest || 0) + total - d.total) * 100) / 100;
+      if (d.applied?.stock && d.qty != null && qty != null) p.stock = (p.stock || 0) + qty - d.qty;
+      Object.assign(d, { total, qty, note });
+    }
+    saveAll(); closeDevisModal(); updateStats(); renderGroupedRows();
     showToast('DEVIS MIS À JOUR');
     return;
   }
   if (!devisPending) return;
-  if (!window._fbSaveFile) { alert('Pas de connexion à Firebase : impossible d\'enregistrer le fichier pour le moment.'); return; }
+  const plan = devisApplyPlan();
+
+  // Réf. qui n'existe pas encore : on passe par la création de release
+  if (plan.rid === '__new') {
+    nrDevis = { pending: devisPending, info: devisInfo || {}, total, qty, note };
+    const info = nrDevis.info;
+    devisPending = null;
+    closeDevisModal();
+    openNewReleaseModal(true);
+    prefillNewRelease(info, total, qty);
+    return;
+  }
+
   const btn = document.getElementById('dv-save');
   btn.disabled = true; btn.textContent = 'ENVOI…';
-  const id = 'dv' + Date.now();
   try {
-    const chunks = await window._fbSaveFile(id, devisPending.dataUrl);
-    fileUrls[id] = URL.createObjectURL(dataUrlToBlob(devisPending.dataUrl));
-    const p = allParams[rid];
+    const up = await uploadDevisFile(devisPending);
+    const p = allParams[plan.rid];
+    const applied = { invest: plan.doI, stock: plan.doS, mode: plan.mode, prevInvest: p.invest || 0, prevStock: p.stock || 0 };
+    if (plan.doI) { p.invest = plan.newI; p.investFromDevis = true; }
+    if (plan.doS) { p.stock  = plan.newS; p.stockFromDevis  = true; }
     p.devis = p.devis || [];
-    p.devis.push({ id, nom: devisPending.nom, type: devisPending.type, size: devisPending.size, chunks,
-                   total, qty, note, date: new Date().toISOString().slice(0, 10) });
-    if (rid === currentRelease) params = p;
+    p.devis.push(devisMeta(up, devisPending, devisInfo, total, qty, note, applied));
+    if (plan.rid === currentRelease) params = p;
     saveAll();
     closeDevisModal();
-    renderDevis();
-    showToast('DEVIS ENREGISTRÉ');
+    if (plan.rid !== currentRelease) switchRelease(plan.rid); else { updateStats(); }
+    renderGroupedRows();
+    const what = [plan.doI && 'invest.', plan.doS && 'stock'].filter(Boolean).join(' + ');
+    showToast('DEVIS ENREGISTRÉ' + (what ? ' · ' + what.toUpperCase() + ' À JOUR' : ''));
   } catch (e) {
     alert('Échec de l\'envoi du devis : ' + e.message);
   } finally {
@@ -2614,19 +2783,58 @@ async function saveDevis() {
 function editDevis(id) {
   const d = (params.devis || []).find(x => x.id === id);
   if (!d) return;
-  devisPending = null; devisEditId = id;
+  devisPending = null; devisEditId = id; devisInfo = null;
   openDevisModal(d, 'MODIFIER LE DEVIS');
+  if (d.applied?.invest || d.applied?.stock) setDevisHint('L\'investissement / le stock de la release seront ajustés de la différence.', false);
 }
 
 async function deleteDevis(id) {
-  const d = (params.devis || []).find(x => x.id === id);
+  const p = params;
+  const d = (p.devis || []).find(x => x.id === id);
   if (!d || !confirm('Supprimer le devis "' + d.nom + '" ?')) return;
-  params.devis = params.devis.filter(x => x.id !== id);
+  const a = d.applied || {};
+  if ((a.invest || a.stock) && confirm('Ce devis avait mis à jour la release. Annuler aussi ces changements (investissement / stock) ?')) {
+    if (a.mode === 'add') {
+      if (a.invest && d.total != null) p.invest = Math.round(((p.invest || 0) - d.total) * 100) / 100;
+      if (a.stock && d.qty != null) p.stock = (p.stock || 0) - d.qty;
+    } else {
+      if (a.invest) p.invest = a.prevInvest || 0;
+      if (a.stock)  p.stock  = a.prevStock || 0;
+    }
+  }
+  p.devis = p.devis.filter(x => x.id !== id);
   saveAll();
-  renderDevis();
+  updateStats();
   if (window._fbDeleteFile) window._fbDeleteFile(id, d.chunks || 1).catch(e => console.warn(e));
   if (fileUrls[id]) { URL.revokeObjectURL(fileUrls[id]); delete fileUrls[id]; }
   showToast('DEVIS SUPPRIMÉ');
+}
+
+// ── Nouvelle release depuis un devis ──
+async function pickDevisForNewRelease(event) {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file) return;
+  const hint = document.getElementById('nr-devis-hint');
+  hint.textContent = 'Lecture du devis…'; hint.className = 'devis-hint';
+  const pending = { nom: file.name, dataUrl: await readFileAsDataUrl(file), size: file.size, type: file.type || 'application/pdf' };
+  let info = null;
+  try { info = await extractPdfInfo(await file.arrayBuffer()); } catch (e) {}
+  info = info || {};
+  nrDevis = { pending, info, total: info.total ?? null, qty: info.qty ?? null, note: '' };
+  prefillNewRelease(info, info.total, info.qty);
+}
+function prefillNewRelease(info, total, qty) {
+  if (info.ref && !getReleaseIds().includes('bdc' + String(releaseNum(info.ref)).padStart(3, '0'))) document.getElementById('nr-nom').value = info.ref;
+  if (info.format) document.getElementById('nr-format').value = info.format;
+  if (qty != null) document.getElementById('nr-stock').value = qty;
+  if (total != null) document.getElementById('nr-invest').value = total;
+  const hint = document.getElementById('nr-devis-hint');
+  const ok = total != null && qty;
+  hint.innerHTML = ok
+    ? `Devis lu : <b>${qty} ex.</b> · <b>${fmt(total)}</b> TTC · ${fmt(total / qty)}/ex. — il sera joint à la release`
+    : 'Lecture partielle du devis — complète les champs (il sera quand même joint)';
+  hint.className = 'devis-hint ' + (ok ? 'ok' : 'warn');
 }
 
 // Lecture du total dans le PDF (pdf.js chargé à la demande)
@@ -2645,38 +2853,103 @@ function loadPdfJs() {
   });
   return pdfjsPromise;
 }
-async function extractPdfTotal(buffer) {
+async function extractPdfInfo(buffer) {
   const lib = await loadPdfJs();
   const pdf = await lib.getDocument({ data: new Uint8Array(buffer) }).promise;
-  let txt = '';
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const tc = await page.getTextContent();
-    txt += tc.items.map(it => it.str).join(' ') + '\n';
-  }
-  return parseDevisTotal(txt);
+  return parseDevisText(await pdfToLines(pdf));
 }
+
+// <<PARSE>>
+// Reconstitue les lignes du PDF (pdf.js donne des morceaux de texte positionnés)
+async function pdfToLines(pdf) {
+  const out = [];
+  for (let n = 1; n <= pdf.numPages; n++) {
+    const page = await pdf.getPage(n);
+    const tc = await page.getTextContent();
+    const rows = [];
+    tc.items.forEach(it => {
+      if (!it.str || !it.str.trim()) return;
+      const x = it.transform[4], y = it.transform[5];
+      let row = rows.find(r => Math.abs(r.y - y) < 2.5);
+      if (!row) { row = { y, parts: [] }; rows.push(row); }
+      row.parts.push({ x, s: it.str.trim() });
+    });
+    rows.sort((a, b) => b.y - a.y).forEach(r => out.push(r.parts.sort((a, b) => a.x - b.x).map(p => p.s).join(' ').replace(/\s+/g, ' ').trim()));
+  }
+  return out;
+}
+
 function parseAmount(raw) {
-  let t = raw.replace(/[\s  €]/g, '');
+  if (raw == null) return null;
+  let t = String(raw).replace(/[\s  €]/g, '');
   if (t.includes(',') && t.includes('.')) t = t.lastIndexOf(',') > t.lastIndexOf('.') ? t.replace(/\./g, '').replace(',', '.') : t.replace(/,/g, '');
   else t = t.replace(',', '.');
   const n = parseFloat(t);
   return isNaN(n) ? null : Math.round(n * 100) / 100;
 }
-function parseDevisTotal(txt) {
-  const num = '€?\\s*([0-9][0-9\\s\\u00a0\\u202f.,]*[0-9])';
-  const patterns = [
-    new RegExp('(?:^|[^-\\w])Total\\s*\\(EUR\\)\\s*:?\\s*' + num, 'gi'),   // Vinyle de Paris
-    new RegExp('Total\\s*TTC\\s*:?\\s*' + num, 'gi'),
-    new RegExp('Net\\s*[àa]\\s*payer\\s*:?\\s*' + num, 'gi'),
-    new RegExp('Montant\\s*total\\s*:?\\s*' + num, 'gi'),
-  ];
-  for (const re of patterns) {
-    const all = [...txt.matchAll(re)];
-    if (all.length) return parseAmount(all[all.length - 1][1]);
-  }
+
+const MOIS_FR = { jan: 1, janv: 1, 'fév': 2, fev: 2, 'févr': 2, mar: 3, mars: 3, avr: 4, mai: 5, jun: 6, juin: 6, juil: 7, 'aoû': 8, aou: 8, 'août': 8, sep: 9, sept: 9, oct: 10, nov: 11, 'déc': 12, dec: 12 };
+
+function guessFormat(desc) {
+  const d = (desc || '').toLowerCase();
+  if (/\b2\s*lp\b|double|2x12|gatefold 2/.test(d)) return '2LP';
+  if (/12\s*(inch|"|''|pouces)|\blp\b|vinyl|vinyle/.test(d)) return 'LP';
+  if (/7\s*(inch|"|'')/.test(d)) return '7"';
+  if (/\bcd\b|digipack|digisleeve|jewel/.test(d)) return 'CD';
+  if (/cassette|\btape\b|\bk7\b/.test(d)) return 'Tape';
   return null;
 }
+
+function parseDevisText(lines, fileName) {
+  const text = lines.join('\n');
+  const AMT = '(\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+,\\d{2}|\\d+,\\d{2})';
+  const QTY = '(\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)';
+  // Ligne d'article : [SKU] Description  Qté  Prix  Taxes  Total
+  const lineRe = new RegExp('^(?:([A-Z0-9][A-Z0-9-]{4,})\\s+)?(.+?)\\s+' + QTY + '\\s+' + AMT + '\\s+' + AMT + '\\s+' + AMT + '$');
+  const items = [];
+  lines.forEach(l => {
+    const m = l.match(lineRe);
+    if (m && !/total|tva|sous-total/i.test(m[2])) items.push({ sku: m[1] || '', desc: m[2], qty: parseInt(m[3].replace(/\D/g, '')), prix: parseAmount(m[4]), total: parseAmount(m[6]) });
+  });
+  // Ligne principale = le pressage / la fabrication (1re ligne payante avec une vraie quantité)
+  const payantes = items.filter(i => i.qty > 1 && i.total > 0);
+  const main = payantes.find(i => /pack|vinyl|vinyle|pressage|12\s*inch|\bcd\b|cassette|tape|\bk7\b|disque|duplication|replication/i.test(i.desc)) || payantes[0] || null;
+
+  const last = (re) => { const all = [...text.matchAll(re)]; return all.length ? all[all.length - 1][1] : null; };
+  const total = parseAmount(
+    last(new RegExp('(?:^|[^-\\w])Total\\s*\\(EUR\\)\\s*:?\\s*€?\\s*' + AMT, 'gim')) ||
+    last(new RegExp('Total\\s*TTC\\s*:?\\s*€?\\s*' + AMT, 'gi')) ||
+    last(new RegExp('Net\\s*[àa]\\s*payer\\s*:?\\s*€?\\s*' + AMT, 'gi')) ||
+    last(new RegExp('Montant\\s*total\\s*:?\\s*€?\\s*' + AMT, 'gi')));
+  const totalHT = parseAmount(last(new RegExp('Sous-total\\s*\\(EUR\\)\\s*:?\\s*€?\\s*' + AMT, 'gi')) || last(new RegExp('Total\\s*HT\\s*:?\\s*€?\\s*' + AMT, 'gi')));
+
+  // Quantité : ligne principale, sinon "- 200 Vinyl" / "300 ex." dans les notes
+  let qty = main ? main.qty : null;
+  if (!qty) {
+    const m = text.match(/(?:^|\s|-)\s*(\d{2,5})\s*(?:ex\b|ex\.|exemplaires|vinyl|vinyles|cd|cassettes|tapes|k7)/i);
+    if (m) qty = parseInt(m[1]);
+  }
+
+  const refM = text.match(/R[ée]f[ée]rence\s*Produit\s*:?\s*:?\s*(BDC)\s*-?\s*(\d{2,3})/i) || text.match(/\b(BDC)\s*-?\s*(\d{3})\b/i);
+  const ref = refM ? 'BDC-' + refM[2].padStart(3, '0') : null;
+
+  let docType = null, docNum = null;
+  if (/FACTURE/i.test(text)) { docType = 'Facture'; docNum = (text.match(/FACTURE\s*\/\s*INVOICE\s*:\s*([A-Z0-9#-]+)/i) || text.match(/Facture\s*(?:n°|:)\s*([A-Z0-9#-]+)/i) || [])[1] || null; }
+  else if (/Bon de commande/i.test(text)) { docType = 'Bon de commande'; docNum = (text.match(/Bon de commande\s*:\s*#?([A-Z0-9-]+)/i) || [])[1] || null; }
+  else if (/\bDevis\b/i.test(text)) { docType = 'Devis'; docNum = (text.match(/Devis\s*:\s*([A-Z0-9-]+)/i) || [])[1] || null; }
+
+  let date = null;
+  const dm = text.match(/Date de cr[ée]ation\s*:\s*([a-zéûè]{3,5})\.?\s+(\d{1,2}),?\s+(\d{4})/i);
+  if (dm && MOIS_FR[dm[1].toLowerCase()]) date = `${dm[3]}-${String(MOIS_FR[dm[1].toLowerCase()]).padStart(2, '0')}-${dm[2].padStart(2, '0')}`;
+  else { const d2 = text.match(/(\d{2})\/(\d{2})\/(\d{4})/); if (d2) date = `${d2[3]}-${d2[2]}-${d2[1]}`; }
+
+  const isRegul = /r[ée]gularisation/i.test(text) || /r[ée]_?gul/i.test(fileName || '');
+  const fournisseur = /vinyl\s*de\s*paris|vinyldeparis/i.test(text) ? 'Vinyl de Paris' : null;
+
+  return { total, totalHT, qty, ref, docType, docNum, date, isRegul, fournisseur,
+           format: guessFormat(main ? main.desc : text), main, lines: items };
+}
+// <<ENDPARSE>>
 
 // ── MODE MERCH (table de concert) ───────────────────────────────
 let merchCart = {};          // { releaseId: qty }
