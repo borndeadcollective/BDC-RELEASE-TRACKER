@@ -9,7 +9,7 @@
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyDCeyG4fRFUL4btxVIxz8LES0dq0rTyDMc",
   authDomain: "bdc10-moldy.firebaseapp.com",
@@ -25,6 +25,28 @@ const REF_P = doc(db, 'bdc', 'params');
 
 window._fbSaveCommandes = async (d) => { try { await setDoc(REF_C, { data: JSON.stringify(d) }); } catch(e) { console.error(e); } };
 window._fbSaveParams    = async (d) => { try { await setDoc(REF_P, { data: JSON.stringify(d) }); } catch(e) { console.error(e); } };
+
+// Fichiers (PDF de devis) : découpés en morceaux de 800 Ko (limite Firestore = 1 Mo par document)
+const FILE_CHUNK = 800000;
+window._fbSaveFile = async (fileId, dataUrl) => {
+  const n = Math.ceil(dataUrl.length / FILE_CHUNK);
+  for (let i = 0; i < n; i++) {
+    await setDoc(doc(db, 'bdc', 'file_' + fileId + '_' + i), { data: dataUrl.slice(i * FILE_CHUNK, (i + 1) * FILE_CHUNK) });
+  }
+  return n;
+};
+window._fbLoadFile = async (fileId, chunks) => {
+  let out = '';
+  for (let i = 0; i < chunks; i++) {
+    const snap = await getDoc(doc(db, 'bdc', 'file_' + fileId + '_' + i));
+    if (!snap.exists()) throw new Error('Morceau manquant ' + i);
+    out += snap.data().data;
+  }
+  return out;
+};
+window._fbDeleteFile = async (fileId, chunks) => {
+  for (let i = 0; i < chunks; i++) await deleteDoc(doc(db, 'bdc', 'file_' + fileId + '_' + i));
+};
 
 window._fbInit = async () => {
   try {
@@ -269,6 +291,27 @@ details.more-fields[open] { padding-bottom: 12px; }
 .fiche-row .v { flex: 1; word-break: break-word; }
 .fiche-addr { background: #f8f8f8; border: 1px solid var(--border); padding: 12px; font-size: 13px; line-height: 1.5; margin-top: 12px; white-space: pre-line; }
 
+/* DEVIS */
+.devis-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.devis-title { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); padding-top: 9px; flex-shrink: 0; }
+.devis-list { flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 6px; }
+.devis-item { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border: 1px solid var(--border); background: #fafafa; padding: 7px 10px; font-size: 11px; }
+.devis-open { background: none; border: none; cursor: pointer; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: #1a1a1a; text-decoration: underline; padding: 0; text-align: left; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.devis-tag { font-size: 8px; letter-spacing: 1px; background: #1a1a1a; color: #fff; padding: 2px 5px; font-weight: 700; }
+.devis-num { white-space: nowrap; }
+.devis-num b { font-size: 12px; }
+.devis-unit { font-family: var(--font-display); font-size: 18px; letter-spacing: 1px; white-space: nowrap; }
+.devis-note { color: var(--muted); font-size: 10px; }
+.devis-actions { margin-left: auto; white-space: nowrap; }
+.devis-empty { font-size: 11px; color: var(--muted); padding-top: 8px; }
+.devis-side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.devis-revient { font-size: 10px; color: var(--muted); line-height: 1.5; }
+.devis-revient b { font-family: var(--font-display); font-size: 20px; color: #1a1a1a; font-weight: normal; letter-spacing: 1px; }
+.devis-add { cursor: pointer; }
+.devis-file { font-size: 11px; background: #f8f8f8; border: 1px solid var(--border); padding: 10px 12px; margin-bottom: 4px; word-break: break-all; }
+.devis-hint { font-size: 10px; color: var(--muted); margin-top: 4px; min-height: 14px; }
+.devis-hint.ok { color: var(--green); }
+
 /* Vues plein écran (merch, stock) */
 .view-panel { display: none; padding: 24px 32px; }
 .view-panel.active { display: block; }
@@ -382,6 +425,12 @@ details.more-fields[open] { padding-bottom: 12px; }
   .header-left .label-tag { max-width: none; }
   .history-table td:first-child { white-space: nowrap; }
 
+  .devis-bar { padding: 12px 16px; gap: 10px; }
+  .devis-title { padding-top: 0; width: 100%; }
+  .devis-side { text-align: left; align-items: flex-start; width: 100%; flex-direction: row; justify-content: space-between; align-items: center; }
+  .devis-item { gap: 8px; }
+  .devis-actions { margin-left: 0; }
+
   /* MERCH / STOCK MOBILE */
   .view-panel { padding: 16px; }
   .merch-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -479,6 +528,8 @@ details.more-fields[open] { padding-bottom: 12px; }
     <div class="stat-progress" id="stat-equilibre" style="margin-top:4px; color: var(--text); font-weight:600;"></div>
   </div>
 </div>
+
+<div class="devis-bar" id="devis-bar"></div>
 
 <div class="main">
 
@@ -761,6 +812,27 @@ details.more-fields[open] { padding-bottom: 12px; }
     <div class="modal-btns">
       <button class="btn-save" onclick="createRelease()">CRÉER</button>
       <button class="btn-cancel" onclick="closeNewReleaseModal()">ANNULER</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DEVIS -->
+<div class="modal-overlay" id="modal-devis">
+  <div class="modal">
+    <h2 id="devis-modal-title">NOUVEAU DEVIS</h2>
+    <div class="devis-file" id="devis-file-name"></div>
+    <div class="form-row-2">
+      <div class="form-group"><label>Total TTC (€)</label><input type="number" step="0.01" id="dv-total" oninput="updateDevisUnit()" /></div>
+      <div class="form-group"><label>Exemplaires</label><input type="number" id="dv-qty" oninput="updateDevisUnit()" /></div>
+    </div>
+    <div class="devis-hint" id="dv-hint"></div>
+    <div class="form-group"><label>Note (optionnel)</label><input type="text" id="dv-note" placeholder="ex: régul 20 ex., part UK incluse…" /></div>
+    <div class="calc-preview" style="margin-top:12px">
+      <div class="calc-row"><span class="clabel">Prix par exemplaire</span><span class="cval" id="dv-unit">—</span></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-save" id="dv-save" onclick="saveDevis()">ENREGISTRER</button>
+      <button class="btn-cancel" onclick="closeDevisModal()">ANNULER</button>
     </div>
   </div>
 </div>
@@ -1210,6 +1282,7 @@ function switchView(view) {
   const isRelease = view === 'release';
   document.querySelector('.stats-bar').style.display = isRelease ? '' : 'none';
   document.querySelector('.main').style.display      = isRelease ? '' : 'none';
+  document.getElementById('devis-bar').style.display = isRelease ? '' : 'none';
   document.getElementById('btn-params').style.visibility = isRelease ? '' : 'hidden';
   document.getElementById('finances-panel').classList.toggle('active', view === 'finances');
   document.getElementById('merch-panel').classList.toggle('active', view === 'merch');
@@ -1572,6 +1645,7 @@ function toggleStatut(id) {
 // ── STATS ────────────────────────────────────────────────────────
 function updateStats() {
   allCommandes[currentRelease] = commandes;
+  renderDevis();
   const st = computeReleaseStats(currentRelease);
   const { nbBC, nbPH, nbDistro, nbGroupe, total, stock, recTotal, balance } = st;
 
@@ -2366,6 +2440,242 @@ function renderFinances() {
         </tr>`;
       }).join('')}</tbody>
     </table>`;
+}
+
+// ── DEVIS (PDF par release) ─────────────────────────────────────
+const DEVIS_MAX_MB = 8;
+const fileUrls = {};        // fileId -> URL blob déjà chargée
+const fileLoading = {};     // fileId -> promesse en cours
+let devisPending = null;    // { nom, dataUrl, size, type } pour un nouvel envoi
+let devisEditId = null;     // id du devis en cours de modification
+let devisExtract = null;    // lecture du total en cours (promesse)
+
+function renderDevis() {
+  const bar = document.getElementById('devis-bar');
+  if (!bar || !params) return;
+  const list = params.devis || [];
+  const items = list.map(d => {
+    const pu = d.total && d.qty ? d.total / d.qty : null;
+    return `<div class="devis-item">
+      <span class="devis-tag">${d.type && d.type.startsWith('image/') ? 'IMG' : 'PDF'}</span>
+      <button class="devis-open" onclick="openDevis('${d.id}')" title="Ouvrir ${esc(d.nom)}">${esc(d.nom)}</button>
+      <span class="devis-num">${d.total != null ? 'Total <b>' + fmt(d.total) + '</b>' : 'Total ?'}</span>
+      <span class="devis-num">${d.qty ? d.qty + ' ex.' : '? ex.'}</span>
+      <span class="devis-unit">${pu != null ? fmt(pu) + '/ex.' : '—'}</span>
+      ${d.note ? `<span class="devis-note">${esc(d.note)}</span>` : ''}
+      <span class="devis-actions">
+        <button class="edit-btn" onclick="editDevis('${d.id}')">edit</button>
+        <button class="del-btn" onclick="deleteDevis('${d.id}')">✕</button>
+      </span>
+    </div>`;
+  }).join('');
+  const totalDevis = list.reduce((s, d) => s + (d.total || 0), 0);
+  const revient = params.stock > 0 && params.invest > 0 ? params.invest / params.stock : null;
+  bar.innerHTML = `
+    <div class="devis-title">Devis</div>
+    <div class="devis-list">${items || '<div class="devis-empty">Aucun devis pour cette release.</div>'}
+      ${list.length > 1 ? `<div class="devis-note">Total des devis : ${fmt(totalDevis)}</div>` : ''}
+    </div>
+    <div class="devis-side">
+      ${revient != null ? `<div class="devis-revient">Coût de revient<br><b>${fmt(revient)}/ex.</b><br>invest. ÷ stock initial</div>` : ''}
+      <label class="btn-clear devis-add">+ AJOUTER UN DEVIS<input type="file" accept="application/pdf,image/*" style="display:none" onchange="pickDevis(event)" /></label>
+    </div>`;
+  // Précharge les fichiers (quelques dizaines de Ko) pour qu'ils s'ouvrent d'un coup
+  list.forEach(d => loadDevisFile(d).catch(() => {}));
+}
+
+function dataUrlToBlob(dataUrl) {
+  const [head, b64] = dataUrl.split(',');
+  const mime = (head.match(/data:([^;]+)/) || [])[1] || 'application/pdf';
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+
+function loadDevisFile(d) {
+  if (fileUrls[d.id]) return Promise.resolve(fileUrls[d.id]);
+  if (fileLoading[d.id]) return fileLoading[d.id];
+  if (!window._fbLoadFile) return Promise.reject(new Error('Firebase non connecté'));
+  fileLoading[d.id] = window._fbLoadFile(d.id, d.chunks || 1).then(du => {
+    fileUrls[d.id] = URL.createObjectURL(dataUrlToBlob(du));
+    return fileUrls[d.id];
+  }).finally(() => { delete fileLoading[d.id]; });
+  return fileLoading[d.id];
+}
+
+function openDevis(id) {
+  const d = (params.devis || []).find(x => x.id === id);
+  if (!d) return;
+  if (fileUrls[id]) { window.open(fileUrls[id], '_blank'); return; }
+  // Fichier pas encore chargé : on ouvre l'onglet tout de suite (sinon bloqué), puis on le remplit
+  const w = window.open('', '_blank');
+  showToast('CHARGEMENT DU DEVIS…');
+  loadDevisFile(d).then(url => {
+    if (w) w.location.href = url; else window.open(url, '_blank');
+  }).catch(e => {
+    if (w) w.close();
+    alert('Impossible de charger le devis : ' + e.message);
+  });
+}
+
+function pickDevis(event) {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file) return;
+  if (file.size > DEVIS_MAX_MB * 1024 * 1024) { alert('Fichier trop lourd (max ' + DEVIS_MAX_MB + ' Mo).'); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    devisPending = { nom: file.name, dataUrl: reader.result, size: file.size, type: file.type || 'application/pdf' };
+    devisEditId = null;
+    openDevisModal({ nom: file.name, total: null, qty: params.stock || '', note: '' }, 'NOUVEAU DEVIS');
+    if (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) {
+      setDevisHint('Lecture du total dans le PDF…', false);
+      devisExtract = file.arrayBuffer().then(extractPdfTotal).catch(() => null);
+      devisExtract.then(total => {
+        if (!devisPending || devisPending.nom !== file.name) return;
+        if (total != null) {
+          if (document.getElementById('dv-total').value === '') document.getElementById('dv-total').value = total;
+          setDevisHint('Total trouvé dans le PDF — vérifie-le', true);
+          updateDevisUnit();
+        } else setDevisHint('Total non trouvé — saisis-le', false);
+      });
+    } else devisExtract = null;
+  };
+  reader.readAsDataURL(file);
+}
+
+function openDevisModal(d, title) {
+  document.getElementById('devis-modal-title').textContent = title;
+  document.getElementById('devis-file-name').textContent = d.nom;
+  document.getElementById('dv-total').value = d.total ?? '';
+  document.getElementById('dv-qty').value   = d.qty ?? '';
+  document.getElementById('dv-note').value  = d.note || '';
+  document.getElementById('dv-save').disabled = false;
+  setDevisHint('', false);
+  updateDevisUnit();
+  document.getElementById('modal-devis').classList.add('open');
+}
+function closeDevisModal() {
+  document.getElementById('modal-devis').classList.remove('open');
+  devisPending = null; devisEditId = null;
+}
+function setDevisHint(txt, ok) {
+  const h = document.getElementById('dv-hint');
+  h.textContent = txt; h.className = 'devis-hint' + (ok ? ' ok' : '');
+}
+function updateDevisUnit() {
+  const t = numOrNull('dv-total'), q = numOrNull('dv-qty');
+  document.getElementById('dv-unit').textContent = t && q ? fmt(t / q) : '—';
+}
+
+async function saveDevis() {
+  if (!devisEditId && devisPending && devisExtract && numOrNull('dv-total') == null) {
+    setDevisHint('Lecture du total dans le PDF…', false);
+    const t = await devisExtract;
+    if (t != null && document.getElementById('dv-total').value === '') document.getElementById('dv-total').value = t;
+  }
+  const total = numOrNull('dv-total');
+  const qty   = numOrNull('dv-qty');
+  const note  = document.getElementById('dv-note').value.trim();
+  const rid = currentRelease;
+  if (devisEditId) {
+    const d = (allParams[rid].devis || []).find(x => x.id === devisEditId);
+    if (d) Object.assign(d, { total, qty, note });
+    params = allParams[rid];
+    saveAll(); closeDevisModal(); renderDevis();
+    showToast('DEVIS MIS À JOUR');
+    return;
+  }
+  if (!devisPending) return;
+  if (!window._fbSaveFile) { alert('Pas de connexion à Firebase : impossible d\'enregistrer le fichier pour le moment.'); return; }
+  const btn = document.getElementById('dv-save');
+  btn.disabled = true; btn.textContent = 'ENVOI…';
+  const id = 'dv' + Date.now();
+  try {
+    const chunks = await window._fbSaveFile(id, devisPending.dataUrl);
+    fileUrls[id] = URL.createObjectURL(dataUrlToBlob(devisPending.dataUrl));
+    const p = allParams[rid];
+    p.devis = p.devis || [];
+    p.devis.push({ id, nom: devisPending.nom, type: devisPending.type, size: devisPending.size, chunks,
+                   total, qty, note, date: new Date().toISOString().slice(0, 10) });
+    if (rid === currentRelease) params = p;
+    saveAll();
+    closeDevisModal();
+    renderDevis();
+    showToast('DEVIS ENREGISTRÉ');
+  } catch (e) {
+    alert('Échec de l\'envoi du devis : ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'ENREGISTRER';
+  }
+}
+
+function editDevis(id) {
+  const d = (params.devis || []).find(x => x.id === id);
+  if (!d) return;
+  devisPending = null; devisEditId = id;
+  openDevisModal(d, 'MODIFIER LE DEVIS');
+}
+
+async function deleteDevis(id) {
+  const d = (params.devis || []).find(x => x.id === id);
+  if (!d || !confirm('Supprimer le devis "' + d.nom + '" ?')) return;
+  params.devis = params.devis.filter(x => x.id !== id);
+  saveAll();
+  renderDevis();
+  if (window._fbDeleteFile) window._fbDeleteFile(id, d.chunks || 1).catch(e => console.warn(e));
+  if (fileUrls[id]) { URL.revokeObjectURL(fileUrls[id]); delete fileUrls[id]; }
+  showToast('DEVIS SUPPRIMÉ');
+}
+
+// Lecture du total dans le PDF (pdf.js chargé à la demande)
+let pdfjsPromise = null;
+function loadPdfJs() {
+  if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if (!pdfjsPromise) pdfjsPromise = new Promise((resolve, reject) => {
+    const sc = document.createElement('script');
+    sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    sc.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      resolve(window.pdfjsLib);
+    };
+    sc.onerror = () => { pdfjsPromise = null; reject(new Error('pdf.js indisponible')); };
+    document.head.appendChild(sc);
+  });
+  return pdfjsPromise;
+}
+async function extractPdfTotal(buffer) {
+  const lib = await loadPdfJs();
+  const pdf = await lib.getDocument({ data: new Uint8Array(buffer) }).promise;
+  let txt = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const tc = await page.getTextContent();
+    txt += tc.items.map(it => it.str).join(' ') + '\n';
+  }
+  return parseDevisTotal(txt);
+}
+function parseAmount(raw) {
+  let t = raw.replace(/[\s  €]/g, '');
+  if (t.includes(',') && t.includes('.')) t = t.lastIndexOf(',') > t.lastIndexOf('.') ? t.replace(/\./g, '').replace(',', '.') : t.replace(/,/g, '');
+  else t = t.replace(',', '.');
+  const n = parseFloat(t);
+  return isNaN(n) ? null : Math.round(n * 100) / 100;
+}
+function parseDevisTotal(txt) {
+  const num = '€?\\s*([0-9][0-9\\s\\u00a0\\u202f.,]*[0-9])';
+  const patterns = [
+    new RegExp('(?:^|[^-\\w])Total\\s*\\(EUR\\)\\s*:?\\s*' + num, 'gi'),   // Vinyle de Paris
+    new RegExp('Total\\s*TTC\\s*:?\\s*' + num, 'gi'),
+    new RegExp('Net\\s*[àa]\\s*payer\\s*:?\\s*' + num, 'gi'),
+    new RegExp('Montant\\s*total\\s*:?\\s*' + num, 'gi'),
+  ];
+  for (const re of patterns) {
+    const all = [...txt.matchAll(re)];
+    if (all.length) return parseAmount(all[all.length - 1][1]);
+  }
+  return null;
 }
 
 // ── MODE MERCH (table de concert) ───────────────────────────────
