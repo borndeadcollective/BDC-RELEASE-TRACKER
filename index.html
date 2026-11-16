@@ -232,6 +232,98 @@ header {
 .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a1a; color: #fff; font-family: var(--font-display); font-size: 15px; letter-spacing: 2px; padding: 12px 20px; z-index: 200; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
 .toast.show { transform: translateY(0); opacity: 1; }
 
+/* ── AJOUTS v2 ── */
+.release-badge.ghost { background: none; color: #1a1a1a; border: 1px solid #1a1a1a; }
+.release-badge.ghost:hover { background: #1a1a1a; color: #fff; }
+.release-tab.tool { color: #1a1a1a; }
+.release-nav { overflow-x: auto; scrollbar-width: thin; }
+.release-tab { white-space: nowrap; flex-shrink: 0; padding: 12px 16px; }
+.release-tab .tab-sub { max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+.main > * { min-width: 0; }
+.merch-tile.in-cart .mt-groupe, .merch-tile.in-cart .mt-titre { padding-right: 34px; }
+.hide-m { display: inline; }
+.release-nav .nav-sep { flex: 0 0 1px; background: var(--border); margin: 10px 6px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.form-row-2 .form-group, .form-row-3 .form-group { min-width: 0; }
+.form-row-2 input, .form-row-2 select, .form-row-3 input { width: 100%; }
+details.more-fields { margin-top: 12px; border: 1px solid var(--border); padding: 0 12px; background: #fafafa; }
+details.more-fields > summary { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); padding: 10px 0; cursor: pointer; list-style: none; }
+details.more-fields > summary::before { content: '+ '; }
+details.more-fields[open] > summary::before { content: '– '; }
+details.more-fields[open] { padding-bottom: 12px; }
+.filter-search { border: none; border-left: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; padding: 9px 12px; min-width: 150px; outline: none; background: #fff; }
+.history-table { overflow-x: auto; }
+.cell-sub { display: block; font-size: 9px; color: var(--muted); margin-top: 2px; }
+.ref-tag { font-size: 9px; letter-spacing: 1px; color: #1a1a1a; font-weight: 700; }
+.fdp-cell { background: none; border: 1px dashed transparent; font-family: var(--font-mono); font-size: 11px; padding: 3px 6px; cursor: pointer; text-align: left; color: var(--text); }
+.fdp-cell:hover { border-color: #999; }
+.fdp-cell.estime { color: var(--muted); font-style: italic; }
+.fdp-cell.reel { font-weight: 700; }
+.fiche-btn { background: none; border: 1px solid var(--border); color: #1a1a1a; cursor: pointer; font-size: 9px; letter-spacing: 1px; padding: 3px 6px; font-family: var(--font-mono); text-transform: uppercase; }
+.fiche-btn:hover { border-color: #1a1a1a; }
+.btn-link-danger { display: block; margin-top: 14px; background: none; border: none; color: var(--muted); font-family: var(--font-mono); font-size: 10px; cursor: pointer; text-decoration: underline; padding: 0; }
+.btn-link-danger:hover { color: var(--red); }
+.fiche-row { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px solid #f0f0f0; font-size: 12px; }
+.fiche-row .k { width: 90px; flex-shrink: 0; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.fiche-row .v { flex: 1; word-break: break-word; }
+.fiche-addr { background: #f8f8f8; border: 1px solid var(--border); padding: 12px; font-size: 13px; line-height: 1.5; margin-top: 12px; white-space: pre-line; }
+
+/* Vues plein écran (merch, stock) */
+.view-panel { display: none; padding: 24px 32px; }
+.view-panel.active { display: block; }
+
+/* MERCH */
+#merch-panel { padding-bottom: 130px; }
+.merch-head { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+.merch-lieu { flex: 1; min-width: 220px; margin-top: 0; }
+.merch-soiree { font-size: 11px; color: var(--muted); line-height: 1.6; text-align: right; }
+.merch-soiree b { font-family: var(--font-display); font-size: 26px; color: #1a1a1a; letter-spacing: 1px; font-weight: normal; }
+.merch-tools { display: flex; gap: 8px; margin: 16px 0 12px; flex-wrap: wrap; }
+.merch-tools .btn-clear:disabled { opacity: 0.35; cursor: default; }
+.merch-tools .btn-clear.on { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.merch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.merch-tile { position: relative; background: #fff; border: 2px solid var(--border); padding: 16px 14px 14px; cursor: pointer; user-select: none; -webkit-user-select: none; transition: border-color 0.1s, transform 0.05s; min-height: 132px; display: flex; flex-direction: column; -webkit-tap-highlight-color: transparent; }
+.merch-tile:active { transform: scale(0.98); }
+.merch-tile.in-cart { border-color: #1a1a1a; }
+.merch-tile.empty { opacity: 0.35; cursor: not-allowed; }
+.merch-tile .mt-ref { font-size: 9px; letter-spacing: 2px; color: var(--muted); }
+.merch-tile .mt-groupe { font-family: var(--font-display); font-size: 22px; letter-spacing: 1px; line-height: 1.05; margin-top: 4px; }
+.merch-tile .mt-titre { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.merch-tile .mt-foot { margin-top: auto; padding-top: 10px; display: flex; justify-content: space-between; align-items: baseline; }
+.merch-tile .mt-prix { font-family: var(--font-display); font-size: 24px; }
+.merch-tile .mt-prix input { width: 70px; font-family: var(--font-display); font-size: 20px; border: 1px solid #1a1a1a; padding: 2px 4px; }
+.merch-tile .mt-stock { font-size: 10px; color: var(--muted); }
+.merch-tile .mt-stock.low { color: var(--red); font-weight: 700; }
+.merch-tile .mt-count { position: absolute; top: -10px; right: -10px; background: #1a1a1a; color: #fff; font-family: var(--font-display); font-size: 20px; min-width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 18px; padding: 0 8px; }
+.merch-tile .mt-minus { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border: 1px solid var(--border); background: #fff; font-size: 18px; line-height: 1; cursor: pointer; display: none; }
+.merch-tile.in-cart .mt-minus { display: block; }
+.merch-tile.in-cart .mt-count + .mt-minus { top: 34px; }
+.merch-cart { position: fixed; left: 0; right: 0; bottom: 0; background: #1a1a1a; color: #fff; padding: 14px 32px; display: none; align-items: center; gap: 16px; z-index: 50; }
+.merch-cart.show { display: flex; }
+.merch-cart-info { flex: 1; min-width: 0; }
+.merch-cart-total { font-family: var(--font-display); font-size: 34px; letter-spacing: 1px; line-height: 1; }
+.merch-cart-detail { font-size: 10px; color: #aaa; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.merch-cart-btns { display: flex; gap: 8px; }
+.merch-pay { background: #fff; color: #1a1a1a; border: none; font-family: var(--font-display); font-size: 20px; letter-spacing: 2px; padding: 14px 22px; cursor: pointer; }
+.merch-pay.alt { background: #1a6ea8; color: #fff; }
+.merch-clear { background: none; border: 1px solid #555; color: #aaa; font-size: 16px; padding: 0 14px; cursor: pointer; }
+
+/* STOCK */
+.stock-title { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.stock-actions { display: flex; gap: 8px; }
+.stock-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--border); font-size: 11px; }
+.stock-table th { background: #f8f8f8; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 10px 12px; text-align: left; border-bottom: 2px solid var(--border); }
+.stock-table td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+.stock-table td.num, .stock-table th.num { text-align: right; }
+.stock-table .big { font-family: var(--font-display); font-size: 22px; }
+.stock-table tr.clickable { cursor: pointer; }
+.stock-table tr.clickable:hover td { background: #fafafa; }
+.stock-badge { font-size: 9px; letter-spacing: 1px; padding: 3px 7px; font-weight: 700; white-space: nowrap; }
+.stock-badge.low { background: #f39c12; color: #fff; }
+.stock-badge.out { background: var(--red); color: #fff; }
+.stock-badge.ok { background: #e8f5ec; color: var(--green); }
+
 @media (max-width: 800px) {
   /* HEADER */
   header { padding: 12px 16px; }
@@ -276,10 +368,32 @@ header {
   .filter-bar::-webkit-scrollbar { display: none; }
   .filter-btn { white-space: nowrap; flex-shrink: 0; font-size: 8px; padding: 8px 12px; }
   .history-table th, .history-table td { padding: 8px 6px; font-size: 10px; }
-  .history-table th:nth-child(6),
-  .history-table td:nth-child(6),
   .history-table th:nth-child(8),
   .history-table td:nth-child(8) { display: none; }
+  .filter-search { width: 100%; border-left: none; border-top: 1px solid var(--border); font-size: 16px; }
+  .filter-bar { flex-wrap: wrap; }
+
+  .hide-m { display: none; }
+  .release-tab.tool { order: -2; }
+  .release-nav .nav-sep { order: -1; }
+  .header-right { gap: 8px; flex-shrink: 0; }
+  header { gap: 10px; }
+  .header-left { min-width: 0; flex: 1; }
+  .header-left .label-tag { max-width: none; }
+  .history-table td:first-child { white-space: nowrap; }
+
+  /* MERCH / STOCK MOBILE */
+  .view-panel { padding: 16px; }
+  .merch-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .merch-tile { min-height: 120px; padding: 12px 10px 10px; }
+  .merch-tile .mt-groupe { font-size: 18px; }
+  .merch-soiree { text-align: left; width: 100%; }
+  .merch-cart { padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
+  .merch-cart-total { font-size: 28px; }
+  .merch-pay { font-size: 16px; padding: 14px 12px; letter-spacing: 1px; }
+  .stock-table .col-hide { display: none; }
+  .stock-table th, .stock-table td { padding: 8px 6px; }
+  .form-row-3 { grid-template-columns: 1fr 1fr; }
 
   /* MODAL */
   .modal { padding: 20px 16px; width: 95vw; }
@@ -331,37 +445,12 @@ header {
   </div>
   <div class="header-right">
     <span class="sync-dot" id="sync-dot" title="Sync Firebase"></span>
-    <button class="release-badge" onclick="openModal()">PARAMETRES</button>
+    <button class="release-badge ghost" onclick="openNewReleaseModal()" title="Nouvelle release">+<span class="hide-m"> RELEASE</span></button>
+    <button class="release-badge" id="btn-params" onclick="openModal()">PARAMETRES</button>
   </div>
 </header>
 
-<div class="release-nav">
-  <button class="release-tab active" onclick="switchRelease('bdc007', this)" id="tab-bdc007">
-    BDC-007<span class="tab-sub">Soul Hater — Astral Malefactor</span>
-  </button>
-  <button class="release-tab" onclick="switchRelease('bdc010', this)" id="tab-bdc010">
-    BDC-010<span class="tab-sub">Moldy — Do Not Resuscitate</span>
-  </button>
-  <button class="release-tab" onclick="switchRelease('bdc012', this)" id="tab-bdc012">
-    BDC-012<span class="tab-sub">Corruption Pact — Unanswered Cries</span>
-  </button>
-  <button class="release-tab" onclick="switchRelease('bdc013', this)" id="tab-bdc013">
-    BDC-013<span class="tab-sub">Take it in Blood — Exit from Life</span>
-  </button>
-  <button class="release-tab" onclick="switchRelease('bdc014', this)" id="tab-bdc014">
-    BDC-014<span class="tab-sub">Loyal 2 None — Backstabbers</span>
-  </button>
-  <button class="release-tab" onclick="switchRelease('bdc015', this)" id="tab-bdc015">
-    BDC-015<span class="tab-sub">Hard to Handle — Get it over with</span>
-  </button>
-  <button class="release-tab" onclick="switchRelease('bdc016', this)" id="tab-bdc016">
-    BDC-016<span class="tab-sub">Mozdrill — Démo 2026</span>
-  </button>
-  <button class="release-tab" onclick="switchToFinances(this)" id="tab-finances">
-    FINANCES<span class="tab-sub">Vue globale label</span>
-  </button>
-
-</div>
+<div class="release-nav" id="release-nav"></div>
 
 <div class="stats-bar">
   <div class="stat">
@@ -408,33 +497,49 @@ header {
     <!-- BIGCARTEL -->
     <div id="form-bc">
       <div class="form-group">
-        <label>Quantité</label>
-        <input type="number" id="input-num" min="1" value="1" />
+        <label>Réf. commande Bigcartel</label>
+        <input type="text" id="input-ref" placeholder="ex: CDEF-123456" autocomplete="off" />
       </div>
-      <div class="form-group">
-        <label>Pays d'expédition</label>
-        <select id="input-pays"><option value="">— Choisir —</option></select>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Quantité</label>
+          <input type="number" id="input-num" min="1" value="1" />
+        </div>
+        <div class="form-group">
+          <label>Pays</label>
+          <select id="input-pays"><option value="">— Choisir —</option></select>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Statut</label>
-        <select id="input-statut">
-          <option value="preorder">Preorder</option>
-          <option value="en_attente">En attente d'envoi</option>
-          <option value="envoye">Envoyé</option>
-        </select>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Statut</label>
+          <select id="input-statut">
+            <option value="preorder">Preorder</option>
+            <option value="en_attente">En attente d'envoi</option>
+            <option value="envoye">Envoyé</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Transporteur</label>
+          <select id="input-transporteur" class="transporteur-select"></select>
+        </div>
       </div>
-      <div class="form-group">
-        <label>FdP encaissé (€) — optionnel</label>
-        <input type="number" id="input-fdp-enc" step="0.01" placeholder="laisser vide = tarif pays" />
-      </div>
-      <div class="form-group">
-        <label>FdP payé (€) — optionnel</label>
-        <input type="number" id="input-fdp-pay" step="0.01" placeholder="laisser vide = tarif pays" />
-      </div>
-      <div class="form-group">
-        <label>Note (optionnel)</label>
-        <input type="text" id="input-note-bc" placeholder="ex: adresse incorrecte..." />
-      </div>
+      <div id="bc-client"></div>
+      <details class="more-fields">
+        <summary>Frais de port / note</summary>
+        <div class="form-group">
+          <label>FdP encaissé (€) — vide = tarif pays</label>
+          <input type="number" id="input-fdp-enc" step="0.01" placeholder="tarif pays" />
+        </div>
+        <div class="form-group">
+          <label>FdP réellement payé (€) — si déjà connu</label>
+          <input type="number" id="input-fdp-pay" step="0.01" placeholder="estimé automatiquement" />
+        </div>
+        <div class="form-group">
+          <label>Note</label>
+          <input type="text" id="input-note-bc" placeholder="ex: point relais spécifique..." />
+        </div>
+      </details>
     </div>
 
     <!-- PHYSIQUE -->
@@ -508,74 +613,15 @@ header {
       </div>
     </div>
 
-    <!-- GROUPE -->
-    <div id="form-groupe" style="display:none">
-      <div class="form-group">
-        <label>Nom du groupe</label>
-        <input type="text" id="input-groupe-nom" placeholder="ex: Corruption Pact" />
-      </div>
-      <div class="form-group">
-        <label>Quantité</label>
-        <input type="number" id="input-groupe-qty" min="1" value="1" />
-      </div>
-      <div class="form-group">
-        <label>Prix unitaire (€)</label>
-        <input type="number" id="input-groupe-prix" step="0.01" placeholder="ex: 16" />
-      </div>
-      <div class="form-group">
-        <label>Note (optionnel)</label>
-        <input type="text" id="input-note-groupe" placeholder="" />
-      </div>
-    </div>
-
     <!-- COMMANDE GROUPÉE -->
     <div id="form-grouped" style="display:none">
       <div class="form-group">
+        <label>Réf. commande Bigcartel</label>
+        <input type="text" id="grp-ref" placeholder="ex: CDEF-123456" autocomplete="off" />
+      </div>
+      <div class="form-group">
         <label>Cocher les releases concernées</label>
-        <div id="grouped-releases" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-          <div id="grp-row-bdc007" onclick="toggleGrouped('bdc007')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:2px solid var(--border);cursor:pointer;user-select:none;transition:all 0.15s;">
-            <div id="grp-check-bdc007" style="width:22px;height:22px;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;"></div>
-            <span id="grp-label-bdc007" style="font-size:12px;font-weight:600;flex:1;">BDC-007 — Soul Hater (CD)</span>
-            <input type="number" id="grp-qty-bdc007" min="1" value="1" style="display:none;width:55px;background:#fff;border:1px solid #ccc;padding:4px 6px;font-family:var(--font-mono);font-size:12px;" oninput="updateGroupedPreview()" onclick="event.stopPropagation()" />
-            <span id="grp-qty-label-bdc007" style="display:none;font-size:10px;color:var(--muted)">ex.</span>
-          </div>
-          <div id="grp-row-bdc010" onclick="toggleGrouped('bdc010')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:2px solid var(--border);cursor:pointer;user-select:none;transition:all 0.15s;">
-            <div id="grp-check-bdc010" style="width:22px;height:22px;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;"></div>
-            <span id="grp-label-bdc010" style="font-size:12px;font-weight:600;flex:1;">BDC-010 — Moldy</span>
-            <input type="number" id="grp-qty-bdc010" min="1" value="1" style="display:none;width:55px;background:#fff;border:1px solid #ccc;padding:4px 6px;font-family:var(--font-mono);font-size:12px;" oninput="updateGroupedPreview()" onclick="event.stopPropagation()" />
-            <span id="grp-qty-label-bdc010" style="display:none;font-size:10px;color:var(--muted)">ex.</span>
-          </div>
-          <div id="grp-row-bdc012" onclick="toggleGrouped('bdc012')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:2px solid var(--border);cursor:pointer;user-select:none;transition:all 0.15s;">
-            <div id="grp-check-bdc012" style="width:22px;height:22px;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;"></div>
-            <span id="grp-label-bdc012" style="font-size:12px;font-weight:600;flex:1;">BDC-012 — Corruption Pact</span>
-            <input type="number" id="grp-qty-bdc012" min="1" value="1" style="display:none;width:55px;background:#fff;border:1px solid #ccc;padding:4px 6px;font-family:var(--font-mono);font-size:12px;" oninput="updateGroupedPreview()" onclick="event.stopPropagation()" />
-            <span id="grp-qty-label-bdc012" style="display:none;font-size:10px;color:var(--muted)">ex.</span>
-          </div>
-          <div id="grp-row-bdc013" onclick="toggleGrouped('bdc013')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:2px solid var(--border);cursor:pointer;user-select:none;transition:all 0.15s;">
-            <div id="grp-check-bdc013" style="width:22px;height:22px;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;"></div>
-            <span id="grp-label-bdc013" style="font-size:12px;font-weight:600;flex:1;">BDC-013 — Take it in Blood</span>
-            <input type="number" id="grp-qty-bdc013" min="1" value="1" style="display:none;width:55px;background:#fff;border:1px solid #ccc;padding:4px 6px;font-family:var(--font-mono);font-size:12px;" oninput="updateGroupedPreview()" onclick="event.stopPropagation()" />
-            <span id="grp-qty-label-bdc013" style="display:none;font-size:10px;color:var(--muted)">ex.</span>
-          </div>
-          <div id="grp-row-bdc014" onclick="toggleGrouped('bdc014')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:2px solid var(--border);cursor:pointer;user-select:none;transition:all 0.15s;">
-            <div id="grp-check-bdc014" style="width:22px;height:22px;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;"></div>
-            <span id="grp-label-bdc014" style="font-size:12px;font-weight:600;flex:1;">BDC-014 — Loyal 2 None (CD)</span>
-            <input type="number" id="grp-qty-bdc014" min="1" value="1" style="display:none;width:55px;background:#fff;border:1px solid #ccc;padding:4px 6px;font-family:var(--font-mono);font-size:12px;" oninput="updateGroupedPreview()" onclick="event.stopPropagation()" />
-            <span id="grp-qty-label-bdc014" style="display:none;font-size:10px;color:var(--muted)">ex.</span>
-          </div>
-          <div id="grp-row-bdc016" onclick="toggleGrouped('bdc016')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:2px solid var(--border);cursor:pointer;user-select:none;transition:all 0.15s;">
-            <div id="grp-check-bdc016" style="width:22px;height:22px;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;"></div>
-            <span id="grp-label-bdc016" style="font-size:12px;font-weight:600;flex:1;">BDC-016 — Mozdrill (Tape)</span>
-            <input type="number" id="grp-qty-bdc016" min="1" value="1" style="display:none;width:55px;background:#fff;border:1px solid #ccc;padding:4px 6px;font-family:var(--font-mono);font-size:12px;" oninput="updateGroupedPreview()" onclick="event.stopPropagation()" />
-            <span id="grp-qty-label-bdc016" style="display:none;font-size:10px;color:var(--muted)">ex.</span>
-          </div>
-          <div id="grp-row-bdc015" onclick="toggleGrouped('bdc015')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:2px solid var(--border);cursor:pointer;user-select:none;transition:all 0.15s;">
-            <div id="grp-check-bdc015" style="width:22px;height:22px;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;"></div>
-            <span id="grp-label-bdc015" style="font-size:12px;font-weight:600;flex:1;">BDC-015 — Hard to Handle (Tape)</span>
-            <input type="number" id="grp-qty-bdc015" min="1" value="1" style="display:none;width:55px;background:#fff;border:1px solid #ccc;padding:4px 6px;font-family:var(--font-mono);font-size:12px;" oninput="updateGroupedPreview()" onclick="event.stopPropagation()" />
-            <span id="grp-qty-label-bdc015" style="display:none;font-size:10px;color:var(--muted)">ex.</span>
-          </div>
-        </div>
+        <div id="grouped-releases" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"></div>
       </div>
       <div class="form-group">
         <label>Pays d'expédition</label>
@@ -585,6 +631,11 @@ header {
         <label>FdP total encaissé (€) — optionnel</label>
         <input type="number" id="grp-fdp-enc" step="0.01" placeholder="laisser vide = tarif pays" oninput="updateGroupedPreview()" />
       </div>
+      <div class="form-group">
+        <label>Transporteur</label>
+        <select id="grp-transporteur" class="transporteur-select"></select>
+      </div>
+      <div id="grp-client"></div>
       <div class="form-group">
         <label>Note (optionnel)</label>
         <input type="text" id="grp-note" placeholder="" />
@@ -635,6 +686,7 @@ header {
       <button class="filter-btn" onclick="setFilter('groupe', this)">Groupe</button>
       <button class="filter-btn" onclick="setFilter('grouped', this)">Groupée</button>
       <button class="filter-btn" onclick="setFilter('distro', this)">Distro</button>
+      <input type="search" id="filter-search" placeholder="Réf. ou nom…" oninput="setSearch()" class="filter-search" />
       <select id="filter-pays" onchange="setPaysFilter()" style="margin-left:auto;font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;background:#fff;border:none;border-left:1px solid var(--border);color:var(--muted);padding:9px 16px;cursor:pointer;">
         <option value="">Tous pays</option>
       </select>
@@ -655,12 +707,20 @@ header {
     <h2>PARAMETRES</h2>
 
     <div class="modal-section">Release</div>
-    <div class="form-group"><label>Nom release</label><input type="text" id="p-nom" /></div>
+    <div class="form-row-2">
+      <div class="form-group"><label>Référence</label><input type="text" id="p-nom" /></div>
+      <div class="form-group"><label>Format</label><select id="p-format" class="format-select"></select></div>
+    </div>
+    <div class="form-group"><label>Groupe</label><input type="text" id="p-groupe" /></div>
+    <div class="form-group"><label>Titre</label><input type="text" id="p-titre" /></div>
     <div class="form-group"><label>Stock initial</label><input type="number" id="p-stock" /></div>
 
     <div class="modal-section">Prix de vente</div>
     <div class="form-group"><label>Prix Bigcartel / Physique (€)</label><input type="number" id="p-prix" step="0.01" /></div>
-    <div class="form-group"><label>Prix groupe (€)</label><input type="number" id="p-prix-groupe" step="0.01" /></div>
+    <div class="form-row-2">
+      <div class="form-group"><label>Prix groupe (€)</label><input type="number" id="p-prix-groupe" step="0.01" /></div>
+      <div class="form-group"><label>Prix distro (€)</label><input type="number" id="p-prix-distro" step="0.01" /></div>
+    </div>
 
     <div class="modal-section">Finances</div>
     <div class="form-group"><label>Investissement total (€)</label><input type="number" id="p-invest" step="0.01" /></div>
@@ -675,6 +735,45 @@ header {
       <button class="btn-save" onclick="saveParams()">SAUVEGARDER</button>
       <button class="btn-cancel" onclick="closeModal()">ANNULER</button>
     </div>
+    <button class="btn-link-danger" id="btn-delete-release" onclick="deleteRelease()">Supprimer cette release (aucune vente enregistrée)</button>
+  </div>
+</div>
+
+<!-- MODAL NOUVELLE RELEASE -->
+<div class="modal-overlay" id="modal-new-release">
+  <div class="modal">
+    <h2>NOUVELLE RELEASE</h2>
+    <div class="form-row-2">
+      <div class="form-group"><label>Référence</label><input type="text" id="nr-nom" placeholder="BDC-017" /></div>
+      <div class="form-group"><label>Format</label><select id="nr-format" class="format-select"></select></div>
+    </div>
+    <div class="form-group"><label>Groupe</label><input type="text" id="nr-groupe" placeholder="ex: Purgatory" /></div>
+    <div class="form-group"><label>Titre</label><input type="text" id="nr-titre" placeholder="ex: titre de l'album" /></div>
+    <div class="form-row-2">
+      <div class="form-group"><label>Stock (ex.)</label><input type="number" id="nr-stock" placeholder="100" /></div>
+      <div class="form-group"><label>Investissement (€)</label><input type="number" id="nr-invest" step="0.01" placeholder="0" /></div>
+    </div>
+    <div class="form-row-3">
+      <div class="form-group"><label>Prix vente</label><input type="number" id="nr-prix" step="0.01" /></div>
+      <div class="form-group"><label>Prix groupe</label><input type="number" id="nr-prix-groupe" step="0.01" /></div>
+      <div class="form-group"><label>Prix distro</label><input type="number" id="nr-prix-distro" step="0.01" /></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-save" onclick="createRelease()">CRÉER</button>
+      <button class="btn-cancel" onclick="closeNewReleaseModal()">ANNULER</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FICHE CLIENT -->
+<div class="modal-overlay" id="modal-client">
+  <div class="modal">
+    <h2>FICHE COMMANDE</h2>
+    <div id="client-fiche"></div>
+    <div class="modal-btns">
+      <button class="btn-save" onclick="copyClientAddress()">COPIER L'ADRESSE</button>
+      <button class="btn-cancel" onclick="closeClientModal()">FERMER</button>
+    </div>
   </div>
 </div>
 
@@ -683,6 +782,7 @@ header {
   <div class="modal">
     <h2>EDITER LA COMMANDE</h2>
     <div id="edit-form-bc">
+      <div class="form-group"><label>Réf. commande</label><input type="text" id="edit-ref" /></div>
       <div class="form-group"><label>Quantité</label><input type="number" id="edit-num" min="1" /></div>
       <div class="form-group"><label>Pays</label><select id="edit-pays"></select></div>
       <div class="form-group"><label>Date</label><input type="date" id="edit-date" /></div>
@@ -694,8 +794,11 @@ header {
         </select>
       </div>
       <div class="form-group"><label>FdP encaissé (€) — vide = tarif pays</label><input type="number" id="edit-fdp-enc" step="0.01" /></div>
-      <div class="form-group"><label>FdP payé (€) — vide = tarif pays</label><input type="number" id="edit-fdp-pay" step="0.01" /></div>
+      <div class="form-group"><label>Transporteur</label><select id="edit-transporteur" class="transporteur-select"></select></div>
+      <div class="form-group"><label>FdP réellement payé (€) — vide = estimation</label><input type="number" id="edit-fdp-pay" step="0.01" /></div>
       <div class="form-group"><label>Note</label><input type="text" id="edit-note-bc" /></div>
+      <div class="modal-section">Coordonnées client</div>
+      <div id="edit-client"></div>
     </div>
     <div id="edit-form-ph" style="display:none">
       <div class="form-group"><label>Quantité</label><input type="number" id="edit-qty" min="1" /></div>
@@ -735,6 +838,48 @@ header {
       <button class="btn-save" onclick="saveEdit()">SAUVEGARDER</button>
       <button class="btn-cancel" onclick="closeEditModal()">ANNULER</button>
     </div>
+  </div>
+</div>
+
+<!-- PANNEAU MERCH -->
+<div class="view-panel" id="merch-panel">
+  <div class="merch-head">
+    <div class="form-group merch-lieu">
+      <label>Lieu / soirée</label>
+      <input type="text" id="merch-lieu" placeholder="ex: Le Chinois, Montreuil" oninput="saveMerchLieu()" />
+    </div>
+    <div class="merch-soiree" id="merch-soiree"></div>
+  </div>
+  <div class="merch-tools">
+    <button class="btn-clear" id="merch-price-toggle" onclick="toggleMerchPrices()">MODIFIER LES PRIX DU SOIR</button>
+    <button class="btn-clear" id="merch-undo" onclick="undoMerchSale()" disabled>ANNULER LA DERNIÈRE VENTE</button>
+  </div>
+  <div class="merch-grid" id="merch-grid"></div>
+  <div class="merch-cart" id="merch-cart">
+    <div class="merch-cart-info">
+      <div class="merch-cart-total" id="merch-cart-total">0,00 €</div>
+      <div class="merch-cart-detail" id="merch-cart-detail">Touche une release pour l'ajouter</div>
+    </div>
+    <div class="merch-cart-btns">
+      <button class="merch-pay" onclick="validateMerch('cash')">CASH</button>
+      <button class="merch-pay alt" onclick="validateMerch('paypal')">PAYPAL</button>
+      <button class="merch-clear" onclick="clearMerchCart()" title="Vider">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- PANNEAU STOCK -->
+<div class="view-panel" id="stock-panel">
+  <div class="fin-section">
+    <div class="fin-section-title stock-title">
+      <span>STOCK — TOUTES LES RELEASES</span>
+      <span class="stock-actions">
+        <button class="btn-clear" onclick="copyCatalogue()">COPIER POUR EMAIL</button>
+        <button class="btn-clear" onclick="exportCatalogue()">EXPORT CATALOGUE CSV</button>
+      </span>
+    </div>
+    <div class="fin-grid" id="stock-summary"></div>
+    <div id="stock-table" style="margin-top:16px"></div>
   </div>
 </div>
 
@@ -796,73 +941,130 @@ let TARIFS = JSON.parse(localStorage.getItem('bdc_tarifs') || 'null') || TARIFS_
 // Retourne le bon tarif fdpPay selon la quantité et le format de la release
 function getFdpPay(tarif, qty, format) {
   if (!tarif) return null;
-  const fmt = (format || params.format || 'LP').toUpperCase();
+  const fmt = (format || (params && params.format) || 'LP').toUpperCase();
   if (fmt === 'TAPE' || fmt === 'CD') return tarif.fdpPay250g || tarif.fdpPay500g;
+  if (fmt === '2LP') return tarif.fdpPay1kg;
   return qty >= 2 ? tarif.fdpPay1kg : tarif.fdpPay500g;
 }
 
+const FORMATS = ['LP', '2LP', 'CD', 'Tape', '7"', 'Autre'];
+const TRANSPORTEURS = ['Mondial Relay', 'La Poste', 'Main propre', 'Autre'];
+
 // ── RELEASES CONFIG ──────────────────────────────────────────────
+// Valeurs de départ uniquement. Ensuite tout se gère dans l'appli
+// (bouton "+ RELEASE" et PARAMETRES), synchronisé via Firebase.
 const RELEASES_DEF = {
-  bdc007: { nom: 'BDC-007', groupe: 'Soul Hater',         titre: 'Astral Malefactor',   stock: 50,  prix: 10, prixGroupe: 6,  invest: 251.00,  format: 'CD' },
-  bdc010: { nom: 'BDC-010', groupe: 'Moldy',              titre: 'Do Not Resuscitate',  stock: 220, prix: 20, prixGroupe: 16, invest: 2019.02, format: 'LP' },
-  bdc012: { nom: 'BDC-012', groupe: 'Corruption Pact',    titre: 'Unanswered Cries',    stock: 112, prix: 25, prixGroupe: 16, invest: 1694.38, format: 'LP' },
-  bdc013: { nom: 'BDC-013', groupe: 'Take it in Blood',   titre: 'Exit from Life',      stock: 211, prix: 25, prixGroupe: 16, invest: 1516.66, format: 'LP' },
-  bdc014: { nom: 'BDC-014', groupe: 'Loyal 2 None',         titre: 'Backstabbers',         stock: 50,  prix: 10, prixGroupe: 6,  invest: 254.00,  format: 'CD' },
-  bdc015: { nom: 'BDC-015', groupe: 'Hard to Handle',       titre: 'Get it over with',    stock: 50,  prix: 6,  prixGroupe: 4,  invest: 202.20,  format: 'Tape' },
-  bdc016: { nom: 'BDC-016', groupe: 'Mozdrill',               titre: 'Démo 2026',           stock: 50,  prix: 10, prixGroupe: 0,  invest: 0,       format: 'Tape' },
+  bdc007: { nom: 'BDC-007', groupe: 'Soul Hater',       titre: 'Astral Malefactor',  stock: 50,  prix: 10, prixGroupe: 6,  prixDistro: 6.5, invest: 251.00,  format: 'CD' },
+  bdc010: { nom: 'BDC-010', groupe: 'Moldy',            titre: 'Do Not Resuscitate', stock: 220, prix: 20, prixGroupe: 16, prixDistro: 15,  invest: 2019.02, format: 'LP' },
+  bdc012: { nom: 'BDC-012', groupe: 'Corruption Pact',  titre: 'Unanswered Cries',   stock: 112, prix: 25, prixGroupe: 16, prixDistro: 19,  invest: 1694.38, format: 'LP' },
+  bdc013: { nom: 'BDC-013', groupe: 'Take it in Blood', titre: 'Exit from Life',     stock: 211, prix: 25, prixGroupe: 16, prixDistro: 17,  invest: 1516.66, format: 'LP' },
+  bdc014: { nom: 'BDC-014', groupe: 'Loyal 2 None',     titre: 'Backstabbers',       stock: 50,  prix: 10, prixGroupe: 6,  prixDistro: null, invest: 254.00, format: 'CD' },
+  bdc015: { nom: 'BDC-015', groupe: 'Hard to Handle',   titre: 'Get it over with',   stock: 50,  prix: 6,  prixGroupe: 4,  prixDistro: 5,   invest: 202.20,  format: 'Tape' },
+  bdc016: { nom: 'BDC-016', groupe: 'Mozdrill',         titre: 'Démo 2026',          stock: 50,  prix: 10, prixGroupe: 0,  prixDistro: null, invest: 0,     format: 'Tape' },
 };
 
-// ── STATE ────────────────────────────────────────────────────────
-let currentRelease = localStorage.getItem('bdc_current_release') || 'bdc007';
-let allParams      = JSON.parse(localStorage.getItem('bdc_all_params')    || 'null') || JSON.parse(JSON.stringify(RELEASES_DEF));
-let allCommandes   = JSON.parse(localStorage.getItem('bdc_all_commandes') || 'null') || { bdc007: [], bdc010: [], bdc012: [], bdc013: [], bdc014: [], bdc015: [], bdc016: [] };
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function releaseNum(id) { return parseInt(String(id).replace(/\D/g, '')) || 0; }
 
-// Migrate old single-release data
+// Complète les params (releases manquantes, champs nouveaux) sans écraser l'existant
+function normalizeParams(ap) {
+  ap = ap && typeof ap === 'object' ? ap : {};
+  Object.entries(RELEASES_DEF).forEach(([id, def]) => {
+    if (!ap[id]) { ap[id] = clone(def); return; }
+    Object.keys(def).forEach(k => { if (ap[id][k] === undefined) ap[id][k] = def[k]; });
+  });
+  // Nettoyage : BDC-017 "Nouvel EP" créé par erreur et jamais utilisé
+  if (ap.bdc017 && ap.bdc017.titre === 'Nouvel EP' && !(allCommandesSafe().bdc017 || []).length) delete ap.bdc017;
+  return ap;
+}
+function allCommandesSafe() { return (typeof allCommandes !== 'undefined' && allCommandes) || {}; }
+function normalizeCommandes(ac) {
+  ac = ac && typeof ac === 'object' ? ac : {};
+  getReleaseIds(true).forEach(id => { if (!Array.isArray(ac[id])) ac[id] = []; });
+  return ac;
+}
+
+// Liste unique des releases (ordre BDC-xxx), hors releases supprimées
+function getReleaseIds(includeArchived) {
+  return Object.keys(allParams)
+    .filter(k => !k.startsWith('_') && allParams[k] && typeof allParams[k] === 'object' && (includeArchived || !allParams[k].archived))
+    .sort((a, b) => releaseNum(a) - releaseNum(b));
+}
+function relLabel(id) {
+  const p = allParams[id] || {};
+  return (p.nom || id.toUpperCase()) + ' — ' + (p.groupe || '') + (p.format ? ' (' + p.format + ')' : '');
+}
+
+// ── STATE ────────────────────────────────────────────────────────
+let allCommandes   = JSON.parse(localStorage.getItem('bdc_all_commandes') || 'null') || {};
+let allParams      = normalizeParams(JSON.parse(localStorage.getItem('bdc_all_params') || 'null') || clone(RELEASES_DEF));
+allCommandes       = normalizeCommandes(allCommandes);
+let currentRelease = localStorage.getItem('bdc_current_release') || 'bdc007';
+if (!getReleaseIds().includes(currentRelease)) currentRelease = getReleaseIds()[0];
+let currentView    = 'release'; // release | merch | stock | finances
+
+// Migration ancienne version mono-release
 if (localStorage.getItem('bdc_commandes')) {
   allCommandes['bdc010'] = JSON.parse(localStorage.getItem('bdc_commandes') || '[]');
   localStorage.removeItem('bdc_commandes');
-  saveAll();
 }
 
-let params    = allParams[currentRelease]    || JSON.parse(JSON.stringify(RELEASES_DEF[currentRelease]));
-let commandes = allCommandes[currentRelease] || [];
+let params    = allParams[currentRelease];
+let commandes = allCommandes[currentRelease];
 
-let currentType = 'bigcartel';
-let filterMode  = 'all';
-let filterPays  = '';
+let currentType  = 'bigcartel';
+let filterMode   = 'all';
+let filterPays   = '';
 let filterStatut = '';
-let fxRates     = {}; // cache taux de change
+let filterSearch = '';
+let fxRates      = {}; // cache taux de change
 
-// BDC-010 pré-chargé si vide
-if (allCommandes['bdc010'].length === 0) {
-  let id = 1000;
-  // BIGCARTEL (14 commandes)
-  for (let i=1;i<=10;i++) allCommandes['bdc010'].push({ id:id++, type:'bigcartel', num:String(i), pays:'France',   statut:'envoye',     date:'2026-01-15' });
-  allCommandes['bdc010'].push({ id:id++, type:'bigcartel', qty:1, pays:'Belgique', statut:'envoye',     date:'2026-01-20' });
-  allCommandes['bdc010'].push({ id:id++, type:'bigcartel', qty:1, pays:'Belgique', statut:'envoye',     date:'2026-01-22' });
-  allCommandes['bdc010'].push({ id:id++, type:'bigcartel', qty:1, pays:'Belgique', statut:'en_attente', date:'2026-03-20' });
-  allCommandes['bdc010'].push({ id:id++, type:'bigcartel', qty:1, pays:'Espagne',  statut:'en_attente', date:'2026-03-21' });
-  // PHYSIQUE (15 ventes)
-  for (let i=0;i<10;i++) allCommandes['bdc010'].push({ id:id++, type:'physique', qty:1, lieu:'Concert',         paiement:'cash', date:'2026-01-10' });
-  allCommandes['bdc010'].push({ id:id++, type:'physique', qty:1, lieu:'Le Sample',       paiement:'cash', date:'2026-03-28' });
-  allCommandes['bdc010'].push({ id:id++, type:'physique', qty:2, lieu:'Concert Deviant',  paiement:'cash', date:'2026-03-27' });
-  allCommandes['bdc010'].push({ id:id++, type:'physique', qty:1, lieu:'Show Arkangel',    paiement:'cash', date:'2026-04-17' });
-  allCommandes['bdc010'].push({ id:id++, type:'physique', qty:1, lieu:'Show Arkangel',    paiement:'cash', date:'2026-04-20' });
-  // DISTRO (11 copies)
-  allCommandes['bdc010'].push({ id:id++, type:'distro', qty:3, nom:'AWAM',              devise:'EUR', prixUnit:14, tauxEUR:1, date:'2026-03-25' });
-  allCommandes['bdc010'].push({ id:id++, type:'distro', qty:8, nom:'Guillotine Records', devise:'EUR', prixUnit:14, tauxEUR:1, date:'2026-05-05' });
-  // BDC-013 preorders depuis CSV Bigcartel
-  if (allCommandes['bdc013'].length === 0) {
-    allCommandes['bdc013'] = [{"id": 2000, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "", "date": "2026-06-03"}, {"id": 2001, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "Salut !! Pourriez vous s'il vous plait séparer le vinyle de la pochette pour éviter les seams splits durant le trajet ? Mille mercis - Alex", "date": "2026-05-31"}, {"id": 2002, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "", "date": "2026-05-30"}, {"id": 2003, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "Hello, is it possible to get a UK pressing? Red vinyl?", "date": "2026-05-30"}, {"id": 2004, "type": "bigcartel", "qty": 1, "pays": "Allemagne", "statut": "preorder", "fdpEncOverride": 14.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2005, "type": "bigcartel", "qty": 2, "pays": "Finlande", "statut": "preorder", "fdpEncOverride": 27.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2006, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2007, "type": "bigcartel", "qty": 1, "pays": "Pays-Bas", "statut": "preorder", "fdpEncOverride": 6.0, "fdpPayOverride": null, "note": "Please use: Shirley's Axel, Gentsevaartstraat 45, 4571 GA Axel as Mondial Relay Point. Thank you in advance, kind regards Joost", "date": "2026-05-29"}, {"id": 2008, "type": "bigcartel", "qty": 1, "pays": "Suède", "statut": "preorder", "fdpEncOverride": 17.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2009, "type": "bigcartel", "qty": 1, "pays": "Finlande", "statut": "preorder", "fdpEncOverride": 17.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2010, "type": "bigcartel", "qty": 2, "pays": "Allemagne", "statut": "preorder", "fdpEncOverride": 24.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2011, "type": "bigcartel", "qty": 1, "pays": "Suède", "statut": "preorder", "fdpEncOverride": 17.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2012, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}];
-  }
-
-  commandes = allCommandes[currentRelease];
-  saveAll();
+// ── CALCULS PARTAGÉS (onglet release, stock, finances) ──────────────
+function isGroupedCmd(c) { return !!(c.note && c.note.includes('[commande groupée')); }
+function fdpPayInfo(c, p) {
+  const t = TARIFS.find(t => t.pays === c.pays);
+  const reel = c.fdpPayReel !== undefined ? !!c.fdpPayReel : (c.fdpPayOverride != null && !isGroupedCmd(c));
+  let val;
+  if (c.fdpPayOverride != null) val = c.fdpPayOverride;
+  else if (c.transporteur === 'Main propre') val = 0;
+  else val = getFdpPay(t, c.qty || 1, p.format);
+  return { val, reel };
 }
+function fdpEncOf(c) {
+  const t = TARIFS.find(t => t.pays === c.pays);
+  return c.fdpEncOverride != null ? c.fdpEncOverride : (t ? t.fdpEnc : null);
+}
+function prixPhysique(c, p) { return c.prixUnit != null ? c.prixUnit : (p.prix || 0); }
 
-// BDC-013 preorders depuis CSV Bigcartel
-if (allCommandes['bdc013'].length === 0) {
-  allCommandes['bdc013'] = [{"id": 2000, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "", "date": "2026-06-03"}, {"id": 2001, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "Salut !! Pourriez vous s'il vous plait séparer le vinyle de la pochette pour éviter les seams splits durant le trajet ? Mille mercis - Alex", "date": "2026-05-31"}, {"id": 2002, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "", "date": "2026-05-30"}, {"id": 2003, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "Hello, is it possible to get a UK pressing? Red vinyl?", "date": "2026-05-30"}, {"id": 2004, "type": "bigcartel", "qty": 1, "pays": "Allemagne", "statut": "preorder", "fdpEncOverride": 14.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2005, "type": "bigcartel", "qty": 2, "pays": "Finlande", "statut": "preorder", "fdpEncOverride": 27.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2006, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2007, "type": "bigcartel", "qty": 1, "pays": "Pays-Bas", "statut": "preorder", "fdpEncOverride": 6.0, "fdpPayOverride": null, "note": "Please use: Shirley's Axel, Gentsevaartstraat 45, 4571 GA Axel as Mondial Relay Point. Thank you in advance, kind regards Joost", "date": "2026-05-29"}, {"id": 2008, "type": "bigcartel", "qty": 1, "pays": "Suède", "statut": "preorder", "fdpEncOverride": 17.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2009, "type": "bigcartel", "qty": 1, "pays": "Finlande", "statut": "preorder", "fdpEncOverride": 17.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2010, "type": "bigcartel", "qty": 2, "pays": "Allemagne", "statut": "preorder", "fdpEncOverride": 24.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2011, "type": "bigcartel", "qty": 1, "pays": "Suède", "statut": "preorder", "fdpEncOverride": 17.0, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}, {"id": 2012, "type": "bigcartel", "qty": 1, "pays": "France", "statut": "preorder", "fdpEncOverride": 5.5, "fdpPayOverride": null, "note": "", "date": "2026-05-29"}];
+function computeReleaseStats(rid) {
+  const p   = allParams[rid] || {};
+  const cms = allCommandes[rid] || [];
+  const sumQty = arr => arr.reduce((s, c) => s + (c.qty || 1), 0);
+  const bc = cms.filter(c => c.type === 'bigcartel'), ph = cms.filter(c => c.type === 'physique');
+  const distro = cms.filter(c => c.type === 'distro'), groupe = cms.filter(c => c.type === 'groupe');
+  let recBC = 0, recBCHorsFdp = 0, fdpPay = 0, fdpEstime = 0;
+  bc.forEach(c => {
+    const enc = fdpEncOf(c) || 0;
+    const { val, reel } = fdpPayInfo(c, p);
+    recBC += (p.prix || 0) * (c.qty || 1) + enc;
+    recBCHorsFdp += (p.prix || 0) * (c.qty || 1);
+    if (val) { fdpPay += val; if (!reel) fdpEstime += val; }
+  });
+  const recPH     = ph.reduce((s, c) => s + (c.qty || 1) * prixPhysique(c, p), 0);
+  const recDistro = distro.reduce((s, c) => s + (c.qty || 1) * (c.prixUnit || 0) * (c.tauxEUR || 1), 0);
+  const recGroupe = groupe.reduce((s, c) => s + (c.qty || 1) * (c.prixUnit || 0), 0);
+  const nbBC = sumQty(bc), nbPH = sumQty(ph), nbDistro = sumQty(distro), nbGroupe = sumQty(groupe);
+  const total = nbBC + nbPH + nbDistro + nbGroupe;
+  const recTotal = recBC + recPH + recDistro + recGroupe;
+  const invest = p.invest || 0;
+  return {
+    p, nbBC, nbPH, nbDistro, nbGroupe, total,
+    stockInit: p.stock || 0, stock: (p.stock || 0) - total,
+    recBC, recBCHorsFdp, recPH, recDistro, recGroupe, recTotal,
+    fdpPay, fdpEstime, invest,
+    balance: recTotal - fdpPay - invest,
+    pct: invest > 0 ? Math.min(100, Math.max(0, Math.round((recTotal / invest) * 100))) : 0,
+  };
 }
 
 // ── TAUX DE CHANGE ───────────────────────────────────────────────
@@ -889,17 +1091,23 @@ function fmtDevise(amount, devise) {
 
 // ── INIT ─────────────────────────────────────────────────────────
 async function init() {
-  await fetchFXRates();
-
-  // Dropdown pays saisie
-  const sel = document.getElementById('input-pays');
-  TARIFS.forEach(t => {
-    const o = document.createElement('option');
-    o.value = t.pays; o.textContent = t.pays;
-    sel.appendChild(o);
+  // Listes déroulantes
+  fillPaysSelect('input-pays', true);
+  fillPaysSelect('grp-pays', true);
+  fillPaysSelect('edit-pays', false);
+  document.querySelectorAll('.transporteur-select').forEach(sel => {
+    sel.innerHTML = TRANSPORTEURS.map(t => `<option value="${t}">${t}</option>`).join('');
   });
+  document.querySelectorAll('.format-select').forEach(sel => {
+    sel.innerHTML = FORMATS.map(f => `<option value="${f}">${f}</option>`).join('');
+  });
+  document.getElementById('bc-client').innerHTML   = clientFieldsHTML('in', true);
+  document.getElementById('grp-client').innerHTML  = clientFieldsHTML('grp', true);
+  document.getElementById('edit-client').innerHTML = clientFieldsHTML('ed', false);
 
-  document.getElementById('input-pays').addEventListener('change', updatePreview);
+  document.getElementById('input-pays').addEventListener('change', () => { syncTransporteur('input-pays', 'input-transporteur'); updatePreview(); });
+  document.getElementById('grp-pays').addEventListener('change', () => syncTransporteur('grp-pays', 'grp-transporteur'));
+  document.getElementById('input-transporteur').addEventListener('change', updatePreview);
   document.getElementById('input-num').addEventListener('input', updatePreview);
   document.getElementById('input-fdp-enc').addEventListener('input', updatePreview);
   document.getElementById('input-fdp-pay').addEventListener('input', updatePreview);
@@ -910,20 +1118,135 @@ async function init() {
   document.getElementById('input-groupe-qty').addEventListener('input', updatePreview);
   document.getElementById('input-groupe-prix').addEventListener('input', updatePreview);
 
-  // Activer le bon onglet release
-  document.querySelectorAll('.release-tab').forEach(btn => {
-    if (btn.getAttribute('onclick').includes(currentRelease)) btn.classList.add('active');
-    else btn.classList.remove('active');
-  });
+  try { document.getElementById('merch-lieu').value = localStorage.getItem('bdc_merch_lieu') || ''; } catch(e) {}
 
-  const rn = document.getElementById('release-name'); if(rn) rn.textContent = params.nom;
+  renderReleaseNav();
+  renderGroupedRows();
+  updateStats();
+  renderHistory();
+  updatePreview();
+  fetchFXRates().then(updatePreview);
+}
+
+function fillPaysSelect(id, withPlaceholder) {
+  const sel = document.getElementById(id);
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = (withPlaceholder ? '<option value="">— Choisir —</option>' : '') +
+    TARIFS.map(t => `<option value="${esc(t.pays)}">${esc(t.pays)}</option>`).join('');
+  sel.value = cur;
+}
+
+// Mondial Relay par défaut, sauf pays où il ne livre pas (tarif "La Poste")
+function syncTransporteur(paysId, transId) {
+  const t = TARIFS.find(t => t.pays === document.getElementById(paysId).value);
+  const sel = document.getElementById(transId);
+  if (sel && sel.value !== 'Main propre' && sel.value !== 'Autre') sel.value = (t && t.transporteur === 'La Poste') ? 'La Poste' : 'Mondial Relay';
+}
+
+// ── COORDONNÉES CLIENT ───────────────────────────────────────────
+const CLIENT_FIELDS = [
+  ['prenom', 'Prénom'], ['nom', 'Nom'], ['email', 'Email'], ['tel', 'Téléphone'],
+  ['adr1', 'Adresse'], ['adr2', 'Complément'], ['cp', 'Code postal'], ['ville', 'Ville'],
+];
+function clientFieldsHTML(prefix, collapsible) {
+  const f = (k, label, type) => `<div class="form-group"><label>${label}</label><input type="${type||'text'}" id="${prefix}-cli-${k}" autocomplete="off" /></div>`;
+  const inner = `
+    <div class="form-row-2">${f('prenom','Prénom')}${f('nom','Nom')}</div>
+    <div class="form-row-2">${f('email','Email','email')}${f('tel','Téléphone','tel')}</div>
+    ${f('adr1','Adresse / point relais')}
+    ${f('adr2','Complément')}
+    <div class="form-row-2">${f('cp','Code postal')}${f('ville','Ville')}</div>`;
+  return collapsible ? `<details class="more-fields"><summary>Coordonnées client</summary>${inner}</details>` : inner;
+}
+function readClient(prefix) {
+  const c = {};
+  CLIENT_FIELDS.forEach(([k]) => { const el = document.getElementById(prefix + '-cli-' + k); if (el && el.value.trim()) c[k] = el.value.trim(); });
+  return Object.keys(c).length ? c : null;
+}
+function fillClient(prefix, c) {
+  CLIENT_FIELDS.forEach(([k]) => { const el = document.getElementById(prefix + '-cli-' + k); if (el) el.value = (c && c[k]) || ''; });
+}
+function clearClient(prefix) {
+  fillClient(prefix, null);
+  const el = document.getElementById(prefix + '-cli-prenom');
+  const d = el && el.closest('details'); if (d) d.open = false;
+}
+function clientName(c) { return c ? [c.prenom, c.nom].filter(Boolean).join(' ') : ''; }
+
+// Cherche une référence de commande dans toutes les releases
+function findRef(ref) {
+  const r = (ref || '').trim().toLowerCase();
+  if (!r) return [];
+  const hits = [];
+  getReleaseIds(true).forEach(id => (allCommandes[id] || []).forEach(c => {
+    if (c.ref && c.ref.trim().toLowerCase() === r) hits.push(allParams[id].nom || id);
+  }));
+  return [...new Set(hits)];
+}
+
+function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+// ── NAVIGATION ───────────────────────────────────────────────────
+function renderReleaseNav() {
+  const nav = document.getElementById('release-nav');
+  const tabs = getReleaseIds().map(id => {
+    const p = allParams[id];
+    const active = currentView === 'release' && id === currentRelease ? ' active' : '';
+    return `<button class="release-tab${active}" onclick="switchRelease('${id}')">${esc(p.nom || id)}<span class="tab-sub">${esc(p.groupe || '')}${p.titre ? ' — ' + esc(p.titre) : ''}</span></button>`;
+  }).join('');
+  const tool = (view, label, sub) =>
+    `<button class="release-tab tool${currentView === view ? ' active' : ''}" onclick="switchView('${view}')">${label}<span class="tab-sub">${sub}</span></button>`;
+  nav.innerHTML = tabs + '<span class="nav-sep"></span>' +
+    tool('merch', 'MERCH', 'Table de concert') +
+    tool('stock', 'STOCK', 'Toutes releases') +
+    tool('finances', 'FINANCES', 'Vue globale label');
+  const act = nav.querySelector('.release-tab.active');
+  if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+function switchView(view) {
+  currentView = view;
+  const isRelease = view === 'release';
+  document.querySelector('.stats-bar').style.display = isRelease ? '' : 'none';
+  document.querySelector('.main').style.display      = isRelease ? '' : 'none';
+  document.getElementById('btn-params').style.visibility = isRelease ? '' : 'hidden';
+  document.getElementById('finances-panel').classList.toggle('active', view === 'finances');
+  document.getElementById('merch-panel').classList.toggle('active', view === 'merch');
+  document.getElementById('stock-panel').classList.toggle('active', view === 'stock');
+  if (view !== 'merch') document.getElementById('merch-cart').classList.remove('show');
+  renderReleaseNav();
+  if (view === 'finances') renderFinances();
+  if (view === 'merch')    renderMerch();
+  if (view === 'stock')    renderStock();
+}
+function switchToFinances() { switchView('finances'); }
+
+function switchRelease(releaseId) {
+  currentRelease = releaseId;
+  try { localStorage.setItem('bdc_current_release', releaseId); } catch(e) {}
+  params    = allParams[releaseId];
+  commandes = allCommandes[releaseId] = allCommandes[releaseId] || [];
+  filterMode = 'all'; filterPays = ''; filterStatut = ''; filterSearch = '';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  const fs = document.getElementById('filter-statut'); if (fs) fs.value = '';
+  const fq = document.getElementById('filter-search'); if (fq) fq.value = '';
+  switchView('release');
   updateStats();
   renderHistory();
   updatePreview();
 }
 
-// ── SWITCH RELEASE ───────────────────────────────────────────────
-// [switchRelease moved to FINANCES section]
+// Re-render de la vue courante après une synchro
+function refreshCurrentView() {
+  renderReleaseNav();
+  renderGroupedRows();
+  if (currentView === 'release') { updateStats(); renderHistory(); updatePreview(); }
+  if (currentView === 'finances') renderFinances();
+  if (currentView === 'merch')    renderMerch();
+  if (currentView === 'stock')    renderStock();
+}
 
 // ── TYPE SWITCH ──────────────────────────────────────────────────
 function setType(type) {
@@ -938,32 +1261,38 @@ function setType(type) {
   document.getElementById('row-fdp-enc').style.display = (type==='bigcartel'||type==='grouped') ? 'flex' : 'none';
   document.getElementById('row-fdp-pay').style.display = (type==='bigcartel'||type==='grouped') ? 'flex' : 'none';
   document.getElementById('row-taux').style.display    = type==='distro' ? 'flex' : 'none';
-  document.getElementById('prev-total-label').textContent = type==='bigcartel' ? 'Marge nette' : 'Recette';
-  if (type === 'grouped') {
-    // Remplir dropdown pays groupée
-    const sg = document.getElementById('grp-pays');
-    if (sg.options.length <= 1) {
-      TARIFS.forEach(t => { const o = document.createElement('option'); o.value=t.pays; o.textContent=t.pays; sg.appendChild(o); });
-    }
-  }
+  document.getElementById('prev-total-label').textContent = (type==='bigcartel'||type==='grouped') ? 'Marge nette' : 'Recette';
   updatePreview();
 }
 
-// ── APERCU ───────────────────────────────────────────────────────
-// État des releases sélectionnées pour commande groupée
+// ── COMMANDE GROUPÉE ─────────────────────────────────────────────
 const groupedSelected = new Set();
 
+function renderGroupedRows() {
+  const box = document.getElementById('grouped-releases');
+  if (!box) return;
+  const ids = getReleaseIds();
+  [...groupedSelected].forEach(id => { if (!ids.includes(id)) groupedSelected.delete(id); });
+  const prevQty = {};
+  ids.forEach(id => { const q = document.getElementById('grp-qty-' + id); if (q) prevQty[id] = q.value; });
+  box.innerHTML = ids.map(id => `
+    <div class="grp-row" id="grp-row-${id}" onclick="toggleGrouped('${id}')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:2px solid var(--border);cursor:pointer;user-select:none;transition:all 0.15s;">
+      <div id="grp-check-${id}" style="width:22px;height:22px;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;"></div>
+      <span id="grp-label-${id}" style="font-size:12px;font-weight:600;flex:1;">${esc(relLabel(id))}</span>
+      <input type="number" id="grp-qty-${id}" min="1" value="${prevQty[id] || 1}" style="display:none;width:55px;background:#fff;border:1px solid #ccc;padding:4px 6px;font-family:var(--font-mono);font-size:12px;" oninput="updateGroupedPreview()" onclick="event.stopPropagation()" />
+      <span id="grp-qty-label-${id}" style="display:none;font-size:10px;color:var(--muted)">ex.</span>
+    </div>`).join('');
+  updateGroupedPreview();
+}
+
 function toggleGrouped(id) {
-  if (groupedSelected.has(id)) {
-    groupedSelected.delete(id);
-  } else {
-    groupedSelected.add(id);
-  }
+  if (groupedSelected.has(id)) groupedSelected.delete(id);
+  else groupedSelected.add(id);
   updateGroupedPreview();
 }
 
 function updateGroupedPreview() {
-  ['bdc007','bdc010','bdc012','bdc013','bdc014','bdc015','bdc016'].forEach(id => {
+  getReleaseIds().forEach(id => {
     const selected = groupedSelected.has(id);
     const row   = document.getElementById('grp-row-'+id);
     const check = document.getElementById('grp-check-'+id);
@@ -981,6 +1310,21 @@ function updateGroupedPreview() {
   if (currentType === 'grouped') updatePreview();
 }
 
+// Tarif d'envoi d'un colis groupé : basé sur les vinyles qu'il contient
+function groupedFdpPay(tarif, ids) {
+  if (!tarif) return null;
+  let lp = 0, has2lp = false;
+  ids.forEach(id => {
+    const f = (allParams[id]?.format || 'LP').toUpperCase();
+    const q = parseInt(document.getElementById('grp-qty-' + id)?.value) || 1;
+    if (f === '2LP') has2lp = true;
+    else if (f !== 'CD' && f !== 'TAPE') lp += q;
+  });
+  if (has2lp) return getFdpPay(tarif, 1, '2LP');
+  if (lp > 0) return getFdpPay(tarif, lp, 'LP');
+  return getFdpPay(tarif, 1, 'CD');
+}
+
 function updatePreview() {
   const prix = params.prix || 20;
   if (currentType === 'bigcartel') {
@@ -990,7 +1334,8 @@ function updatePreview() {
     const fdpEncOverride = parseFloat(document.getElementById('input-fdp-enc').value);
     const fdpPayOverride = parseFloat(document.getElementById('input-fdp-pay').value);
     const fdpEnc = !isNaN(fdpEncOverride) ? fdpEncOverride : (tarif ? tarif.fdpEnc : null);
-    const fdpPay = !isNaN(fdpPayOverride) ? fdpPayOverride : getFdpPay(tarif, qty);
+    const transp = document.getElementById('input-transporteur').value;
+    const fdpPay = !isNaN(fdpPayOverride) ? fdpPayOverride : (transp === 'Main propre' ? 0 : getFdpPay(tarif, qty));
     document.getElementById('prev-vinyl').textContent = fmt(prix * qty);
     if (tarif || !isNaN(fdpEncOverride)) {
       document.getElementById('prev-fdp-enc').textContent = fdpEnc !== null ? fmt(fdpEnc) : '—';
@@ -1023,7 +1368,7 @@ function updatePreview() {
     const totalQty   = checked.reduce((s,id) => s + (parseInt(document.getElementById('grp-qty-'+id)?.value)||1), 0);
     const fdpEncIn   = parseFloat(document.getElementById('grp-fdp-enc').value);
     const fdpEnc     = !isNaN(fdpEncIn) ? fdpEncIn : (tarif ? tarif.fdpEnc : null);
-    const fdpPay     = getFdpPay(tarif, totalQty);
+    const fdpPay     = groupedFdpPay(tarif, checked);
     const totalVinyl = checked.reduce((s,id) => {
       const qty = parseInt(document.getElementById('grp-qty-'+id)?.value)||1;
       return s + qty * (allParams[id]?.prix || 0);
@@ -1062,22 +1407,33 @@ function addCommande() {
   const today = new Date().toISOString().split('T')[0];
 
   if (currentType === 'bigcartel') {
+    const ref    = document.getElementById('input-ref').value.trim();
     const qty    = parseInt(document.getElementById('input-num').value) || 1;
     const pays   = document.getElementById('input-pays').value;
     const statut = document.getElementById('input-statut').value;
+    const transporteur = document.getElementById('input-transporteur').value;
     const note   = document.getElementById('input-note-bc').value.trim();
     if (!pays) { shake('input-pays'); return; }
+    const dejaVu = findRef(ref);
+    if (dejaVu.length && !confirm('La commande ' + ref + ' est déjà enregistrée (' + dejaVu.join(', ') + ').\nL\'ajouter quand même ?')) return;
     const fdpEncIn = parseFloat(document.getElementById('input-fdp-enc').value);
     const fdpPayIn = parseFloat(document.getElementById('input-fdp-pay').value);
-    commandes.push({ id: Date.now(), type:'bigcartel', qty, pays, statut, note,
+    const client = readClient('in');
+    const cmd = { id: Date.now(), type:'bigcartel', ref, qty, pays, statut, transporteur, note,
       fdpEncOverride: !isNaN(fdpEncIn) ? fdpEncIn : null,
       fdpPayOverride: !isNaN(fdpPayIn) ? fdpPayIn : null,
-      date: today });
+      fdpPayReel: !isNaN(fdpPayIn),
+      date: today };
+    if (client) cmd.client = client;
+    commandes.push(cmd);
+    document.getElementById('input-ref').value     = '';
     document.getElementById('input-num').value     = 1;
     document.getElementById('input-pays').value    = '';
+    document.getElementById('input-transporteur').value = 'Mondial Relay';
     document.getElementById('input-fdp-enc').value = '';
     document.getElementById('input-fdp-pay').value = '';
     document.getElementById('input-note-bc').value = '';
+    clearClient('in');
 
   } else if (currentType === 'physique') {
     const qty      = parseInt(document.getElementById('input-qty').value) || 1;
@@ -1101,17 +1457,21 @@ function addCommande() {
     document.getElementById('input-note-groupe').value = '';
 
   } else if (currentType === 'grouped') {
+    const ref     = document.getElementById('grp-ref').value.trim();
     const pays    = document.getElementById('grp-pays').value;
     const note    = document.getElementById('grp-note').value.trim();
+    const transporteur = document.getElementById('grp-transporteur').value;
+    const client  = readClient('grp');
     const tarif   = TARIFS.find(t => t.pays === pays);
     const checked = [...groupedSelected];
     if (checked.length < 2) { alert('Sélectionne au moins 2 releases.'); return; }
     if (!pays) { shake('grp-pays'); return; }
+    const dejaVu = findRef(ref);
+    if (dejaVu.length && !confirm('La commande ' + ref + ' est déjà enregistrée (' + dejaVu.join(', ') + ').\nL\'ajouter quand même ?')) return;
 
-    const totalQty    = checked.reduce((s,id) => s + (parseInt(document.getElementById('grp-qty-'+id)?.value)||1), 0);
     const fdpEncIn    = parseFloat(document.getElementById('grp-fdp-enc').value);
     const fdpEncTotal = !isNaN(fdpEncIn) ? fdpEncIn : (tarif ? tarif.fdpEnc : 0);
-    const fdpPayTotal = getFdpPay(tarif, totalQty) || 0;
+    const fdpPayTotal = transporteur === 'Main propre' ? 0 : (groupedFdpPay(tarif, checked) || 0);
     const nReleases   = checked.length;
     const fdpEncPart  = Math.round((fdpEncTotal / nReleases) * 100) / 100;
     const fdpPayPart  = Math.round((fdpPayTotal / nReleases) * 100) / 100;
@@ -1120,16 +1480,19 @@ function addCommande() {
     checked.forEach((releaseId, i) => {
       const qty = parseInt(document.getElementById('grp-qty-'+releaseId)?.value) || 1;
       allCommandes[releaseId] = allCommandes[releaseId] || [];
-      allCommandes[releaseId].push({
+      const entry = {
         id: Date.now() + i + 1,
         type: 'bigcartel',
-        qty, pays,
+        ref, qty, pays, transporteur,
         statut: 'preorder',
         fdpEncOverride: fdpEncPart,
         fdpPayOverride: fdpPayPart,
+        fdpPayReel: false,
         note: (note ? note + ' ' : '') + '[commande groupée ' + groupRef + ']',
         date: today,
-      });
+      };
+      if (client) entry.client = client;
+      allCommandes[releaseId].push(entry);
     });
 
     // Sync commandes si la release courante est dans la commande groupée
@@ -1138,11 +1501,14 @@ function addCommande() {
     // Reset form
     groupedSelected.clear();
     updateGroupedPreview();
-    ['bdc007','bdc010','bdc012','bdc013','bdc014','bdc015','bdc016'].forEach(id => {
+    getReleaseIds().forEach(id => {
       const qty = document.getElementById('grp-qty-'+id);
       if (qty) qty.value = 1;
     });
+    document.getElementById('grp-ref').value     = '';
     document.getElementById('grp-pays').value    = '';
+    document.getElementById('grp-transporteur').value = 'Mondial Relay';
+    clearClient('grp');
     document.getElementById('grp-fdp-enc').value = '';
     document.getElementById('grp-note').value    = '';
 
@@ -1205,74 +1571,48 @@ function toggleStatut(id) {
 
 // ── STATS ────────────────────────────────────────────────────────
 function updateStats() {
-  const bc     = commandes.filter(c => c.type === 'bigcartel');
-  const ph     = commandes.filter(c => c.type === 'physique');
-  const distro = commandes.filter(c => c.type === 'distro');
-
-  const groupe   = commandes.filter(c => c.type === 'groupe');
-  const nbBC     = bc.reduce((s,c) => s + (c.qty||1), 0);
-  const nbPH     = ph.reduce((s,c) => s + (c.qty||1), 0);
-  const nbDistro = distro.reduce((s,c) => s + (c.qty||1), 0);
-  const nbGroupe = groupe.reduce((s,c) => s + (c.qty||1), 0);
-  const total    = nbBC + nbPH + nbDistro + nbGroupe;
-  const stock    = (params.stock||0) - total;
-
-  let recettesBC = 0, fdpPayes = 0;
-  bc.forEach(c => {
-    const t      = TARIFS.find(t => t.pays === c.pays);
-    const qty    = c.qty || 1;
-    const fdpEnc = c.fdpEncOverride !== null && c.fdpEncOverride !== undefined ? c.fdpEncOverride : (t ? t.fdpEnc : 0);
-    const fdpPay = c.fdpPayOverride !== null && c.fdpPayOverride !== undefined ? c.fdpPayOverride : getFdpPay(t, c.qty||1);
-    recettesBC += (params.prix||0) * qty + fdpEnc;
-    if (fdpPay) fdpPayes += fdpPay;
-  });
-  const recettesPH     = ph.reduce((s,c) => s + (c.qty||1)*(params.prix||0), 0);
-  const recettesDistro = distro.reduce((s,c) => s + (c.qty||1)*(c.prixUnit||0)*(c.tauxEUR||1), 0);
-  const recettesGroupe = groupe.reduce((s,c) => s + (c.qty||1)*(c.prixUnit||0), 0);
-  const totalRec       = recettesBC + recettesPH + recettesDistro + recettesGroupe;
-  const balance        = totalRec - fdpPayes - (params.invest||0);
+  allCommandes[currentRelease] = commandes;
+  const st = computeReleaseStats(currentRelease);
+  const { nbBC, nbPH, nbDistro, nbGroupe, total, stock, recTotal, balance } = st;
 
   document.getElementById('stat-stock').textContent     = stock;
   document.getElementById('stat-stock-sub').textContent = `sur ${params.stock||0} initial`;
   document.getElementById('stat-ventes').textContent    = total;
   document.getElementById('stat-ventes-sub').textContent= `${nbBC} BC · ${nbPH} physique · ${nbGroupe} groupe · ${nbDistro} distro`;
-  document.getElementById('stat-recettes').textContent  = fmt(totalRec);
+  document.getElementById('stat-recettes').textContent  = fmt(recTotal);
 
   const balEl = document.getElementById('stat-balance');
   balEl.textContent = fmt(balance);
   balEl.className   = 'stat-value ' + (balance >= 0 ? 'green' : 'red');
   document.getElementById('stat-balance-sub').textContent =
-    balance >= 0 ? 'benefice' : `manque ${fmt(Math.abs(balance))}`;
+    (balance >= 0 ? 'benefice' : `manque ${fmt(Math.abs(balance))}`) +
+    (st.fdpEstime > 0 ? ` · dont ${fmt(st.fdpEstime)} de FdP estimés` : '');
 
   // Barre de progression vers l'équilibre
-  const invest = params.invest || 1;
-  const pct = Math.min(100, Math.max(0, Math.round((totalRec / invest) * 100)));
   const bar = document.getElementById('stat-progress-bar');
   const barLabel = document.getElementById('stat-progress-label');
   if (bar) {
-    bar.style.width = pct + '%';
-    bar.className = 'progress-bar-fill' + (pct >= 100 ? ' green' : '');
+    bar.style.width = st.pct + '%';
+    bar.className = 'progress-bar-fill' + (st.pct >= 100 ? ' green' : '');
   }
-  if (barLabel) barLabel.textContent = pct + '% de l\'investissement récupéré';
+  if (barLabel) barLabel.textContent = st.pct + '% de l\'investissement récupéré';
 
   // Point d'équilibre
   const equilibreEl = document.getElementById('stat-equilibre');
   if (equilibreEl) {
     const invest    = params.invest || 0;
     const prixVente = params.prix   || 0;
-    // Recettes déjà acquises hors FdP
-    const recettesHorsFdp = recettesPH + recettesDistro + recettesGroupe +
-      bc.reduce((s, cmd) => s + (params.prix||0) * (cmd.qty||1), 0);
+    const recettesHorsFdp = st.recPH + st.recDistro + st.recGroupe + st.recBCHorsFdp;
     const reste = invest - recettesHorsFdp;
     if (balance >= 0) {
       equilibreEl.textContent = '✓ Équilibre atteint !';
       equilibreEl.style.color = 'var(--green)';
     } else if (prixVente > 0) {
-      const nbRestant = Math.ceil(reste / prixVente);
-      const totalVendu = nbBC + nbPH + nbDistro + nbGroupe;
-      const equilibreA = totalVendu + nbRestant;
-      equilibreEl.textContent = 'Équilibre à la vente n°' + equilibreA + ' (' + nbRestant + ' de plus)';
+      const nbRestant = Math.max(1, Math.ceil(reste / prixVente));
+      equilibreEl.textContent = 'Équilibre à la vente n°' + (total + nbRestant) + ' (' + nbRestant + ' de plus)';
       equilibreEl.style.color = 'var(--muted)';
+    } else {
+      equilibreEl.textContent = '';
     }
   }
 }
@@ -1295,6 +1635,19 @@ function setStatutFilter() {
   renderHistory();
 }
 
+function setSearch() {
+  filterSearch = document.getElementById('filter-search').value.trim().toLowerCase();
+  renderHistory();
+}
+
+function matchesSearch(c) {
+  if (!filterSearch) return true;
+  const cli = c.client || {};
+  const hay = [c.ref, c.nom, c.lieu, c.note, c.pays, cli.prenom, cli.nom, cli.email, cli.ville]
+    .filter(Boolean).join(' ').toLowerCase();
+  return hay.includes(filterSearch);
+}
+
 function populatePaysFilter() {
   const sel = document.getElementById('filter-pays');
   if (!sel) return;
@@ -1306,102 +1659,90 @@ function populatePaysFilter() {
   sel.innerHTML = '<option value="">Tous pays</option>' +
     Object.entries(paysCount)
       .sort((a,b) => b[1] - a[1])
-      .map(([pays, count]) => `<option value="${pays}">${pays} (${count})</option>`)
+      .map(([pays, count]) => `<option value="${esc(pays)}">${esc(pays)} (${count})</option>`)
       .join('');
   sel.value = currentVal;
+}
+
+const TRANSP_SHORT = { 'Mondial Relay': 'MR', 'La Poste': 'La Poste', 'Main propre': 'main propre', 'Autre': 'autre' };
+
+function actionBtns(cmd) {
+  return `<button class="edit-btn" onclick="openEditModal(${cmd.id})">edit</button>
+          <button class="del-btn"  onclick="deleteCommande(${cmd.id})">✕</button>`;
 }
 
 function renderHistory() {
   populatePaysFilter();
   const container = document.getElementById('history-table');
   let filtered = filterMode === 'all' ? commandes : commandes.filter(c => c.type === filterMode);
+  if (filterMode === 'grouped') filtered = commandes.filter(isGroupedCmd);
   if (filterPays)   filtered = filtered.filter(c => c.pays === filterPays);
   if (filterStatut) filtered = filtered.filter(c => c.statut === filterStatut);
+  if (filterSearch) filtered = filtered.filter(matchesSearch);
   if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="big">—</div><p>Aucune vente enregistrée</p></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="big">—</div><p>${filterSearch ? 'Aucun résultat' : 'Aucune vente enregistrée'}</p></div>`;
     return;
   }
   const rows = [...filtered].reverse().map(cmd => {
+    const note = `<td style="color:var(--muted);font-size:10px">${esc((cmd.note||'').replace(/\s*\[commande groupée GRP-\d+\]/, ''))}</td>`;
     if (cmd.type === 'bigcartel') {
-      const t     = TARIFS.find(t => t.pays === cmd.pays);
-      const fdpEnc = cmd.fdpEncOverride !== null && cmd.fdpEncOverride !== undefined ? cmd.fdpEncOverride : (t ? t.fdpEnc : null);
-      const fdpPay = cmd.fdpPayOverride !== null && cmd.fdpPayOverride !== undefined ? cmd.fdpPayOverride : getFdpPay(t, cmd.qty||1);
-      const marge  = fdpEnc !== null && fdpPay !== null ? fmt((params.prix||0) * (cmd.qty||1) + fdpEnc - fdpPay) : '?';
-      const fdp    = fdpPay !== null ? fmt(fdpPay) : '?';
+      const fdpEnc = fdpEncOf(cmd);
+      const { val: fdpPay, reel } = fdpPayInfo(cmd, params);
+      const marge  = fdpEnc !== null && fdpPay != null ? fmt((params.prix||0) * (cmd.qty||1) + fdpEnc - fdpPay) : '?';
       const statutClass = cmd.statut === 'envoye' ? 'envoye' : cmd.statut === 'preorder' ? 'preorder' : 'attente';
       const statutLabel = cmd.statut === 'envoye' ? 'Envoyé' : cmd.statut === 'preorder' ? 'Preorder' : 'En attente';
       const statBtn = `<button class="statut-btn ${statutClass}" onclick="toggleStatut(${cmd.id})">${statutLabel}</button>`;
-      const isGrouped = cmd.note && cmd.note.includes('[commande groupée');
-      const canalBadge = isGrouped
+      const canalBadge = isGroupedCmd(cmd)
         ? `<span class="badge badge-grouped">GROUPÉE</span>`
         : `<span class="badge badge-bc">BC</span>`;
-      const cli = cmd.client || {};
-      const cliName = [cli.prenom, cli.nom].filter(Boolean).join(' ');
-      const cliAddr = [cli.adr1, cli.adr2, cli.cp, cli.ville].filter(Boolean).join(', ');
-      const paysCell = cliName
-        ? `${cmd.pays}<br><span style="font-size:9px;color:var(--muted);cursor:${cliAddr?'help':'default'}" ${cliAddr ? `title="${cliAddr.replace(/"/g,'&quot;')}"` : ''}>${cliName}</span>`
-        : cmd.pays;
+      const refLine = cmd.ref ? `<span class="cell-sub ref-tag">#${esc(cmd.ref)}</span>` : '';
+      const cliName = clientName(cmd.client);
+      const paysCell = `${esc(cmd.pays)}${cliName ? `<span class="cell-sub">${esc(cliName)}</span>` : ''}`;
+      const fdpTitle = reel ? 'Montant réel — toucher pour modifier' : 'Estimation — toucher pour saisir le montant réel';
+      const fdpBtn = `<button class="fdp-cell ${reel ? 'reel' : 'estime'}" title="${fdpTitle}" onclick="setFdpReel(${cmd.id})">${fdpPay != null ? (reel ? '' : '≈ ') + fmt(fdpPay) : '?'}</button><span class="cell-sub">${esc(TRANSP_SHORT[cmd.transporteur] || (cmd.transporteur ? cmd.transporteur : 'MR'))}</span>`;
+      const hasFiche = cmd.ref || cliName || (cmd.client && (cmd.client.adr1 || cmd.client.email));
       return `<tr>
-        <td>${cmd.date}</td>
+        <td>${esc(cmd.date)}${refLine}</td>
         <td>${canalBadge}</td>
         <td>${cmd.qty||1} ex.</td>
         <td>${paysCell}</td>
         <td>${marge}</td>
-        <td style="color:var(--muted)">${fdp}</td>
+        <td>${fdpBtn}</td>
         <td>${statBtn}</td>
-        <td style="color:var(--muted);font-size:10px">${cmd.note||''}</td>
-        <td>
-          <button class="edit-btn" onclick="openEditModal(${cmd.id})">edit</button>
-          <button class="del-btn"  onclick="deleteCommande(${cmd.id})">✕</button>
+        ${note}
+        <td style="white-space:nowrap">
+          ${hasFiche ? `<button class="fiche-btn" onclick="openClientModal(${cmd.id})">fiche</button>` : ''}
+          ${actionBtns(cmd)}
         </td></tr>`;
     } else if (cmd.type === 'physique') {
-      const recette  = fmt((cmd.qty||1)*(params.prix||0));
+      const pu = prixPhysique(cmd, params);
+      const recette  = fmt((cmd.qty||1) * pu);
+      const prixInfo = cmd.prixUnit != null && cmd.prixUnit !== params.prix ? `<span class="cell-sub">${fmt(pu)}/ex.</span>` : '';
       const payBadge = cmd.paiement==='paypal'
         ? `<span style="font-size:10px;color:#1a6ea8">PayPal</span>`
         : `<span style="font-size:10px;color:var(--green)">Cash</span>`;
       return `<tr>
-        <td>${cmd.date}</td>
+        <td>${esc(cmd.date)}</td>
         <td><span class="badge badge-ph">PHYSIQUE</span></td>
         <td>${cmd.qty||1} ex.</td>
-        <td>${cmd.lieu||'—'}</td>
-        <td>${recette}</td>
+        <td>${esc(cmd.lieu||'—')}</td>
+        <td>${recette}${prixInfo}</td>
         <td>—</td>
         <td>${payBadge}</td>
-        <td style="color:var(--muted);font-size:10px">${cmd.note||''}</td>
-        <td>
-          <button class="edit-btn" onclick="openEditModal(${cmd.id})">edit</button>
-          <button class="del-btn"  onclick="deleteCommande(${cmd.id})">✕</button>
-        </td></tr>`;
+        ${note}
+        <td>${actionBtns(cmd)}</td></tr>`;
     } else if (cmd.type === 'groupe') {
       const recette = fmt((cmd.qty||1)*(cmd.prixUnit||0));
       return `<tr>
-        <td>${cmd.date}</td>
+        <td>${esc(cmd.date)}</td>
         <td><span class="badge" style="background:#f0e6ff;color:#6a1ab8;border:1px solid #d4b0f0">GROUPE</span></td>
         <td>${cmd.qty||1} ex.</td>
-        <td>${cmd.nom||'—'}</td>
-        <td>${recette} (${fmt(cmd.prixUnit||0)}/ex.)</td>
+        <td>${esc(cmd.nom||'—')}</td>
+        <td>${recette}<span class="cell-sub">${fmt(cmd.prixUnit||0)}/ex.</span></td>
         <td>—</td>
         <td>—</td>
-        <td style="color:var(--muted);font-size:10px">${cmd.note||''}</td>
-        <td>
-          <button class="edit-btn" onclick="openEditModal(${cmd.id})">edit</button>
-          <button class="del-btn"  onclick="deleteCommande(${cmd.id})">✕</button>
-        </td></tr>`;
-    } else if (cmd.type === 'groupe') {
-      const recette = fmt((cmd.qty||1)*(cmd.prixUnit||0));
-      return `<tr>
-        <td>${cmd.date}</td>
-        <td><span class="badge" style="background:#f0e6ff;color:#6a1a9a;border:1px solid #d4a8f0">GROUPE</span></td>
-        <td>${cmd.qty||1} ex.</td>
-        <td>${cmd.nom||'—'}</td>
-        <td>${recette}</td>
-        <td>—</td>
-        <td>${fmt(cmd.prixUnit||0)}/ex.</td>
-        <td style="color:var(--muted);font-size:10px">${cmd.note||''}</td>
-        <td>
-          <button class="edit-btn" onclick="openEditModal(${cmd.id})">edit</button>
-          <button class="del-btn"  onclick="deleteCommande(${cmd.id})">✕</button>
-        </td></tr>`;
+        ${note}
+        <td>${actionBtns(cmd)}</td></tr>`;
     } else {
       const recEUR   = (cmd.qty||1)*(cmd.prixUnit||0)*(cmd.tauxEUR||1);
       const recOrig  = cmd.devise && cmd.devise !== 'EUR' ? ` (${fmtDevise((cmd.qty||1)*(cmd.prixUnit||0), cmd.devise)})` : '';
@@ -1415,43 +1756,132 @@ function renderHistory() {
         ? '<span class="alert-badge warn">+30j</span>'
         : '';
       return `<tr class="${alertClass}">
-        <td>${cmd.date}</td>
+        <td>${esc(cmd.date)}</td>
         <td><span class="badge badge-distro">DISTRO</span> ${alertBadge}</td>
         <td>${cmd.qty||1} ex.</td>
-        <td>${cmd.nom||'—'}</td>
+        <td>${esc(cmd.nom||'—')}</td>
         <td>${fmt(recEUR)}${recOrig}</td>
         <td>—</td>
-        <td>${cmd.devise||'EUR'}</td>
-        <td style="color:var(--muted);font-size:10px">${cmd.note||''}</td>
-        <td>
-          <button class="edit-btn" onclick="openEditModal(${cmd.id})">edit</button>
-          <button class="del-btn"  onclick="deleteCommande(${cmd.id})">✕</button>
-        </td></tr>`;
+        <td>${esc(cmd.devise||'EUR')}</td>
+        ${note}
+        <td>${actionBtns(cmd)}</td></tr>`;
     }
   }).join('');
 
   container.innerHTML = `<table>
     <thead><tr>
-      <th>Date</th><th>Canal</th><th>Ref</th><th>Pays / Lieu</th>
+      <th>Date</th><th>Canal</th><th>Qté</th><th>Pays / Lieu</th>
       <th>Recette / Marge</th><th>FdP payé</th><th>Statut / Paiement</th><th>Note</th><th></th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
 
+// ── FDP RÉELLEMENT PAYÉ (un tap depuis l'historique) ─────────────
+function setFdpReel(id) {
+  const cmd = commandes.find(c => c.id === id);
+  if (!cmd) return;
+  const grp = (cmd.note || '').match(/GRP-\d+/);
+  // Commande groupée : on saisit le prix du colis, réparti sur les releases
+  let siblings = [{ c: cmd }];
+  if (grp) {
+    siblings = [];
+    getReleaseIds(true).forEach(rid => (allCommandes[rid] || []).forEach(c => {
+      if ((c.note || '').includes(grp[0])) siblings.push({ c, rid });
+    }));
+  }
+  const n = siblings.length;
+  const current = siblings.reduce((s, x) => s + (fdpPayInfo(x.c, allParams[x.rid] || params).val || 0), 0);
+  const label = n > 1
+    ? `Prix réel du colis groupé (${n} releases) en € :\n(laisser vide pour revenir à l'estimation)`
+    : `FdP réellement payé pour cette commande (€) :\n(laisser vide pour revenir à l'estimation)`;
+  const input = prompt(label, String(Math.round(current * 100) / 100).replace('.', ','));
+  if (input === null) return;
+  const txt = input.trim().replace(',', '.');
+  if (txt === '') {
+    siblings.forEach(({ c }) => {
+      if (n > 1) { c.fdpPayReel = false; }          // garde la répartition estimée
+      else { c.fdpPayOverride = null; c.fdpPayReel = false; }
+    });
+  } else {
+    const v = parseFloat(txt);
+    if (isNaN(v) || v < 0) { alert('Montant invalide'); return; }
+    const part = Math.round((v / n) * 100) / 100;
+    siblings.forEach(({ c }) => { c.fdpPayOverride = part; c.fdpPayReel = true; });
+  }
+  saveAll(true);
+  updateStats();
+  renderHistory();
+  showToast(txt === '' ? 'FDP : ESTIMATION' : 'FDP RÉEL ENREGISTRÉ');
+}
+
+// ── FICHE CLIENT ─────────────────────────────────────────────────
+let ficheId = null;
+function clientAddressText(cmd) {
+  const c = cmd.client || {};
+  return [clientName(c), c.adr1, c.adr2, [c.cp, c.ville].filter(Boolean).join(' '), cmd.pays]
+    .filter(Boolean).join('\n');
+}
+function openClientModal(id) {
+  const cmd = commandes.find(c => c.id === id);
+  if (!cmd) return;
+  ficheId = id;
+  const c = cmd.client || {};
+  const row = (k, v) => v ? `<div class="fiche-row"><span class="k">${k}</span><span class="v">${v}</span></div>` : '';
+  document.getElementById('client-fiche').innerHTML =
+    row('Commande', cmd.ref ? '#' + esc(cmd.ref) : '') +
+    row('Release', esc(params.nom) + ' × ' + (cmd.qty || 1)) +
+    row('Date', esc(cmd.date)) +
+    row('Envoi', esc(cmd.transporteur || 'Mondial Relay')) +
+    row('Email', c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : '') +
+    row('Tél.', c.tel ? `<a href="tel:${esc(c.tel)}">${esc(c.tel)}</a>` : '') +
+    row('Note', esc((cmd.note || '').replace(/\s*\[commande groupée GRP-\d+\]/, ''))) +
+    `<div class="fiche-addr">${esc(clientAddressText(cmd)) || '<span style="color:var(--muted)">Pas d\'adresse — à compléter via edit</span>'}</div>`;
+  document.getElementById('modal-client').classList.add('open');
+}
+function closeClientModal() { document.getElementById('modal-client').classList.remove('open'); ficheId = null; }
+function copyClientAddress() {
+  const cmd = commandes.find(c => c.id === ficheId);
+  if (!cmd) return;
+  const txt = clientAddressText(cmd);
+  const done = () => showToast('ADRESSE COPIÉE');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, done));
+  else fallbackCopy(txt, done);
+}
+function fallbackCopy(txt, done) {
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done && done(); } catch(e) { alert(txt); }
+  ta.remove();
+}
+
 // ── MODAL PARAMS ─────────────────────────────────────────────────
+function numOr(id, fallback) {
+  const v = document.getElementById(id).value.trim().replace(',', '.');
+  if (v === '') return fallback;
+  const n = parseFloat(v);
+  return isNaN(n) ? fallback : n;
+}
+function numOrNull(id) { return numOr(id, null); }
+
 function openModal() {
-  document.getElementById('p-nom').value        = params.nom       || '';
-  document.getElementById('p-stock').value      = params.stock     || '';
-  document.getElementById('p-prix').value       = params.prix      || '';
-  document.getElementById('p-prix-groupe').value= params.prixGroupe|| '';
-  document.getElementById('p-invest').value     = params.invest    || '';
+  document.getElementById('p-nom').value         = params.nom       || '';
+  document.getElementById('p-groupe').value      = params.groupe    || '';
+  document.getElementById('p-titre').value       = params.titre     || '';
+  document.getElementById('p-format').value      = params.format    || 'LP';
+  document.getElementById('p-stock').value       = params.stock     ?? '';
+  document.getElementById('p-prix').value        = params.prix      ?? '';
+  document.getElementById('p-prix-groupe').value = params.prixGroupe ?? '';
+  document.getElementById('p-prix-distro').value = params.prixDistro ?? '';
+  document.getElementById('p-invest').value      = params.invest    ?? '';
+  document.getElementById('btn-delete-release').style.display = commandes.length === 0 ? 'block' : 'none';
 
   // Remplir tableau tarifs
   const tbody = document.getElementById('tarifs-tbody');
   tbody.innerHTML = TARIFS.map((t, i) => `
     <tr>
-      <td class="pays-name" style="font-size:10px">${t.pays}<br><span style="color:#999;font-size:9px">${t.transporteur||''}</span></td>
+      <td class="pays-name" style="font-size:10px">${esc(t.pays)}<br><span style="color:#999;font-size:9px">${esc(t.transporteur||'')}</span></td>
       <td><input type="number" step="0.01" value="${t.fdpEnc}" id="t-enc-${i}" /></td>
       <td><input type="number" step="0.01" value="${t.fdpPay250g !== undefined ? t.fdpPay250g : ''}" placeholder="?" id="t-pay250-${i}" /></td>
       <td><input type="number" step="0.01" value="${t.fdpPay500g !== undefined ? t.fdpPay500g : ''}" placeholder="?" id="t-pay500-${i}" /></td>
@@ -1463,38 +1893,88 @@ function openModal() {
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
 function saveParams() {
-  params.nom        = document.getElementById('p-nom').value        || params.nom;
-  params.stock      = parseFloat(document.getElementById('p-stock').value)       || params.stock;
-  params.prix       = parseFloat(document.getElementById('p-prix').value)        || params.prix;
-  params.prixGroupe = parseFloat(document.getElementById('p-prix-groupe').value) || params.prixGroupe;
-  params.invest     = parseFloat(document.getElementById('p-invest').value)      || params.invest;
+  params.nom        = document.getElementById('p-nom').value.trim()    || params.nom;
+  params.groupe     = document.getElementById('p-groupe').value.trim() || params.groupe;
+  params.titre      = document.getElementById('p-titre').value.trim();
+  params.format     = document.getElementById('p-format').value;
+  params.stock      = numOr('p-stock', params.stock);
+  params.prix       = numOr('p-prix', params.prix);
+  params.prixGroupe = numOr('p-prix-groupe', params.prixGroupe);
+  params.prixDistro = numOrNull('p-prix-distro');
+  params.invest     = numOr('p-invest', params.invest);
   allParams[currentRelease] = params;
 
   // Sauver tarifs modifiés
   TARIFS = TARIFS.map((t, i) => ({
     ...t,
-    fdpEnc:     parseFloat(document.getElementById('t-enc-'+i).value)    || t.fdpEnc,
-    fdpPay250g: document.getElementById('t-pay250-'+i).value !== '' ? parseFloat(document.getElementById('t-pay250-'+i).value) : t.fdpPay250g,
-    fdpPay500g: document.getElementById('t-pay500-'+i).value !== '' ? parseFloat(document.getElementById('t-pay500-'+i).value) : t.fdpPay500g,
-    fdpPay1kg:  document.getElementById('t-pay1kg-'+i).value !== '' ? parseFloat(document.getElementById('t-pay1kg-'+i).value) : t.fdpPay1kg,
+    fdpEnc:     numOr('t-enc-'+i, t.fdpEnc),
+    fdpPay250g: numOr('t-pay250-'+i, t.fdpPay250g),
+    fdpPay500g: numOr('t-pay500-'+i, t.fdpPay500g),
+    fdpPay1kg:  numOr('t-pay1kg-'+i, t.fdpPay1kg),
   }));
-  localStorage.setItem('bdc_tarifs', JSON.stringify(TARIFS));
-  if (window._fbSaveParams) window._fbSaveParams({ ...allParams, _tarifs: TARIFS });
+  try { localStorage.setItem('bdc_tarifs', JSON.stringify(TARIFS)); } catch(e) {}
+  allParams._tarifs = TARIFS;
 
   saveAll();
   closeModal();
+  renderReleaseNav();
+  renderGroupedRows();
   updateStats();
   updatePreview();
-  // Refresh dropdowns pays
-  const sel = document.getElementById('input-pays');
-  sel.innerHTML = '<option value="">— Choisir —</option>';
-  TARIFS.forEach(t => { const o = document.createElement('option'); o.value=t.pays; o.textContent=t.pays; sel.appendChild(o); });
-  const selE = document.getElementById('edit-pays');
-  selE.innerHTML = '';
-  TARIFS.forEach(t => { const o = document.createElement('option'); o.value=t.pays; o.textContent=t.pays; selE.appendChild(o); });
-
-  const rn = document.getElementById('release-name'); if(rn) rn.textContent = params.nom;
+  fillPaysSelect('input-pays', true);
+  fillPaysSelect('grp-pays', true);
+  fillPaysSelect('edit-pays', false);
   showToast('PARAMETRES SAUVEGARDES');
+}
+
+// ── NOUVELLE RELEASE ─────────────────────────────────────────────
+function openNewReleaseModal() {
+  const nums = getReleaseIds(true).map(releaseNum);
+  const next = (nums.length ? Math.max(...nums) : 0) + 1;
+  document.getElementById('nr-nom').value = 'BDC-' + String(next).padStart(3, '0');
+  ['nr-groupe','nr-titre','nr-stock','nr-invest','nr-prix','nr-prix-groupe','nr-prix-distro'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('nr-format').value = 'LP';
+  document.getElementById('modal-new-release').classList.add('open');
+  setTimeout(() => document.getElementById('nr-groupe').focus(), 50);
+}
+function closeNewReleaseModal() { document.getElementById('modal-new-release').classList.remove('open'); }
+
+function createRelease() {
+  const nom    = document.getElementById('nr-nom').value.trim().toUpperCase();
+  const groupe = document.getElementById('nr-groupe').value.trim();
+  const num    = releaseNum(nom);
+  if (!num) { shake('nr-nom'); return; }
+  if (!groupe) { shake('nr-groupe'); return; }
+  const id = 'bdc' + String(num).padStart(3, '0');
+  if (allParams[id] && !allParams[id].archived) { alert(nom + ' existe déjà.'); return; }
+  allParams[id] = {
+    nom, groupe,
+    titre:      document.getElementById('nr-titre').value.trim(),
+    format:     document.getElementById('nr-format').value,
+    stock:      numOr('nr-stock', 0),
+    prix:       numOr('nr-prix', 0),
+    prixGroupe: numOr('nr-prix-groupe', 0),
+    prixDistro: numOrNull('nr-prix-distro'),
+    invest:     numOr('nr-invest', 0),
+  };
+  allCommandes[id] = allCommandes[id] || [];
+  saveAll();
+  closeNewReleaseModal();
+  renderGroupedRows();
+  switchRelease(id);
+  showToast(nom + ' CRÉÉE');
+}
+
+function deleteRelease() {
+  if (commandes.length > 0) { alert('Impossible : cette release a des ventes enregistrées.'); return; }
+  if (!confirm('Supprimer ' + (params.nom || currentRelease) + ' ?')) return;
+  const id = currentRelease;
+  allParams[id].archived = true;
+  saveAll();
+  closeModal();
+  renderGroupedRows();
+  switchRelease(getReleaseIds()[0]);
+  showToast('RELEASE SUPPRIMÉE');
 }
 
 // ── MODAL EDITION ────────────────────────────────────────────────
@@ -1506,21 +1986,21 @@ function openEditModal(id) {
   editId = id;
   document.getElementById('edit-form-bc').style.display     = cmd.type==='bigcartel' ? 'block':'none';
   document.getElementById('edit-form-ph').style.display     = cmd.type==='physique'  ? 'block':'none';
-  document.getElementById('edit-form-distro').style.display = (cmd.type==='distro' || cmd.type==='groupe') ? 'block':'none';
+  document.getElementById('edit-form-distro').style.display = cmd.type==='distro'    ? 'block':'none';
   document.getElementById('edit-form-groupe').style.display = cmd.type==='groupe'    ? 'block':'none';
 
   if (cmd.type === 'bigcartel') {
+    const { reel } = fdpPayInfo(cmd, params);
+    document.getElementById('edit-ref').value     = cmd.ref    || '';
     document.getElementById('edit-num').value     = cmd.qty    || 1;
     document.getElementById('edit-date').value    = cmd.date   || '';
     document.getElementById('edit-statut').value  = cmd.statut || 'en_attente';
-    document.getElementById('edit-fdp-enc').value = cmd.fdpEncOverride !== null && cmd.fdpEncOverride !== undefined ? cmd.fdpEncOverride : '';
-    document.getElementById('edit-fdp-pay').value = cmd.fdpPayOverride !== null && cmd.fdpPayOverride !== undefined ? cmd.fdpPayOverride : '';
+    document.getElementById('edit-transporteur').value = cmd.transporteur || 'Mondial Relay';
+    document.getElementById('edit-fdp-enc').value = cmd.fdpEncOverride != null ? cmd.fdpEncOverride : '';
+    document.getElementById('edit-fdp-pay').value = reel && cmd.fdpPayOverride != null ? cmd.fdpPayOverride : '';
     document.getElementById('edit-note-bc').value = cmd.note   || '';
-    const sel = document.getElementById('edit-pays');
-    if (sel.options.length === 0) {
-      TARIFS.forEach(t => { const o = document.createElement('option'); o.value=t.pays; o.textContent=t.pays; sel.appendChild(o); });
-    }
-    sel.value = cmd.pays || '';
+    document.getElementById('edit-pays').value    = cmd.pays   || '';
+    fillClient('ed', cmd.client);
   } else if (cmd.type === 'physique') {
     document.getElementById('edit-qty').value       = cmd.qty      || 1;
     document.getElementById('edit-lieu').value      = cmd.lieu     || '';
@@ -1533,13 +2013,6 @@ function openEditModal(id) {
     document.getElementById('edit-groupe-prix').value = cmd.prixUnit || '';
     document.getElementById('edit-date-groupe').value = cmd.date     || '';
     document.getElementById('edit-note-groupe').value = cmd.note     || '';
-  } else if (cmd.type === 'groupe') {
-    // use distro form fields for groupe too
-    document.getElementById('edit-distro-nom').value   = cmd.nom      || '';
-    document.getElementById('edit-distro-qty').value   = cmd.qty      || 1;
-    document.getElementById('edit-distro-prix').value  = cmd.prixUnit || '';
-    document.getElementById('edit-date-distro').value  = cmd.date     || '';
-    document.getElementById('edit-note-distro').value  = cmd.note     || '';
   } else {
     document.getElementById('edit-distro-nom').value   = cmd.nom      || '';
     document.getElementById('edit-distro-qty').value   = cmd.qty      || 1;
@@ -1557,15 +2030,23 @@ function saveEdit() {
   const cmd = commandes.find(c => c.id === editId);
   if (!cmd) return;
   if (cmd.type === 'bigcartel') {
+    cmd.ref    = document.getElementById('edit-ref').value.trim();
     cmd.qty    = parseInt(document.getElementById('edit-num').value) || 1;
     cmd.pays   = document.getElementById('edit-pays').value;
     cmd.date   = document.getElementById('edit-date').value;
     cmd.statut = document.getElementById('edit-statut').value;
+    cmd.transporteur = document.getElementById('edit-transporteur').value;
     cmd.note   = document.getElementById('edit-note-bc').value.trim();
-    const eEnc = parseFloat(document.getElementById('edit-fdp-enc').value);
-    const ePay = parseFloat(document.getElementById('edit-fdp-pay').value);
-    cmd.fdpEncOverride = !isNaN(eEnc) ? eEnc : null;
-    cmd.fdpPayOverride = !isNaN(ePay) ? ePay : null;
+    cmd.fdpEncOverride = numOrNull('edit-fdp-enc');
+    const ePay = numOrNull('edit-fdp-pay');
+    if (ePay != null) { cmd.fdpPayOverride = ePay; cmd.fdpPayReel = true; }
+    else if (fdpPayInfo(cmd, params).reel) {
+      // champ vidé : retour à l'estimation (les groupées gardent leur répartition)
+      if (!isGroupedCmd(cmd)) cmd.fdpPayOverride = null;
+      cmd.fdpPayReel = false;
+    }
+    const cli = readClient('ed');
+    if (cli) cmd.client = cli; else delete cmd.client;
   } else if (cmd.type === 'physique') {
     cmd.qty      = parseInt(document.getElementById('edit-qty').value) || 1;
     cmd.lieu     = document.getElementById('edit-lieu').value.trim();
@@ -1578,12 +2059,6 @@ function saveEdit() {
     cmd.prixUnit = parseFloat(document.getElementById('edit-groupe-prix').value) || 0;
     cmd.date     = document.getElementById('edit-date-groupe').value;
     cmd.note     = document.getElementById('edit-note-groupe').value.trim();
-  } else if (cmd.type === 'groupe') {
-    cmd.nom      = document.getElementById('edit-distro-nom').value.trim();
-    cmd.qty      = parseInt(document.getElementById('edit-distro-qty').value) || 1;
-    cmd.prixUnit = parseFloat(document.getElementById('edit-distro-prix').value) || 0;
-    cmd.date     = document.getElementById('edit-date-distro').value;
-    cmd.note     = document.getElementById('edit-note-distro').value.trim();
   } else {
     cmd.nom      = document.getElementById('edit-distro-nom').value.trim();
     cmd.qty      = parseInt(document.getElementById('edit-distro-qty').value) || 1;
@@ -1602,10 +2077,12 @@ function saveEdit() {
 
 // ── SAVE ─────────────────────────────────────────────────────────
 function saveAll(skipSync) {
-  if (!skipSync) allCommandes[currentRelease] = commandes;
-  allParams[currentRelease]    = params;
-  localStorage.setItem('bdc_all_commandes', JSON.stringify(allCommandes));
-  localStorage.setItem('bdc_all_params',    JSON.stringify(allParams));
+  if (!skipSync && currentRelease) allCommandes[currentRelease] = commandes;
+  if (currentRelease && params) allParams[currentRelease] = params;
+  try {
+    localStorage.setItem('bdc_all_commandes', JSON.stringify(allCommandes));
+    localStorage.setItem('bdc_all_params',    JSON.stringify(allParams));
+  } catch(e) {}
   if (window._fbSaveCommandes) {
     setSyncDot('syncing');
     window._fbSaveCommandes(allCommandes).then(() => setSyncDot('synced')).catch(() => setSyncDot('error'));
@@ -1617,20 +2094,25 @@ function save() { saveAll(); }
 // ── FIREBASE CALLBACKS ───────────────────────────────────────────
 window._fbOnCommandes = (data) => {
   if (JSON.stringify(data) !== JSON.stringify(allCommandes)) {
-    allCommandes = data;
-    commandes = allCommandes[currentRelease] || [];
-    localStorage.setItem('bdc_all_commandes', JSON.stringify(allCommandes));
-    updateStats(); renderHistory(); setSyncDot('synced');
+    allCommandes = normalizeCommandes(data);
+    commandes = allCommandes[currentRelease] = allCommandes[currentRelease] || [];
+    try { localStorage.setItem('bdc_all_commandes', JSON.stringify(allCommandes)); } catch(e) {}
+    refreshCurrentView(); setSyncDot('synced');
   }
 };
 window._fbOnParams = (data) => {
   if (JSON.stringify(data) !== JSON.stringify(allParams)) {
-    allParams = data;
+    allParams = normalizeParams(data);
+    if (Array.isArray(allParams._tarifs) && allParams._tarifs.length && allParams._tarifs[0].fdpPay250g !== undefined) {
+      TARIFS = allParams._tarifs;
+      try { localStorage.setItem('bdc_tarifs', JSON.stringify(TARIFS)); } catch(e) {}
+    }
+    if (!getReleaseIds().includes(currentRelease)) currentRelease = getReleaseIds()[0];
     params = allParams[currentRelease];
-    localStorage.setItem('bdc_all_params', JSON.stringify(allParams));
-    updateStats(); updatePreview();
-    const rn = document.getElementById('release-name'); if(rn) rn.textContent = params.nom;
-    setSyncDot('synced');
+    allCommandes = normalizeCommandes(allCommandes);
+    commandes = allCommandes[currentRelease];
+    try { localStorage.setItem('bdc_all_params', JSON.stringify(allParams)); } catch(e) {}
+    refreshCurrentView(); setSyncDot('synced');
   }
 };
 window.addEventListener('firebase-ready', () => setSyncDot('synced'));
@@ -1661,11 +2143,15 @@ const PAYS_ISO_MAP = {"FR": "France", "BE": "Belgique", "ES": "Espagne", "DE": "
 function detectReleaseFromItems(itemsText) {
   if (!itemsText) return null;
   const lower = itemsText.toLowerCase();
-  for (const [rid, def] of Object.entries(RELEASES_DEF)) {
-    const groupeLower = (def.groupe || '').toLowerCase();
-    const titreLower  = (def.titre  || '').toLowerCase();
-    if (groupeLower && lower.includes(groupeLower)) return rid;
-    if (titreLower  && lower.includes(titreLower))  return rid;
+  const ids = getReleaseIds();
+  // Le titre d'abord (un groupe peut avoir plusieurs sorties), puis le groupe
+  for (const rid of ids) {
+    const t = (allParams[rid].titre || '').toLowerCase();
+    if (t && lower.includes(t)) return rid;
+  }
+  for (const rid of ids) {
+    const g = (allParams[rid].groupe || '').toLowerCase();
+    if (g && lower.includes(g)) return rid;
   }
   return null;
 }
@@ -1752,7 +2238,7 @@ function importCSV(event) {
     event.target.value = '';
 
     const detail = Object.entries(importedPerRelease)
-      .map(([rid, n]) => (RELEASES_DEF[rid]?.nom || rid) + ':' + n)
+      .map(([rid, n]) => (allParams[rid]?.nom || rid) + ':' + n)
       .join(' · ');
     let msg = imported + ' IMPORTÉES';
     if (detail) msg += ' (' + detail + ')';
@@ -1780,99 +2266,28 @@ function parseCSVLine(line) {
 }
 
 // ── FINANCES ────────────────────────────────────────────────────
-let inFinancesMode = false;
-
-function switchToFinances(btn) {
-  inFinancesMode = true;
-  document.querySelectorAll('.release-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  // Masquer le reste, afficher finances
-  document.querySelector('.stats-bar').style.display = 'none';
-  document.querySelector('.main').style.display = 'none';
-  document.getElementById('finances-panel').classList.add('active');
-
-  renderFinances();
-}
-
-
-
-function switchRelease(releaseId, btn) {
-  inFinancesMode = false;
-  document.querySelector('.stats-bar').style.display = '';
-  document.querySelector('.main').style.display = '';
-  document.getElementById('finances-panel').classList.remove('active');
-
-  currentRelease = releaseId;
-  localStorage.setItem('bdc_current_release', releaseId);
-  params    = allParams[releaseId]    || JSON.parse(JSON.stringify(RELEASES_DEF[releaseId]));
-  commandes = allCommandes[releaseId] || [];
-  document.querySelectorAll('.release-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  filterMode = 'all';
-  filterPays = '';
-  filterStatut = '';
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn').classList.add('active');
-  const fs = document.getElementById('filter-statut'); if (fs) fs.value = '';
-  updateStats();
-  renderHistory();
-  updatePreview();
-}
-
-
-
-
-
-
-
-
-
 function renderFinances() {
-  const releases = ['bdc007', 'bdc010', 'bdc012', 'bdc013', 'bdc014', 'bdc015', 'bdc016'];
-  let totalInvest = 0, totalRec = 0, totalFdpPayes = 0;
+  const releases = getReleaseIds();
+  let totalInvest = 0, totalRec = 0, totalFdpPayes = 0, totalFdpEstime = 0;
 
-  // Calculer par release
   const releaseData = releases.map(rid => {
-    const p   = allParams[rid]    || RELEASES_DEF[rid];
-    const cms = allCommandes[rid] || [];
-    const bc     = cms.filter(c => c.type === 'bigcartel');
-    const ph     = cms.filter(c => c.type === 'physique');
-    const distro = cms.filter(c => c.type === 'distro');
-    const groupe = cms.filter(c => c.type === 'groupe');
-
-    let recBC = 0, fdpPay = 0;
-    bc.forEach(cmd => {
-      const t = TARIFS.find(t => t.pays === cmd.pays);
-      const fdpEnc = cmd.fdpEncOverride != null ? cmd.fdpEncOverride : (t ? t.fdpEnc : 0);
-      const fdpP   = cmd.fdpPayOverride != null ? cmd.fdpPayOverride : getFdpPay(t, cmd.qty||1);
-      recBC += (p.prix||0) * (cmd.qty||1) + fdpEnc;
-      if (fdpP) fdpPay += fdpP;
-    });
-    const recPH     = ph.reduce((s,c) => s + (c.qty||1)*(p.prix||0), 0);
-    const recDistro = distro.reduce((s,c) => s + (c.qty||1)*(c.prixUnit||0)*(c.tauxEUR||1), 0);
-    const recGroupe = groupe.reduce((s,c) => s + (c.qty||1)*(c.prixUnit||0), 0);
-    const recTotal  = recBC + recPH + recDistro + recGroupe;
-    const invest    = p.invest || 0;
-    const balance   = recTotal - fdpPay - invest;
-    const pct       = invest > 0 ? Math.min(100, Math.round((recTotal / invest) * 100)) : 0;
-    const nbVentes  = bc.reduce((s,c)=>s+(c.qty||1),0) + ph.reduce((s,c)=>s+(c.qty||1),0) + distro.reduce((s,c)=>s+(c.qty||1),0) + groupe.reduce((s,c)=>s+(c.qty||1),0);
-
-    totalInvest  += invest;
-    totalRec     += recTotal;
-    totalFdpPayes += fdpPay;
-
-    return { rid, p, recTotal, invest, balance, pct, fdpPay, nbVentes, format: p.format||'LP' };
+    const st = computeReleaseStats(rid);
+    totalInvest    += st.invest;
+    totalRec       += st.recTotal;
+    totalFdpPayes  += st.fdpPay;
+    totalFdpEstime += st.fdpEstime;
+    return { rid, p: st.p, recTotal: st.recTotal, invest: st.invest, balance: st.balance, pct: st.pct,
+             fdpPay: st.fdpPay, nbVentes: st.total, format: st.p.format || 'LP' };
   });
 
   const totalBalance = totalRec - totalFdpPayes - totalInvest;
   const totalPct = totalInvest > 0 ? Math.min(100, Math.round((totalRec / totalInvest) * 100)) : 0;
 
-  // ── Global ──
   document.getElementById('fin-global-grid').innerHTML = `
     <div class="fin-card">
       <div class="fin-card-label">Investissement total</div>
       <div class="fin-card-value">${fmt(totalInvest)}</div>
-      <div class="fin-card-sub">7 releases</div>
+      <div class="fin-card-sub">${releases.length} releases</div>
     </div>
     <div class="fin-card">
       <div class="fin-card-label">Recettes totales</div>
@@ -1889,13 +2304,12 @@ function renderFinances() {
       <div class="progress-bar-wrap" style="height:14px;margin-top:8px">
         <div class="progress-bar-fill${totalPct >= 100 ? ' green' : ''}" style="width:${totalPct}%"></div>
       </div>
-      <div class="fin-card-sub" style="margin-top:6px">${totalPct}% — ${fmt(totalRec)} récupérés sur ${fmt(totalInvest)} investis</div>
+      <div class="fin-card-sub" style="margin-top:6px">${totalPct}% — ${fmt(totalRec)} récupérés sur ${fmt(totalInvest)} investis · FdP payés ${fmt(totalFdpPayes)}${totalFdpEstime > 0 ? ` (dont ${fmt(totalFdpEstime)} estimés, non confirmés)` : ''}</div>
     </div>`;
 
-  // ── Par release ──
   document.getElementById('fin-releases').innerHTML = releaseData.map(d => `
     <div class="fin-release-row">
-      <div class="fin-release-name">${d.p.nom} <span style="font-size:9px;background:#f0f0f0;padding:2px 5px;color:#666">${d.format}</span><br><span style="font-size:10px;color:var(--muted);font-family:var(--font-mono)">${d.p.groupe||''}</span></div>
+      <div class="fin-release-name">${esc(d.p.nom)} <span style="font-size:9px;background:#f0f0f0;padding:2px 5px;color:#666">${esc(d.format)}</span><br><span style="font-size:10px;color:var(--muted);font-family:var(--font-mono)">${esc(d.p.groupe||'')}</span></div>
       <div class="fin-release-bar">
         <div class="progress-bar-wrap">
           <div class="progress-bar-fill${d.pct >= 100 ? ' green' : ''}" style="width:${d.pct}%"></div>
@@ -1910,7 +2324,7 @@ function renderFinances() {
   const today = new Date().toISOString().split('T')[0];
   let distroRows = [];
   releases.forEach(rid => {
-    const p   = allParams[rid] || RELEASES_DEF[rid];
+    const p   = allParams[rid];
     const cms = allCommandes[rid] || [];
     cms.filter(c => c.type === 'distro').forEach(cmd => {
       const days = cmd.date ? Math.floor((new Date(today) - new Date(cmd.date)) / 86400000) : 0;
@@ -1924,17 +2338,11 @@ function renderFinances() {
     return;
   }
 
+  const th = (label, align, hide) => `<th style="padding:10px 14px;text-align:${align||'left'};font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase"${hide ? ' class="col-hide"' : ''}>${label}</th>`;
   document.getElementById('fin-distros').innerHTML = `
     <table style="width:100%;border-collapse:collapse;font-size:11px;">
       <thead><tr style="background:#f8f8f8;border-bottom:2px solid var(--border);">
-        <th style="padding:10px 14px;text-align:left;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase" class="col-hide">Date</th>
-        <th style="padding:10px 14px;text-align:left;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">Release</th>
-        <th style="padding:10px 14px;text-align:left;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">Distro</th>
-        <th style="padding:10px 14px;text-align:left;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase" class="col-hide">Qté</th>
-        <th style="padding:10px 14px;text-align:right;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">Montant</th>
-        <th style="padding:10px 14px;text-align:center;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase" class="col-hide">Jours</th>
-        <th style="padding:10px 14px;text-align:center;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase">Statut</th>
-        <th style="padding:10px 14px;text-align:left;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase" class="col-hide">Note</th>
+        ${th('Date','left',1)}${th('Release')}${th('Distro')}${th('Qté','left',1)}${th('Montant','right')}${th('Jours','center',1)}${th('Statut','center')}${th('Note','left',1)}
       </tr></thead>
       <tbody>${distroRows.map(d => {
         const alertClass = d.isPaid ? '' : d.days >= 60 ? 'distro-alert-60' : d.days >= 30 ? 'distro-alert-30' : '';
@@ -1947,17 +2355,255 @@ function renderFinances() {
           : '<span style="color:var(--muted);font-size:10px">En attente</span>';
         const montant = fmt((d.qty||1)*(d.prixUnit||0)*(d.tauxEUR||1));
         return `<tr class="${alertClass}" style="border-bottom:1px solid #f0f0f0;">
-          <td style="padding:10px 14px" class="col-hide">${d.date}</td>
-          <td style="padding:10px 14px;font-weight:600">${d.release}</td>
-          <td style="padding:10px 14px">${d.nom||'—'}</td>
+          <td style="padding:10px 14px" class="col-hide">${esc(d.date)}</td>
+          <td style="padding:10px 14px;font-weight:600">${esc(d.release)}</td>
+          <td style="padding:10px 14px">${esc(d.nom||'—')}</td>
           <td style="padding:10px 14px" class="col-hide">${d.qty||1}</td>
           <td style="padding:10px 14px;text-align:right">${montant}</td>
           <td style="padding:10px 14px;text-align:center;color:${d.days >= 60 ? 'var(--red)' : d.days >= 30 ? '#e67e22' : 'var(--muted)'}" class="col-hide">${d.days}j</td>
           <td style="padding:10px 14px;text-align:center">${alertBadge}</td>
-          <td style="padding:10px 14px;color:var(--muted)" class="col-hide">${d.note||''}</td>
+          <td style="padding:10px 14px;color:var(--muted)" class="col-hide">${esc(d.note||'')}</td>
         </tr>`;
       }).join('')}</tbody>
     </table>`;
+}
+
+// ── MODE MERCH (table de concert) ───────────────────────────────
+let merchCart = {};          // { releaseId: qty }
+let merchPrices = {};        // prix du soir { releaseId: prix }
+let merchEditPrices = false;
+let lastMerchSale = null;    // { lieu, entries: [{rid, id}] }
+try { merchPrices = JSON.parse(localStorage.getItem('bdc_merch_prices') || '{}'); } catch(e) {}
+
+function merchLieu() { return document.getElementById('merch-lieu').value.trim(); }
+function saveMerchLieu() {
+  try { localStorage.setItem('bdc_merch_lieu', merchLieu()); } catch(e) {}
+  renderMerchSoiree();
+}
+function merchPrice(rid) {
+  const v = merchPrices[rid];
+  return v != null && v !== '' && !isNaN(v) ? Number(v) : (allParams[rid].prix || 0);
+}
+
+function renderMerch() {
+  const grid = document.getElementById('merch-grid');
+  grid.innerHTML = getReleaseIds().map(rid => {
+    const p  = allParams[rid];
+    const st = computeReleaseStats(rid);
+    const inCart = merchCart[rid] || 0;
+    const dispo = st.stock - inCart;
+    const empty = st.stock <= 0;
+    const low = !empty && st.stock <= Math.max(3, Math.round((p.stock || 0) * 0.1));
+    const prix = merchEditPrices
+      ? `<input type="number" step="0.5" value="${merchPrice(rid)}" onclick="event.stopPropagation()" onchange="setMerchPrice('${rid}', this.value)" />`
+      : fmt(merchPrice(rid)).replace(',00', '');
+    return `<div class="merch-tile${inCart ? ' in-cart' : ''}${empty ? ' empty' : ''}" onclick="addMerch('${rid}')">
+      ${inCart ? `<div class="mt-count">${inCart}</div>` : ''}
+      <button class="mt-minus" onclick="event.stopPropagation();removeMerch('${rid}')" aria-label="Retirer">−</button>
+      <div class="mt-ref">${esc(p.nom)} · ${esc(p.format || '')}</div>
+      <div class="mt-groupe">${esc(p.groupe || '')}</div>
+      <div class="mt-titre">${esc(p.titre || '')}</div>
+      <div class="mt-foot">
+        <span class="mt-prix">${prix}</span>
+        <span class="mt-stock${low || empty ? ' low' : ''}">${empty ? 'épuisé' : dispo + ' en stock'}</span>
+      </div>
+    </div>`;
+  }).join('');
+  renderMerchCart();
+  renderMerchSoiree();
+  document.getElementById('merch-undo').disabled = !lastMerchSale;
+  document.getElementById('merch-price-toggle').classList.toggle('on', merchEditPrices);
+  document.getElementById('merch-price-toggle').textContent = merchEditPrices ? 'OK — PRIX ENREGISTRÉS' : 'MODIFIER LES PRIX DU SOIR';
+}
+
+function addMerch(rid) {
+  if (merchEditPrices) return;
+  const st = computeReleaseStats(rid);
+  if ((merchCart[rid] || 0) >= st.stock) { showToast('PLUS DE STOCK'); return; }
+  merchCart[rid] = (merchCart[rid] || 0) + 1;
+  renderMerch();
+}
+function removeMerch(rid) {
+  if (!merchCart[rid]) return;
+  merchCart[rid]--;
+  if (merchCart[rid] <= 0) delete merchCart[rid];
+  renderMerch();
+}
+function clearMerchCart() { merchCart = {}; renderMerch(); }
+
+function toggleMerchPrices() { merchEditPrices = !merchEditPrices; renderMerch(); }
+function setMerchPrice(rid, v) {
+  const n = parseFloat(String(v).replace(',', '.'));
+  if (isNaN(n) || n === allParams[rid].prix) delete merchPrices[rid]; else merchPrices[rid] = n;
+  try { localStorage.setItem('bdc_merch_prices', JSON.stringify(merchPrices)); } catch(e) {}
+}
+
+function renderMerchCart() {
+  const ids = Object.keys(merchCart);
+  const total = ids.reduce((s, rid) => s + merchCart[rid] * merchPrice(rid), 0);
+  const nb = ids.reduce((s, rid) => s + merchCart[rid], 0);
+  document.getElementById('merch-cart-total').textContent = fmt(total);
+  document.getElementById('merch-cart-detail').textContent = nb
+    ? ids.map(rid => merchCart[rid] + '× ' + (allParams[rid].groupe || allParams[rid].nom)).join(' · ')
+    : '';
+  document.getElementById('merch-cart').classList.toggle('show', currentView === 'merch' && nb > 0);
+}
+
+function validateMerch(paiement) {
+  const ids = Object.keys(merchCart);
+  if (!ids.length) return;
+  const lieu = merchLieu();
+  if (!lieu) {
+    shake('merch-lieu');
+    document.getElementById('merch-lieu').focus();
+    showToast('INDIQUE LE LIEU DE LA SOIRÉE');
+    return;
+  }
+  const today = new Date().toISOString().split('T')[0];
+  const base = Date.now();
+  const entries = [];
+  let total = 0;
+  ids.forEach((rid, i) => {
+    const qty = merchCart[rid];
+    const prixUnit = merchPrice(rid);
+    const id = base + i;
+    allCommandes[rid] = allCommandes[rid] || [];
+    allCommandes[rid].push({ id, type: 'physique', qty, lieu, paiement, prixUnit, note: '', date: today });
+    entries.push({ rid, id });
+    total += qty * prixUnit;
+  });
+  commandes = allCommandes[currentRelease];
+  lastMerchSale = { entries, total, paiement };
+  merchCart = {};
+  saveAll(true);
+  renderMerch();
+  showToast(fmt(total) + ' ' + (paiement === 'paypal' ? 'PAYPAL' : 'CASH') + ' ✓');
+}
+
+function undoMerchSale() {
+  if (!lastMerchSale) return;
+  if (!confirm('Annuler la dernière vente (' + fmt(lastMerchSale.total) + ') ?')) return;
+  lastMerchSale.entries.forEach(({ rid, id }) => {
+    allCommandes[rid] = (allCommandes[rid] || []).filter(c => c.id !== id);
+  });
+  commandes = allCommandes[currentRelease];
+  lastMerchSale = null;
+  saveAll(true);
+  renderMerch();
+  showToast('VENTE ANNULÉE');
+}
+
+function renderMerchSoiree() {
+  const lieu = merchLieu().toLowerCase();
+  const today = new Date().toISOString().split('T')[0];
+  let nb = 0, cash = 0, paypal = 0;
+  if (lieu) getReleaseIds(true).forEach(rid => (allCommandes[rid] || []).forEach(c => {
+    if (c.type === 'physique' && c.date === today && (c.lieu || '').trim().toLowerCase() === lieu) {
+      const v = (c.qty || 1) * prixPhysique(c, allParams[rid]);
+      nb += c.qty || 1;
+      if (c.paiement === 'paypal') paypal += v; else cash += v;
+    }
+  }));
+  document.getElementById('merch-soiree').innerHTML = lieu
+    ? `Ce soir : <b>${fmt(cash + paypal)}</b><br>${nb} ex. · cash ${fmt(cash)} · PayPal ${fmt(paypal)}`
+    : 'Indique le lieu pour suivre le total de la soirée';
+}
+
+// ── VUE STOCK ───────────────────────────────────────────────────
+function stockLevel(st) {
+  if (st.stock <= 0) return 'out';
+  if (st.stock <= Math.max(5, Math.round(st.stockInit * 0.1))) return 'low';
+  return 'ok';
+}
+
+function renderStock() {
+  const ids = getReleaseIds();
+  const rows = ids.map(rid => ({ rid, st: computeReleaseStats(rid) }));
+  const totalRestant = rows.reduce((s, r) => s + Math.max(0, r.st.stock), 0);
+  const valeur = rows.reduce((s, r) => s + Math.max(0, r.st.stock) * (r.st.p.prix || 0), 0);
+  const alertes = rows.filter(r => stockLevel(r.st) !== 'ok').length;
+  const parFormat = {};
+  rows.forEach(r => { const f = r.st.p.format || 'LP'; parFormat[f] = (parFormat[f] || 0) + Math.max(0, r.st.stock); });
+
+  document.getElementById('stock-summary').innerHTML = `
+    <div class="fin-card">
+      <div class="fin-card-label">Exemplaires en stock</div>
+      <div class="fin-card-value">${totalRestant}</div>
+      <div class="fin-card-sub">${Object.entries(parFormat).map(([f, n]) => n + ' ' + f).join(' · ')}</div>
+    </div>
+    <div class="fin-card">
+      <div class="fin-card-label">Valeur au prix public</div>
+      <div class="fin-card-value">${fmt(valeur)}</div>
+      <div class="fin-card-sub">si tout part au prix Bigcartel</div>
+    </div>
+    <div class="fin-card">
+      <div class="fin-card-label">Alertes</div>
+      <div class="fin-card-value ${alertes ? 'red' : 'green'}">${alertes}</div>
+      <div class="fin-card-sub">${alertes ? 'release(s) épuisée(s) ou presque' : 'rien à signaler'}</div>
+    </div>`;
+
+  const badge = lvl => lvl === 'out' ? '<span class="stock-badge out">ÉPUISÉ</span>'
+                    : lvl === 'low' ? '<span class="stock-badge low">STOCK BAS</span>'
+                    : '<span class="stock-badge ok">OK</span>';
+  document.getElementById('stock-table').innerHTML = `
+    <table class="stock-table">
+      <thead><tr>
+        <th>Release</th><th class="col-hide">Format</th><th class="num col-hide">Initial</th>
+        <th class="num col-hide">Vendus</th><th class="num">Restant</th><th style="width:22%" class="col-hide">Écoulé</th><th></th>
+      </tr></thead>
+      <tbody>${rows.map(({ rid, st }) => {
+        const pctVendu = st.stockInit > 0 ? Math.min(100, Math.round(st.total / st.stockInit * 100)) : 0;
+        return `<tr class="clickable" onclick="switchRelease('${rid}')">
+          <td><b>${esc(st.p.nom)}</b><span class="cell-sub">${esc(st.p.groupe || '')}${st.p.titre ? ' — ' + esc(st.p.titre) : ''}</span></td>
+          <td class="col-hide">${esc(st.p.format || '')}</td>
+          <td class="num col-hide">${st.stockInit}</td>
+          <td class="num col-hide">${st.total}<span class="cell-sub">${st.nbBC} BC · ${st.nbPH} phys. · ${st.nbGroupe} grp · ${st.nbDistro} distro</span></td>
+          <td class="num"><span class="big">${st.stock}</span></td>
+          <td class="col-hide"><div class="progress-bar-wrap"><div class="progress-bar-fill${pctVendu >= 100 ? ' green' : ''}" style="width:${pctVendu}%"></div></div><span class="cell-sub">${pctVendu}%</span></td>
+          <td>${badge(stockLevel(st))}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+}
+
+// Catalogue distro : releases encore en stock
+function catalogueRows() {
+  return getReleaseIds()
+    .map(rid => computeReleaseStats(rid))
+    .filter(st => st.stock > 0)
+    .map(st => ({
+      ref: st.p.nom || '', groupe: st.p.groupe || '', titre: st.p.titre || '',
+      format: st.p.format || '', prixDistro: st.p.prixDistro, prixPublic: st.p.prix, stock: st.stock,
+    }));
+}
+
+function exportCatalogue() {
+  const rows = catalogueRows();
+  const cell = v => { const t = v == null ? '' : String(v); return /[;"\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+  const num  = v => v == null || v === '' ? '' : String(v).replace('.', ',');
+  const lines = [
+    ['Réf.', 'Groupe', 'Titre', 'Format', 'Prix distro (€)', 'Prix public (€)', 'Stock dispo'].join(';'),
+    ...rows.map(r => [cell(r.ref), cell(r.groupe), cell(r.titre), cell(r.format), num(r.prixDistro), num(r.prixPublic), r.stock].join(';')),
+  ];
+  const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'BDC_catalogue_' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  const manquants = rows.filter(r => r.prixDistro == null || r.prixDistro === '').map(r => r.ref);
+  showToast(manquants.length ? 'EXPORTÉ · PRIX DISTRO MANQUANT : ' + manquants.join(', ') : 'CATALOGUE EXPORTÉ');
+}
+
+function copyCatalogue() {
+  const rows = catalogueRows();
+  const txt = 'BORN DEAD COLLECTIVE — CATALOGUE DISPONIBLE\n\n' + rows.map(r =>
+    `${r.ref} — ${r.groupe}${r.titre ? ' "' + r.titre + '"' : ''} (${r.format})` +
+    (r.prixDistro != null && r.prixDistro !== '' ? ' — ' + String(r.prixDistro).replace('.', ',') + ' €' : '') +
+    ` — ${r.stock} dispo`).join('\n');
+  const done = () => showToast('CATALOGUE COPIÉ');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, done));
+  else fallbackCopy(txt, done);
 }
 
 // ── GO ───────────────────────────────────────────────────────────
