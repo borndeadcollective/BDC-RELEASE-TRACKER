@@ -10,6 +10,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 const firebaseConfig = {
   apiKey: "AIzaSyDCeyG4fRFUL4btxVIxz8LES0dq0rTyDMc",
   authDomain: "bdc10-moldy.firebaseapp.com",
@@ -55,12 +56,59 @@ window._fbInit = async () => {
     if (sc.exists() && window._fbOnCommandes) window._fbOnCommandes(JSON.parse(sc.data().data));
     if (sp.exists() && window._fbOnParams)    window._fbOnParams(JSON.parse(sp.data().data));
   } catch(e) { console.warn('FB init:', e); }
-  onSnapshot(REF_C, s => { if (s.exists() && window._fbOnCommandes) window._fbOnCommandes(JSON.parse(s.data().data)); });
-  onSnapshot(REF_P, s => { if (s.exists() && window._fbOnParams)    window._fbOnParams(JSON.parse(s.data().data)); });
+  onSnapshot(REF_C, s => { if (s.exists() && window._fbOnCommandes) window._fbOnCommandes(JSON.parse(s.data().data)); }, e => console.warn('FB commandes:', e));
+  onSnapshot(REF_P, s => { if (s.exists() && window._fbOnParams)    window._fbOnParams(JSON.parse(s.data().data)); }, e => console.warn('FB params:', e));
   window.dispatchEvent(new Event('firebase-ready'));
 };
-window._fbInit();
+
+// Connexion : la base n'est lue qu'une fois connecté (règles Firestore réservées aux comptes autorisés)
+const auth = getAuth(app);
+let fbStarted = false;
+const loginBox = () => document.getElementById('bdc-login');
+function showLogin(msg) {
+  let box = loginBox();
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'bdc-login';
+    box.innerHTML = `
+      <form>
+        <div class="bdc-login-title">BDC TRACKER</div>
+        <input type="email" name="email" placeholder="Email" autocomplete="username" required>
+        <input type="password" name="pw" placeholder="Mot de passe" autocomplete="current-password" required>
+        <button type="submit">Connexion</button>
+        <div class="bdc-login-msg"></div>
+      </form>`;
+    box.querySelector('form').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const f = ev.target;
+      f.querySelector('.bdc-login-msg').textContent = '…';
+      try { await signInWithEmailAndPassword(auth, f.email.value.trim(), f.pw.value); }
+      catch (e) { f.querySelector('.bdc-login-msg').textContent = 'Email ou mot de passe incorrect'; }
+    });
+    document.body.appendChild(box);
+  }
+  box.style.display = 'flex';
+  if (msg) box.querySelector('.bdc-login-msg').textContent = msg;
+}
+window._fbLogout = () => signOut(auth).then(() => location.reload());
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const box = loginBox(); if (box) box.style.display = 'none';
+    if (!fbStarted) { fbStarted = true; window._fbInit(); }
+  } else {
+    const go = () => showLogin();
+    document.body ? go() : document.addEventListener('DOMContentLoaded', go);
+  }
+});
 </script>
+<style>
+#bdc-login { position: fixed; inset: 0; z-index: 99999; background: #000; display: flex; align-items: center; justify-content: center; }
+#bdc-login form { display: flex; flex-direction: column; gap: 12px; width: min(320px, 86vw); }
+#bdc-login .bdc-login-title { font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: #fff; letter-spacing: 2px; text-align: center; margin-bottom: 8px; }
+#bdc-login input, #bdc-login button { font-family: 'IBM Plex Mono', monospace; font-size: 16px; padding: 12px; border: 2px solid #fff; background: #000; color: #fff; border-radius: 0; }
+#bdc-login button { background: #fff; color: #000; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+#bdc-login .bdc-login-msg { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #fff; min-height: 18px; text-align: center; }
+</style>
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
