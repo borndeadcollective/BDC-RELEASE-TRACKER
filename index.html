@@ -1096,34 +1096,58 @@ details.more-fields[open] { padding-bottom: 12px; }
 // fdpPayXXX = ce que tu paies · fdpEncXXX = ce que tu factures au client
 // Se met à jour en important une grille Excel/CSV (Paramètres > Importer une grille).
 // Valeurs par défaut = grille 2026 (Mondial Relay 2026 + La Poste 2026).
+// Grille réellement appliquée sur Bigcartel (17/11/2026) : coûts La Poste 2027 + Mondial Relay 2026.
+// Elle est appliquée une fois à la base (voir applyEmbeddedGrille) ; ensuite on la met à jour
+// par PARAMETRES > IMPORTER UNE GRILLE.
+const GRILLE_EMBED_VERSION = '2027-bigcartel-2026-11-17';
 const TARIFS_DEFAULT = [
-  {"pays": "France", "iso": "FR", "transporteur": "Mondial Relay", "mode": "Locker / Point Relais", "fdpPay100g": 4.15, "fdpPay250g": 4.15, "fdpPay500g": 4.15, "fdpPay1kg": 5.99, "fdpEnc100g": 5.5, "fdpEnc250g": 5.5, "fdpEnc500g": 5.5, "fdpEnc1kg": 5.5, "remarque": "Mondial Relay, dépôt et retrait en Locker ou Point Relais (même prix)."},
-  {"pays": "Belgique", "iso": "BE", "transporteur": "Mondial Relay", "mode": "Locker / Point Relais", "fdpPay100g": 4.6, "fdpPay250g": 4.6, "fdpPay500g": 4.6, "fdpPay1kg": 6.6, "fdpEnc100g": 7, "fdpEnc250g": 7, "fdpEnc500g": 7, "fdpEnc1kg": 7, "remarque": "Mondial Relay, dépôt et retrait en Locker ou Point Relais (même prix)."},
-  {"pays": "Luxembourg", "iso": "LU", "transporteur": "Mondial Relay", "mode": "Locker / Point Relais", "fdpPay100g": 4.6, "fdpPay250g": 4.6, "fdpPay500g": 4.6, "fdpPay1kg": 6.6, "fdpEnc100g": 6, "fdpEnc250g": 6, "fdpEnc500g": 6, "fdpEnc1kg": 6, "remarque": "Mondial Relay, dépôt et retrait en Locker ou Point Relais (même prix)."},
-  {"pays": "Pays-Bas", "iso": "NL", "transporteur": "Mondial Relay", "mode": "Locker / Point Relais", "fdpPay100g": 4.6, "fdpPay250g": 4.6, "fdpPay500g": 4.6, "fdpPay1kg": 6.6, "fdpEnc100g": 6, "fdpEnc250g": 6, "fdpEnc500g": 6, "fdpEnc1kg": 6, "remarque": "Mondial Relay, dépôt et retrait en Locker ou Point Relais (même prix)."},
-  {"pays": "Espagne", "iso": "ES", "transporteur": "Mondial Relay", "mode": "Locker / Point Relais", "fdpPay100g": 6.6, "fdpPay250g": 6.6, "fdpPay500g": 6.6, "fdpPay1kg": 9.5, "fdpEnc100g": 8, "fdpEnc250g": 8, "fdpEnc500g": 8, "fdpEnc1kg": 8, "remarque": "Mondial Relay, dépôt et retrait en Locker ou Point Relais (même prix)."},
-  {"pays": "Portugal", "iso": "PT", "transporteur": "Mondial Relay", "mode": "Locker / Point Relais", "fdpPay100g": 6.6, "fdpPay250g": 6.6, "fdpPay500g": 6.6, "fdpPay1kg": 9.5, "fdpEnc100g": 7.5, "fdpEnc250g": 7.5, "fdpEnc500g": 7.5, "fdpEnc1kg": 7.5, "remarque": "Mondial Relay, dépôt et retrait en Locker ou Point Relais (même prix)."},
-  {"pays": "Italie", "iso": "IT", "transporteur": "Mondial Relay", "mode": "Locker / Point Relais", "fdpPay100g": 6.6, "fdpPay250g": 6.6, "fdpPay500g": 6.6, "fdpPay1kg": 9.5, "fdpEnc100g": 8, "fdpEnc250g": 8, "fdpEnc500g": 8, "fdpEnc1kg": 8, "remarque": "Mondial Relay, dépôt et retrait en Locker ou Point Relais (même prix)."},
-  {"pays": "Pologne", "iso": "PL", "transporteur": "Mondial Relay", "mode": "Locker / Point Relais", "fdpPay100g": 7.2, "fdpPay250g": 7.2, "fdpPay500g": 7.2, "fdpPay1kg": 10.4, "fdpEnc100g": 8, "fdpEnc250g": 8, "fdpEnc500g": 8, "fdpEnc1kg": 8, "remarque": "Mondial Relay, dépôt et retrait en Locker ou Point Relais (même prix)."},
-  {"pays": "Allemagne", "iso": "DE", "transporteur": "Mondial Relay", "mode": "Domicile", "fdpPay100g": 12.5, "fdpPay250g": 12.5, "fdpPay500g": 12.5, "fdpPay1kg": 13.8, "fdpEnc100g": 14, "fdpEnc250g": 14, "fdpEnc500g": 14, "fdpEnc1kg": 14, "remarque": "Pas de Locker/Relais MR en Allemagne : livraison à domicile. Tape/CD moins cher en lettre internationale La Poste (4,85 / 11,65 €, non suivie)."},
-  {"pays": "Autriche", "iso": "AT", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 14.99, "fdpPay1kg": 19.39, "fdpEnc100g": 16, "fdpEnc250g": 16, "fdpEnc500g": 16, "fdpEnc1kg": 16, "remarque": "Zone UE et Suisse. Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Suède", "iso": "SE", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 14.99, "fdpPay1kg": 19.39, "fdpEnc100g": 17, "fdpEnc250g": 17, "fdpEnc500g": 17, "fdpEnc1kg": 17, "remarque": "Zone UE et Suisse. Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Finlande", "iso": "FI", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 14.99, "fdpPay1kg": 19.39, "fdpEnc100g": 17, "fdpEnc250g": 17, "fdpEnc500g": 17, "fdpEnc1kg": 17, "remarque": "Zone UE et Suisse. Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Danemark", "iso": "DK", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 14.99, "fdpPay1kg": 19.39, "fdpEnc100g": 17, "fdpEnc250g": 17, "fdpEnc500g": 17, "fdpEnc1kg": 17, "remarque": "Zone UE et Suisse. Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Irlande", "iso": "IE", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 14.99, "fdpPay1kg": 19.39, "fdpEnc100g": null, "fdpEnc250g": null, "fdpEnc500g": null, "fdpEnc1kg": null, "remarque": "Zone UE et Suisse. Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "République tchèque", "iso": "CZ", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 14.99, "fdpPay1kg": 19.39, "fdpEnc100g": null, "fdpEnc250g": null, "fdpEnc500g": null, "fdpEnc1kg": null, "remarque": "Zone UE et Suisse. Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Grèce", "iso": "GR", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 14.99, "fdpPay1kg": 19.39, "fdpEnc100g": null, "fdpEnc250g": null, "fdpEnc500g": null, "fdpEnc1kg": null, "remarque": "Zone UE et Suisse. Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Suisse", "iso": "CH", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 14.99, "fdpPay1kg": 19.39, "fdpEnc100g": null, "fdpEnc250g": null, "fdpEnc500g": null, "fdpEnc1kg": null, "remarque": "Zone UE et Suisse (hors UE : déclaration douane CN22). Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "United Kingdom", "iso": "GB", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 18.99, "fdpPay1kg": 23.39, "fdpEnc100g": 20, "fdpEnc250g": 20, "fdpEnc500g": 20, "fdpEnc1kg": 20, "remarque": "Zone Royaume-Uni (déclaration douane CN22). Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Norvège", "iso": "NO", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 23.79, "fdpPay1kg": 28.39, "fdpEnc100g": 25, "fdpEnc250g": 25, "fdpEnc500g": 25, "fdpEnc1kg": 25, "remarque": "Zone B (déclaration douane CN22). Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "États-Unis", "iso": "US", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 35.19, "fdpPay1kg": 39.19, "fdpEnc100g": null, "fdpEnc250g": null, "fdpEnc500g": null, "fdpEnc1kg": null, "remarque": "Zone C (déclaration douane). Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Canada", "iso": "CA", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 35.19, "fdpPay1kg": 39.19, "fdpEnc100g": null, "fdpEnc250g": null, "fdpEnc500g": null, "fdpEnc1kg": null, "remarque": "Zone C (déclaration douane). Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Japon", "iso": "JP", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 35.19, "fdpPay1kg": 39.19, "fdpEnc100g": null, "fdpEnc250g": null, "fdpEnc500g": null, "fdpEnc1kg": null, "remarque": "Zone C (déclaration douane). Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."},
-  {"pays": "Australie", "iso": "AU", "transporteur": "La Poste", "mode": "Lettre / Colissimo", "fdpPay100g": 4.85, "fdpPay250g": 11.65, "fdpPay500g": 35.19, "fdpPay1kg": 39.19, "fdpEnc100g": null, "fdpEnc250g": null, "fdpEnc500g": null, "fdpEnc1kg": null, "remarque": "Zone C (déclaration douane). Tape/CD en lettre internationale (non suivie). LP en Colissimo (suivi)."}
+  {"pays": "France", "en": "France", "iso": "FR", "transp100g": "Mondial Relay (Locker / Relais)", "fdpPay100g": 4.15, "fdpEnc100g": 5, "fdpAvec100g": 3, "fdpPay2x100g": 4.15, "transp250g": "Mondial Relay (Locker / Relais)", "fdpPay250g": 4.15, "fdpEnc250g": 5.5, "fdpAvec250g": 3, "fdpPay2x250g": 4.15, "transp500g": "Mondial Relay (Locker / Relais)", "fdpPay500g": 4.15, "fdpEnc500g": 6, "fdpAvec500g": 3.5, "fdpPay2x500g": 5.99, "fdpPay1kg": 5.99, "fdpEnc1kg": 9.5, "transporteur": "Mondial Relay", "mode": "Mondial Relay (Locker / Relais)"},
+  {"pays": "Belgique", "en": "Belgium", "iso": "BE", "transp100g": "Mondial Relay (Locker / Relais)", "fdpPay100g": 4.6, "fdpEnc100g": 5.5, "fdpAvec100g": 3, "fdpPay2x100g": 4.6, "transp250g": "Mondial Relay (Locker / Relais)", "fdpPay250g": 4.6, "fdpEnc250g": 6, "fdpAvec250g": 3, "fdpPay2x250g": 4.6, "transp500g": "Mondial Relay (Locker / Relais)", "fdpPay500g": 4.6, "fdpEnc500g": 6.5, "fdpAvec500g": 4, "fdpPay2x500g": 6.6, "fdpPay1kg": 6.6, "fdpEnc1kg": 10.5, "transporteur": "Mondial Relay", "mode": "Mondial Relay (Locker / Relais)"},
+  {"pays": "Luxembourg", "en": "Luxembourg", "iso": "LU", "transp100g": "Mondial Relay (Locker / Relais)", "fdpPay100g": 4.6, "fdpEnc100g": 5.5, "fdpAvec100g": 3, "fdpPay2x100g": 4.6, "transp250g": "Mondial Relay (Locker / Relais)", "fdpPay250g": 4.6, "fdpEnc250g": 6, "fdpAvec250g": 3, "fdpPay2x250g": 4.6, "transp500g": "Mondial Relay (Locker / Relais)", "fdpPay500g": 4.6, "fdpEnc500g": 6.5, "fdpAvec500g": 4, "fdpPay2x500g": 6.6, "fdpPay1kg": 6.6, "fdpEnc1kg": 10.5, "transporteur": "Mondial Relay", "mode": "Mondial Relay (Locker / Relais)"},
+  {"pays": "Pays-Bas", "en": "Netherlands", "iso": "NL", "transp100g": "Mondial Relay (Locker / Relais)", "fdpPay100g": 4.6, "fdpEnc100g": 5.5, "fdpAvec100g": 3, "fdpPay2x100g": 4.6, "transp250g": "Mondial Relay (Locker / Relais)", "fdpPay250g": 4.6, "fdpEnc250g": 6, "fdpAvec250g": 3, "fdpPay2x250g": 4.6, "transp500g": "Mondial Relay (Locker / Relais)", "fdpPay500g": 4.6, "fdpEnc500g": 6.5, "fdpAvec500g": 4, "fdpPay2x500g": 6.6, "fdpPay1kg": 6.6, "fdpEnc1kg": 10.5, "transporteur": "Mondial Relay", "mode": "Mondial Relay (Locker / Relais)"},
+  {"pays": "Espagne", "en": "Spain", "iso": "ES", "transp100g": "Mondial Relay (Locker / Relais)", "fdpPay100g": 6.6, "fdpEnc100g": 7.5, "fdpAvec100g": 3.5, "fdpPay2x100g": 6.6, "transp250g": "Mondial Relay (Locker / Relais)", "fdpPay250g": 6.6, "fdpEnc250g": 8, "fdpAvec250g": 3.5, "fdpPay2x250g": 6.6, "transp500g": "Mondial Relay (Locker / Relais)", "fdpPay500g": 6.6, "fdpEnc500g": 8.5, "fdpAvec500g": 4.5, "fdpPay2x500g": 9.5, "fdpPay1kg": 9.5, "fdpEnc1kg": 13.0, "transporteur": "Mondial Relay", "mode": "Mondial Relay (Locker / Relais)"},
+  {"pays": "Portugal", "en": "Portugal", "iso": "PT", "transp100g": "Mondial Relay (Locker / Relais)", "fdpPay100g": 6.6, "fdpEnc100g": 7.5, "fdpAvec100g": 3.5, "fdpPay2x100g": 6.6, "transp250g": "Mondial Relay (Locker / Relais)", "fdpPay250g": 6.6, "fdpEnc250g": 8, "fdpAvec250g": 3.5, "fdpPay2x250g": 6.6, "transp500g": "Mondial Relay (Locker / Relais)", "fdpPay500g": 6.6, "fdpEnc500g": 8.5, "fdpAvec500g": 4.5, "fdpPay2x500g": 9.5, "fdpPay1kg": 9.5, "fdpEnc1kg": 13.0, "transporteur": "Mondial Relay", "mode": "Mondial Relay (Locker / Relais)"},
+  {"pays": "Italie", "en": "Italy", "iso": "IT", "transp100g": "Mondial Relay (Locker / Relais)", "fdpPay100g": 6.6, "fdpEnc100g": 7.5, "fdpAvec100g": 3.5, "fdpPay2x100g": 6.6, "transp250g": "Mondial Relay (Locker / Relais)", "fdpPay250g": 6.6, "fdpEnc250g": 8, "fdpAvec250g": 3.5, "fdpPay2x250g": 6.6, "transp500g": "Mondial Relay (Locker / Relais)", "fdpPay500g": 6.6, "fdpEnc500g": 8.5, "fdpAvec500g": 4.5, "fdpPay2x500g": 9.5, "fdpPay1kg": 9.5, "fdpEnc1kg": 13.0, "transporteur": "Mondial Relay", "mode": "Mondial Relay (Locker / Relais)"},
+  {"pays": "Pologne", "en": "Poland", "iso": "PL", "transp100g": "Mondial Relay (Locker / Relais)", "fdpPay100g": 7.2, "fdpEnc100g": 8, "fdpAvec100g": 3.5, "fdpPay2x100g": 7.2, "transp250g": "Mondial Relay (Locker / Relais)", "fdpPay250g": 7.2, "fdpEnc250g": 8.5, "fdpAvec250g": 3.5, "fdpPay2x250g": 7.2, "transp500g": "Mondial Relay (Locker / Relais)", "fdpPay500g": 7.2, "fdpEnc500g": 9, "fdpAvec500g": 5, "fdpPay2x500g": 10.4, "fdpPay1kg": 10.4, "fdpEnc1kg": 14, "transporteur": "Mondial Relay", "mode": "Mondial Relay (Locker / Relais)"},
+  {"pays": "Allemagne", "en": "Germany", "iso": "DE", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 7, "fdpAvec100g": 7, "fdpPay2x100g": 12.5, "transp250g": "Mondial Relay domicile", "fdpPay250g": 12.5, "fdpEnc250g": 13, "fdpAvec250g": 3.5, "fdpPay2x250g": 12.5, "transp500g": "Mondial Relay domicile", "fdpPay500g": 12.5, "fdpEnc500g": 14, "fdpAvec500g": 4.5, "fdpPay2x500g": 13.8, "fdpPay1kg": 13.8, "fdpEnc1kg": 18.5, "transporteur": "Mondial Relay", "mode": "Mondial Relay domicile"},
+  {"pays": "Autriche", "en": "Austria", "iso": "AT", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 15.79, "fdpEnc500g": 17, "fdpAvec500g": 6, "fdpPay2x500g": 20.39, "fdpPay1kg": 20.39, "fdpEnc1kg": 23, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "Danemark", "en": "Denmark", "iso": "DK", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 15.79, "fdpEnc500g": 17, "fdpAvec500g": 6, "fdpPay2x500g": 20.39, "fdpPay1kg": 20.39, "fdpEnc1kg": 23, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "Finlande", "en": "Finland", "iso": "FI", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 15.79, "fdpEnc500g": 17, "fdpAvec500g": 6, "fdpPay2x500g": 20.39, "fdpPay1kg": 20.39, "fdpEnc1kg": 23, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "Suède", "en": "Sweden", "iso": "SE", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 15.79, "fdpEnc500g": 17, "fdpAvec500g": 6, "fdpPay2x500g": 20.39, "fdpPay1kg": 20.39, "fdpEnc1kg": 23, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "Irlande", "en": "Ireland", "iso": "IE", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 15.79, "fdpEnc500g": 17, "fdpAvec500g": 6, "fdpPay2x500g": 20.39, "fdpPay1kg": 20.39, "fdpEnc1kg": 23, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "Grèce", "en": "Greece", "iso": "GR", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 15.79, "fdpEnc500g": 17, "fdpAvec500g": 6, "fdpPay2x500g": 20.39, "fdpPay1kg": 20.39, "fdpEnc1kg": 23, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "République tchèque", "en": "Czechia", "iso": "CZ", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 15.79, "fdpEnc500g": 17, "fdpAvec500g": 6, "fdpPay2x500g": 20.39, "fdpPay1kg": 20.39, "fdpEnc1kg": 23, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "Suisse", "en": "Switzerland", "iso": "CH", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 15.79, "fdpEnc500g": 17, "fdpAvec500g": 6, "fdpPay2x500g": 20.39, "fdpPay1kg": 20.39, "fdpEnc1kg": 23, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "Royaume-Uni", "en": "United Kingdom", "iso": "GB", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 19.79, "fdpEnc500g": 21, "fdpAvec500g": 6, "fdpPay2x500g": 24.39, "fdpPay1kg": 24.39, "fdpEnc1kg": 27, "transporteur": "La Poste", "mode": "La Poste Colissimo"},
+  {"pays": "Norvège", "en": "Norway", "iso": "NO", "transp100g": "La Poste lettre internationale", "fdpPay100g": 5.25, "fdpEnc100g": 6, "fdpAvec100g": 7.5, "fdpPay2x100g": 12.55, "transp250g": "La Poste lettre internationale", "fdpPay250g": 12.55, "fdpEnc250g": 13.5, "fdpAvec250g": 4.5, "fdpPay2x250g": 12.55, "transp500g": "La Poste Colissimo", "fdpPay500g": 24.99, "fdpEnc500g": 27, "fdpAvec500g": 6, "fdpPay2x500g": 29.79, "fdpPay1kg": 29.79, "fdpEnc1kg": 33, "transporteur": "La Poste", "mode": "La Poste Colissimo"}
 ];
 const TIERS = ['100g', '250g', '500g', '1kg'];
 
 // Met une grille (même ancienne) au format actuel
+const PAYS_ALIASES = {
+  FR: ['france'], BE: ['belgique', 'belgium'], LU: ['luxembourg'], NL: ['pays-bas', 'netherlands', 'the netherlands', 'holland'],
+  ES: ['espagne', 'spain'], PT: ['portugal'], IT: ['italie', 'italy'], PL: ['pologne', 'poland'],
+  DE: ['allemagne', 'germany'], AT: ['autriche', 'austria'], DK: ['danemark', 'denmark'], FI: ['finlande', 'finland'],
+  SE: ['suede', 'sweden'], IE: ['irlande', 'ireland'], GR: ['grece', 'greece'],
+  CZ: ['republique tcheque', 'tchequie', 'czechia', 'czech republic'], CH: ['suisse', 'switzerland'],
+  GB: ['royaume-uni', 'united kingdom', 'uk', 'great britain', 'angleterre'], NO: ['norvege', 'norway'],
+  US: ['etats-unis', 'united states', 'usa'], CA: ['canada'], JP: ['japon', 'japan'], AU: ['australie', 'australia'],
+};
+function normPays(p) { return String(p || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
+function isoOfPays(p) {
+  const n = normPays(p);
+  for (const [iso, names] of Object.entries(PAYS_ALIASES)) if (names.includes(n)) return iso;
+  return null;
+}
+// Tarif d'un pays, quel que soit le nom utilisé (« Royaume-Uni » = « United Kingdom »…)
+function tarifFor(pays) {
+  if (!pays) return undefined;
+  const exact = TARIFS.find(t => t.pays === pays);
+  if (exact) return exact;
+  const n = normPays(pays), iso = isoOfPays(pays);
+  return TARIFS.find(t => normPays(t.pays) === n || normPays(t.en) === n || (iso && (t.iso || isoOfPays(t.pays)) === iso));
+}
+
 function normalizeTarifs(list) {
   if (!Array.isArray(list)) return null;
   const isoByPays = {};
@@ -1133,7 +1157,7 @@ function normalizeTarifs(list) {
     if (n.fdpPay250g === undefined && n.fdpPay500g !== undefined) n.fdpPay250g = n.fdpPay500g;
     if (n.fdpPay100g === undefined) n.fdpPay100g = n.fdpPay250g;
     TIERS.forEach(k => { if (n['fdpEnc' + k] === undefined) n['fdpEnc' + k] = n.fdpEnc ?? null; });
-    if (!n.iso && isoByPays[n.pays]) n.iso = isoByPays[n.pays];
+    if (!n.iso) n.iso = isoByPays[n.pays] || isoOfPays(n.pays) || undefined;
     return n;
   });
 }
@@ -1269,7 +1293,7 @@ let fxRates      = {}; // cache taux de change
 // ── CALCULS PARTAGÉS (onglet release, stock, finances) ──────────────
 function isGroupedCmd(c) { return !!(c.note && c.note.includes('[commande groupée')); }
 function fdpPayInfo(c, p) {
-  const t = TARIFS.find(t => t.pays === c.pays);
+  const t = tarifFor(c.pays);
   const reel = c.fdpPayReel !== undefined ? !!c.fdpPayReel : (c.fdpPayOverride != null && !isGroupedCmd(c));
   let val;
   if (c.fdpPayOverride != null) val = c.fdpPayOverride;
@@ -1278,7 +1302,7 @@ function fdpPayInfo(c, p) {
   return { val, reel };
 }
 function fdpEncOf(c, p) {
-  const t = TARIFS.find(t => t.pays === c.pays);
+  const t = tarifFor(c.pays);
   return c.fdpEncOverride != null ? c.fdpEncOverride : getFdpEnc(t, c.qty || 1, (p || params || {}).format);
 }
 function prixPhysique(c, p) { return c.prixUnit != null ? c.prixUnit : (p.prix || 0); }
@@ -1391,7 +1415,7 @@ function transpLabelToSelect(lbl) {
   return 'Mondial Relay';
 }
 function syncTransporteur(paysId, transId) {
-  const t = TARIFS.find(t => t.pays === document.getElementById(paysId).value);
+  const t = tarifFor(document.getElementById(paysId).value);
   const sel = document.getElementById(transId);
   if (!sel || sel.value === 'Main propre' || sel.value === 'Autre') return;
   const lbl = t ? (t['transp' + fmtTier(params && params.format)] || t.transporteur) : '';
@@ -1602,7 +1626,7 @@ function updatePreview() {
   if (currentType === 'bigcartel') {
     const pays  = document.getElementById('input-pays').value;
     const qty   = parseInt(document.getElementById('input-num').value) || 1;
-    const tarif = TARIFS.find(t => t.pays === pays);
+    const tarif = tarifFor(pays);
     const fdpEncOverride = parseFloat(document.getElementById('input-fdp-enc').value);
     const fdpPayOverride = parseFloat(document.getElementById('input-fdp-pay').value);
     const fdpEnc = !isNaN(fdpEncOverride) ? fdpEncOverride : getFdpEnc(tarif, qty);
@@ -1634,7 +1658,7 @@ function updatePreview() {
     document.getElementById('prev-total').className   = 'cval pos';
   } else if (currentType === 'grouped') {
     const pays   = document.getElementById('grp-pays').value;
-    const tarif  = TARIFS.find(t => t.pays === pays);
+    const tarif  = tarifFor(pays);
     const checked = [...groupedSelected];
     const nReleases  = checked.length || 1;
     const totalQty   = checked.reduce((s,id) => s + (parseInt(document.getElementById('grp-qty-'+id)?.value)||1), 0);
@@ -1734,7 +1758,7 @@ function addCommande() {
     const note    = document.getElementById('grp-note').value.trim();
     const transporteur = document.getElementById('grp-transporteur').value;
     const client  = readClient('grp');
-    const tarif   = TARIFS.find(t => t.pays === pays);
+    const tarif   = tarifFor(pays);
     const checked = [...groupedSelected];
     if (checked.length < 2) { alert('Sélectionne au moins 2 releases.'); return; }
     if (!pays) { shake('grp-pays'); return; }
@@ -2350,7 +2374,9 @@ function mergeGrille(parsed, fileName) {
   const source = { file: fileName, date: new Date().toISOString().slice(0, 10) };
   parsed.forEach(t => {
     let i = idx.get(t.pays.toLowerCase());
-    if (i == null && t.iso && byIso.has(t.iso)) i = byIso.get(t.iso);   // "Royaume-Uni" = "United Kingdom"
+    const isoT = t.iso || isoOfPays(t.pays) || isoOfPays(t.en);
+    if (i == null && isoT && byIso.has(isoT)) i = byIso.get(isoT);   // "Royaume-Uni" = "United Kingdom"
+    if (i == null && isoT) { const k = res.findIndex(x => isoOfPays(x.pays) === isoT); if (k >= 0) i = k; }
     const o = i != null ? res[i] : null;
     const n = { ...(o || { pays: t.pays }), source };
     let diff = !o;
@@ -2664,8 +2690,31 @@ window._fbOnCommandes = (data) => {
     refreshCurrentView(); setSyncDot('synced');
   }
 };
+// Applique une fois la grille intégrée (GRILLE_EMBED_VERSION) à la base.
+// N'écrit que le document "params" : jamais les commandes.
+function applyEmbeddedGrille() {
+  if (allParams._grilleVersion === GRILLE_EMBED_VERSION) return false;
+  const m = mergeGrille(normalizeTarifs(TARIFS_DEFAULT), 'grille Bigcartel du 17/11/2026');
+  // Pays proposés par défaut auparavant mais pas ouverts sur Bigcartel
+  const offerts = new Set(TARIFS_DEFAULT.map(t => t.iso));
+  const utilises = new Set();
+  getReleaseIds(true).forEach(id => (allCommandes[id] || []).forEach(c => c.pays && utilises.add(isoOfPays(c.pays) || c.pays)));
+  TARIFS = m.res.filter(t => { const iso = t.iso || isoOfPays(t.pays); return !['US', 'CA', 'JP', 'AU'].includes(iso) || offerts.has(iso) || utilises.has(iso); });
+  allParams._tarifs = TARIFS;
+  allParams._grilleVersion = GRILLE_EMBED_VERSION;
+  try {
+    localStorage.setItem('bdc_tarifs', JSON.stringify(TARIFS));
+    localStorage.setItem('bdc_all_params', JSON.stringify(allParams));
+  } catch(e) {}
+  if (window._fbSaveParams) window._fbSaveParams(allParams);
+  refreshPaysSelects();
+  showToast('FRAIS DE PORT MIS À JOUR (GRILLE BIGCARTEL)');
+  return true;
+}
+
 window._fbOnParams = (data) => {
-  if (JSON.stringify(data) !== JSON.stringify(allParams)) {
+  const changed = JSON.stringify(data) !== JSON.stringify(allParams);
+  if (changed) {
     allParams = normalizeParams(data);
     const fbTarifs = normalizeTarifs(allParams._tarifs);
     if (fbTarifs && fbTarifs.length && fbTarifs[0].fdpPay500g !== undefined) {
@@ -2678,8 +2727,9 @@ window._fbOnParams = (data) => {
     allCommandes = normalizeCommandes(allCommandes);
     commandes = allCommandes[currentRelease];
     try { localStorage.setItem('bdc_all_params', JSON.stringify(allParams)); } catch(e) {}
-    refreshCurrentView(); setSyncDot('synced');
   }
+  const applied = applyEmbeddedGrille();
+  if (changed || applied) { refreshCurrentView(); setSyncDot('synced'); }
 };
 window.addEventListener('firebase-ready', () => setSyncDot('synced'));
 
@@ -2702,7 +2752,7 @@ function showToast(msg) {
 }
 
 // ── IMPORT CSV BIGCARTEL ────────────────────────────────────────
-const PAYS_ISO_MAP = {"FR": "France", "BE": "Belgique", "ES": "Espagne", "DE": "Allemagne", "IT": "Italie", "NL": "Pays-Bas", "AT": "Autriche", "LU": "Luxembourg", "PT": "Portugal", "PL": "Pologne", "GB": "United Kingdom", "SE": "Su\u00e8de", "NO": "Norv\u00e8ge", "FI": "Finlande", "DK": "Danemark"};
+const PAYS_ISO_MAP = {"FR": "France", "BE": "Belgique", "ES": "Espagne", "DE": "Allemagne", "IT": "Italie", "NL": "Pays-Bas", "AT": "Autriche", "LU": "Luxembourg", "PT": "Portugal", "PL": "Pologne", "GB": "Royaume-Uni", "IE": "Irlande", "CZ": "République tchèque", "GR": "Grèce", "CH": "Suisse", "SE": "Su\u00e8de", "NO": "Norv\u00e8ge", "FI": "Finlande", "DK": "Danemark"};
 
 function paysFromIso(iso) {
   const t = TARIFS.find(t => (t.iso || '').toUpperCase() === (iso || '').toUpperCase());
