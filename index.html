@@ -438,6 +438,63 @@ details.more-fields[open] { padding-bottom: 12px; }
 .stock-badge.out { background: var(--red); color: #fff; }
 .stock-badge.ok { background: #e8f5ec; color: var(--green); }
 
+/* À EXPÉDIER */
+.tab-count { background: var(--red); color: #fff; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0; padding: 1px 6px; border-radius: 9px; vertical-align: 2px; margin-left: 4px; }
+.exp-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+.exp-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.exp-chips { display: flex; border: 1px solid var(--border); background: #fff; flex-wrap: wrap; }
+.exp-chip { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; background: #fff; color: #1a1a1a; border: none; border-left: 1px solid var(--border); padding: 9px 14px; cursor: pointer; }
+.exp-chip:first-child { border-left: none; }
+.exp-chip.on { background: #1a1a1a; color: #fff; }
+.exp-hint { font-size: 10px; color: var(--muted); }
+.exp-list { display: flex; flex-direction: column; gap: 12px; }
+.exp-card { background: #fff; border: 1px solid var(--border); display: flex; flex-direction: column; }
+.exp-card.open { border-color: #1a1a1a; }
+.exp-head { padding: 12px 18px; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+.exp-card.open .exp-head { border-bottom: 1px solid #f0f0f0; }
+.exp-ref { font-weight: 700; font-size: 14px; }
+.exp-date { font-size: 11px; color: #666; }
+.exp-sum { font-size: 12px; }
+.exp-sum.muted { color: #666; }
+.exp-badge { font-size: 9px; letter-spacing: 1px; padding: 3px 8px; font-weight: 700; white-space: nowrap; }
+.exp-badge.todo  { background: #fde2e1; color: #8a1c13; }
+.exp-badge.wait  { background: #fff3cd; color: #7a5b00; }
+.exp-badge.go    { background: #dbeafe; color: #1e3a8a; }
+.exp-badge.drop  { background: #e6f4ea; color: #1a5c2a; }
+.exp-badge.done  { background: #f0f0f0; color: #444; }
+.exp-badge.grp   { background: #f0f0f0; color: #444; }
+.exp-toggle { margin-left: auto; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; background: #fff; color: #1a1a1a; border: 1px solid #1a1a1a; padding: 8px 12px; cursor: pointer; }
+.exp-steps { list-style: none; margin: 0; padding: 12px 18px; display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 8px; border-bottom: 1px solid #f0f0f0; font-size: 10px; }
+.exp-steps li { border-top: 3px solid var(--border); padding-top: 6px; }
+.exp-steps li.done { border-top-color: var(--green); }
+.exp-steps li.now { border-top-color: #1a1a1a; }
+.exp-steps li span { color: #666; }
+.exp-body { display: grid; grid-template-columns: 1.05fr 1.15fr 0.9fr; }
+.exp-col { padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.exp-col + .exp-col { border-left: 1px solid #f0f0f0; }
+.exp-col.next { background: #fafafa; }
+.exp-k { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #666; }
+.exp-v { font-size: 12px; line-height: 1.6; }
+.exp-big { font-family: var(--font-display); font-size: 20px; letter-spacing: 1px; line-height: 1.1; }
+.exp-fields { display: grid; grid-template-columns: 92px minmax(0, 1fr) 54px; gap: 4px 8px; align-items: center; font-size: 12px; }
+.exp-fields > span { overflow-wrap: anywhere; }
+.exp-fields .lbl { font-size: 9px; letter-spacing: 1px; color: #666; text-transform: uppercase; }
+.exp-copy { height: 30px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 9px; font-family: var(--font-mono); }
+.exp-copy:hover { border-color: #1a1a1a; }
+.exp-addr { white-space: pre-line; font-size: 14px; line-height: 1.6; border: 1px dashed #bbb; padding: 12px 14px; background: #fafafa; }
+.exp-main { display: block; width: 100%; text-align: center; text-decoration: none; background: #1a1a1a; color: #fff !important; font-family: var(--font-display); font-size: 18px; letter-spacing: 2px; padding: 12px; border: none; cursor: pointer; }
+.exp-main.green { background: var(--green); }
+.exp-sec { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; background: #fff; color: #1a1a1a; border: 1px solid #1a1a1a; padding: 9px 12px; cursor: pointer; text-align: center; text-decoration: none; }
+.exp-ter { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; background: #fff; color: #666; border: 1px solid #ccc; padding: 8px; cursor: pointer; }
+.exp-small { font-size: 10px; color: #666; line-height: 1.5; }
+.exp-kv { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 6px 8px; font-size: 11px; color: #444; }
+.exp-kv .pending { color: var(--muted); font-style: italic; }
+.exp-cost { display: flex; flex-direction: column; gap: 4px; font-size: 9px; letter-spacing: 1px; color: #666; text-transform: uppercase; }
+.exp-cost input { font-family: var(--font-mono); font-size: 14px; padding: 8px; border: 1px solid var(--border); }
+.exp-empty { background: #fff; border: 1px solid var(--border); padding: 28px; text-align: center; font-size: 12px; color: #666; }
+.exp-undo { background: none; border: none; color: var(--muted); font-family: var(--font-mono); font-size: 9px; text-decoration: underline; cursor: pointer; padding: 0; align-self: flex-start; }
+.exp-msg { width: 100%; min-height: 220px; font-family: var(--font-mono); font-size: 12px; padding: 10px; border: 1px solid var(--border); }
+
 @media (max-width: 800px) {
   /* HEADER */
   header { padding: 12px 16px; }
@@ -554,11 +611,23 @@ details.more-fields[open] { padding-bottom: 12px; }
 
   .fin-section-title { font-size: 13px; letter-spacing: 2px; }
 
-  /* EXPÉDITION MOBILE */
-  .exp-fields { grid-template-columns: 1fr; }
-  .exp-field.full { grid-column: span 1; }
-  .exp-card { padding: 12px; }
-  .exp-card-title { font-size: 14px; }
+  /* À EXPÉDIER MOBILE */
+  .exp-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .exp-summary .fin-card:last-child { display: none; }
+  .exp-summary .fin-card { padding: 10px; }
+  .exp-summary .fin-card-sub { display: none; }
+  .exp-hint { display: none; }
+  .exp-head { padding: 12px 14px; }
+  .exp-steps { grid-template-columns: 1fr; gap: 4px; padding: 10px 14px; }
+  .exp-steps li { border-top: none; border-left: 3px solid var(--border); padding: 2px 0 2px 8px; }
+  .exp-steps li.done { border-left-color: var(--green); }
+  .exp-steps li.now { border-left-color: #1a1a1a; }
+  .exp-body { grid-template-columns: 1fr; }
+  .exp-col { padding: 12px 14px; }
+  .exp-col + .exp-col { border-left: none; border-top: 1px solid #f0f0f0; }
+  .exp-fields { grid-template-columns: 74px minmax(0, 1fr) 54px; }
+  .exp-copy { height: 40px; }
+  .exp-cost input { font-size: 16px; }
 }
 </style>
 </head>
@@ -1048,6 +1117,29 @@ details.more-fields[open] { padding-bottom: 12px; }
   </div>
 </div>
 
+<!-- PANNEAU À EXPÉDIER -->
+<div class="view-panel" id="expedier-panel">
+  <div class="exp-summary" id="exp-summary"></div>
+  <div class="exp-bar">
+    <div class="exp-chips" id="exp-chips"></div>
+    <span class="exp-hint">Les plus anciennes en premier · <a href="#" onclick="openMessageRelais(); return false;">message perso</a></span>
+  </div>
+  <div class="exp-list" id="exp-list"></div>
+</div>
+
+<div class="modal-overlay" id="modal-msg-relais">
+  <div class="modal">
+    <h2>MESSAGE PERSO MONDIAL RELAY</h2>
+    <div class="exp-small" style="margin-bottom:10px">Le texte que tu colles dans la demande Mondial Relay pour que l'acheteur choisisse son point relais.</div>
+    <textarea class="exp-msg" id="msg-relais-text"></textarea>
+    <div class="modal-btns">
+      <button class="btn-clear" onclick="resetMessageRelais()">TEXTE D'ORIGINE</button>
+      <button class="btn-clear" style="margin-left:auto" onclick="closeMessageRelais()">ANNULER</button>
+      <button class="release-badge" onclick="saveMessageRelais()">ENREGISTRER</button>
+    </div>
+  </div>
+</div>
+
 <!-- PANNEAU STOCK -->
 <div class="view-panel" id="stock-panel">
   <div class="fin-section">
@@ -1272,7 +1364,7 @@ let allParams      = normalizeParams(JSON.parse(localStorage.getItem('bdc_all_pa
 allCommandes       = normalizeCommandes(allCommandes);
 let currentRelease = localStorage.getItem('bdc_current_release') || 'bdc007';
 if (!getReleaseIds().includes(currentRelease)) currentRelease = getReleaseIds()[0];
-let currentView    = 'release'; // release | merch | stock | finances
+let currentView    = 'release'; // release | expedier | merch | stock | finances
 
 // Migration ancienne version mono-release
 if (localStorage.getItem('bdc_commandes')) {
@@ -1475,7 +1567,9 @@ function renderReleaseNav() {
   }).join('');
   const tool = (view, label, sub) =>
     `<button class="release-tab tool${currentView === view ? ' active' : ''}" onclick="switchView('${view}')">${label}<span class="tab-sub">${sub}</span></button>`;
+  const nbExp = countAExpedier();
   nav.innerHTML = tabs + '<span class="nav-sep"></span>' +
+    tool('expedier', 'À EXPÉDIER' + (nbExp ? `<span class="tab-count">${nbExp}</span>` : ''), 'Commandes à envoyer') +
     tool('merch', 'MERCH', 'Table de concert') +
     tool('stock', 'STOCK', 'Toutes releases') +
     tool('finances', 'FINANCES', 'Vue globale label');
@@ -1493,11 +1587,13 @@ function switchView(view) {
   document.getElementById('finances-panel').classList.toggle('active', view === 'finances');
   document.getElementById('merch-panel').classList.toggle('active', view === 'merch');
   document.getElementById('stock-panel').classList.toggle('active', view === 'stock');
+  document.getElementById('expedier-panel').classList.toggle('active', view === 'expedier');
   if (view !== 'merch') document.getElementById('merch-cart').classList.remove('show');
   renderReleaseNav();
   if (view === 'finances') renderFinances();
   if (view === 'merch')    renderMerch();
   if (view === 'stock')    renderStock();
+  if (view === 'expedier') renderExpedier();
 }
 function switchToFinances() { switchView('finances'); }
 
@@ -1525,6 +1621,7 @@ function refreshCurrentView() {
   if (currentView === 'finances') renderFinances();
   if (currentView === 'merch')    renderMerch();
   if (currentView === 'stock')    renderStock();
+  if (currentView === 'expedier') renderExpedier();
 }
 
 // ── TYPE SWITCH ──────────────────────────────────────────────────
@@ -2678,6 +2775,7 @@ function saveAll(skipSync) {
     window._fbSaveCommandes(allCommandes).then(() => setSyncDot('synced')).catch(() => setSyncDot('error'));
     window._fbSaveParams(allParams);
   }
+  updateExpBadge();
 }
 function save() { saveAll(); }
 
@@ -3689,6 +3787,484 @@ function copyCatalogue() {
   const done = () => showToast('CATALOGUE COPIÉ');
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, done));
   else fallbackCopy(txt, done);
+}
+
+// ── À EXPÉDIER ───────────────────────────────────────────────────
+// Un « colis » = les lignes Bigcartel d'une même commande (même GRP-… ou même réf.).
+// Les étapes Mondial Relay sont rangées dans c.envoi (copié sur chaque ligne du colis) :
+//   relaisDemande, relaisChoisi, mrLien (« Terminer mon envoi »), mrCommande (CV…),
+//   colis (n°), suivi (url), etiquette (url QR code), coutReel (prix du colis),
+//   paye, depot, envoye (dates AAAA-MM-JJ)
+// Le script du lundi remplit tout seul relaisChoisi / mrLien / colis / suivi / coutReel / depot
+// à partir des mails Mondial Relay ; les boutons ci-dessous servent quand il faut le faire à la main.
+const MESSAGE_RELAIS_DEFAULT = `Thank you very much for your order and for supporting the release! Before I can ship your package, please select the Mondial Relay pickup point that is the most convenient for you. Once your selection has been made, I will be able to proceed with the shipment.
+
+----------------------------------------------------------------------------------
+
+Merci beaucoup pour votre commande et votre soutien ! Avant de pouvoir expédier votre colis, merci de sélectionner le point relais Mondial Relay qui vous convient le mieux. Dès que votre choix sera effectué, je pourrai procéder à l'envoi.
+
+Born Dead Collective`;
+const MR_URL = 'https://www.mondialrelay.fr/envoi-de-colis/';
+const HORS_UE = ['CH', 'GB', 'NO', 'US', 'CA', 'JP', 'AU'];
+let expFilter = 'tous';
+const expOpen = {};
+
+function isoToday() { return new Date().toISOString().slice(0, 10); }
+function frDay(s) {
+  if (!s) return '';
+  const d = new Date(String(s).slice(0, 10) + 'T12:00:00');
+  return isNaN(d) ? String(s) : d.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+}
+function frDate(s) {
+  if (!s) return '';
+  const d = new Date(String(s).slice(0, 10) + 'T12:00:00');
+  return isNaN(d) ? String(s) : d.toLocaleDateString('fr-FR');
+}
+function daysSince(s) {
+  if (!s) return 0;
+  const d = new Date(String(s).slice(0, 10) + 'T12:00:00');
+  return isNaN(d) ? 0 : Math.max(0, Math.floor((Date.now() - d.getTime()) / 86400000));
+}
+function joursTxt(n) { return n <= 0 ? "AUJOURD'HUI" : n === 1 ? '1 JOUR' : n + ' JOURS'; }
+function fmtSigne(n) { return (n >= 0 ? '+' : '−') + fmt(Math.abs(n)); }
+
+function colisKey(c) {
+  const g = (c.note || '').match(/GRP-\d+/);
+  if (g) return g[0];
+  const r = String(c.ref || '').trim().replace(/^#/, '').toLowerCase();
+  return r ? 'ref:' + r : 'id:' + c.id;
+}
+function colisUnits(items) {
+  const u = [];
+  items.forEach(({ c, p }) => { for (let k = 0; k < (c.qty || 1); k++) u.push(p.format || 'LP'); });
+  return u;
+}
+function unitGrams(f) { return (FMT_TIERS.find(x => x.tier === fmtTier(f))?.grams || 450) + (String(f).toUpperCase() === '2LP' ? 450 : 0); }
+function heaviestFmt(units) {
+  if (units.some(f => fmtTier(f) === '500g')) return units.find(f => fmtTier(f) === '500g');
+  if (units.some(f => fmtTier(f) === '250g')) return 'CD';
+  return 'Tape';
+}
+// Coût estimé d'un colis (mêmes règles que la grille : tarif 1 ex. ou 2 ex. du format le plus lourd)
+function colisFdpPay(tarif, units, isMR) {
+  if (!tarif || !units.length) return null;
+  if (units.length === 1) return getFdpPay(tarif, 1, units[0]);
+  const f = heaviestFmt(units);
+  const grams = units.reduce((s, x) => s + unitGrams(x), 0);
+  return getFdpPay(tarif, isMR && grams <= 500 ? 1 : 2, f);
+}
+function envoiLabel(lbl, transporteur) {
+  if (transporteur === 'La Poste' && !/poste|lettre|colissimo/i.test(lbl || '')) return 'La Poste';
+  if (transporteur === 'Mondial Relay' && !/mondial/i.test(lbl || '')) return 'Mondial Relay';
+  return String(lbl || transporteur || 'Mondial Relay').replace(/\s*\((.*)\)\s*$/, ' · $1').replace(/^La Poste\s+(?!·)/, 'La Poste · ').replace(/^Mondial Relay\s+(?!·)/, 'Mondial Relay · ');
+}
+
+function buildColis() {
+  const map = new Map();
+  getReleaseIds(true).forEach(rid => (allCommandes[rid] || []).forEach(c => {
+    if (!c || c.type !== 'bigcartel' || c.transporteur === 'Main propre' || c.transporteur === 'Autre') return;
+    const k = colisKey(c);
+    if (!map.has(k)) map.set(k, { key: k, items: [] });
+    map.get(k).items.push({ c, rid, p: allParams[rid] || {} });
+  }));
+  return [...map.values()].map(enrichColis);
+}
+
+function enrichColis(col) {
+  const items = col.items, first = items[0].c;
+  const envoi = Object.assign({}, ...items.map(x => x.c.envoi || {}));
+  const withClient = items.find(x => x.c.client && Object.values(x.c.client).some(Boolean));
+  let client = withClient ? { ...withClient.c.client } : {};
+  if (!client.prenom && !client.nom) {
+    const m = (first.note || '').match(/\/\/\s*([^[]+)/);
+    if (m) { const parts = m[1].trim().split(/\s+/); client.prenom = parts.shift() || ''; client.nom = parts.join(' '); }
+  }
+  const pays = first.pays || '';
+  const tarif = tarifFor(pays);
+  const units = colisUnits(items);
+  const hf = heaviestFmt(units);
+  const gridLbl = tarif ? (tarif['transp' + fmtTier(hf)] || tarif.mode || tarif.transporteur || '') : '';
+  let transporteur = items.some(x => x.c.transporteur === 'La Poste') ? 'La Poste' : (first.transporteur || transpLabelToSelect(gridLbl));
+  const mode = transporteur === 'La Poste' ? 'poste' : 'mr';
+  const label = envoiLabel(gridLbl, transporteur);
+  const domicile = mode === 'mr' && /domicile/i.test(gridLbl);
+  const grams = units.reduce((s, f) => s + unitGrams(f), 0);
+  const tousReels = items.every(x => x.c.fdpPayReel && x.c.fdpPayOverride != null);
+  const coutEstime = colisFdpPay(tarif, units, mode === 'mr');
+  const cout = envoi.coutReel != null ? Number(envoi.coutReel)
+             : tousReels ? items.reduce((s, x) => s + Number(x.c.fdpPayOverride || 0), 0) : coutEstime;
+  const coutReel = envoi.coutReel != null || tousReels;
+  const facture = items.reduce((s, x) => s + (fdpEncOf(x.c, x.p) || 0), 0);
+  const dates = items.map(x => x.c.date).filter(Boolean).sort();
+  const statut = items.some(x => x.c.statut === 'preorder') ? 'preorder'
+               : items.every(x => x.c.statut === 'envoye') ? 'envoye' : 'a_envoyer';
+  const iso = (tarif && tarif.iso) || isoOfPays(pays);
+
+  // Étapes
+  const e = envoi, envoyeTout = statut === 'envoye';
+  let steps;
+  if (mode === 'mr') {
+    steps = [
+      { k: 'recue',   label: 'Commande reçue',  done: true, date: dates[0], how: 'auto (mail Bigcartel)' },
+      { k: 'demande', label: 'Relais demandé',  done: !!(e.relaisDemande || e.relaisChoisi || e.colis || e.paye || envoyeTout), date: e.relaisDemande, how: 'par toi' },
+      { k: 'choisi',  label: 'Relais choisi',   done: !!(e.relaisChoisi || e.colis || e.paye || envoyeTout), date: e.relaisChoisi, how: 'auto (mail MR)' },
+      { k: 'paye',    label: 'Étiquette payée', done: !!(e.colis || e.paye || envoyeTout), date: e.paye, how: 'auto : n° de colis + prix réel' },
+      { k: 'depose',  label: 'Déposé',          done: !!(e.depot || envoyeTout), date: e.depot, how: 'auto : preuve de dépôt MR' },
+    ];
+    if (domicile) steps = steps.filter(s => s.k !== 'demande' && s.k !== 'choisi');
+  } else {
+    steps = [
+      { k: 'recue',  label: 'Commande reçue', done: true, date: dates[0], how: 'auto (mail Bigcartel)' },
+      { k: 'poster', label: 'Posté',          done: envoyeTout, date: e.envoye, how: 'par toi' },
+    ];
+  }
+  const now = steps.find(s => !s.done);
+  const etat = now ? now.k : 'fini';
+  const attente = daysSince(etat === 'choisi' ? e.relaisDemande : dates[0]);
+  const ETATS = {
+    demande: ['RELAIS À DEMANDER SUR MONDIAL RELAY', 'todo'],
+    choisi:  ['EN ATTENTE DU CHOIX CLIENT · ' + joursTxt(attente), attente >= 4 ? 'todo' : 'wait'],
+    paye:    domicile ? ['ÉTIQUETTE À PAYER (DOMICILE)', 'go'] : ['RELAIS CHOISI · À FINALISER SUR MONDIAL RELAY', 'go'],
+    depose:  ['ÉTIQUETTE PAYÉE · À DÉPOSER', 'drop'],
+    poster:  ['À POSTER · ' + joursTxt(attente), attente >= 3 ? 'todo' : 'wait'],
+    fini:    ['ENVOYÉ' + (e.envoye || e.depot ? ' LE ' + frDate(e.envoye || e.depot) : ''), 'done'],
+  };
+  const [etatLabel, etatCls] = ETATS[etat];
+  return Object.assign(col, {
+    ref: first.ref ? '#' + String(first.ref).replace(/^#/, '') : '(sans réf.)',
+    date: dates[0] || '', pays, iso, tarif, client, envoi, units, grams, label, mode, domicile, transporteur,
+    cout, coutEstime, coutReel, facture, statut, steps, etat, etatLabel, etatCls,
+    envoyeLe: e.envoye || e.depot || null,
+    releases: new Set(items.map(x => x.rid)).size,
+    importeLe: items.map(x => x.c.importeLe).filter(Boolean).sort().pop() || null,
+  });
+}
+
+function countAExpedier() {
+  try { return buildColis().filter(c => c.statut === 'a_envoyer').length; } catch (e) { return 0; }
+}
+function updateExpBadge() {
+  const btn = document.querySelector('#release-nav .release-tab.tool[onclick*="expedier"]');
+  if (!btn) return;
+  const n = countAExpedier();
+  let b = btn.querySelector('.tab-count');
+  if (!n) { if (b) b.remove(); return; }
+  if (!b) { b = document.createElement('span'); b.className = 'tab-count'; btn.insertBefore(b, btn.querySelector('.tab-sub')); }
+  b.textContent = n;
+}
+
+function renderExpedier() {
+  const all = buildColis();
+  const aEnv = all.filter(c => c.statut === 'a_envoyer').sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.key.localeCompare(b.key));
+  const mr = aEnv.filter(c => c.mode === 'mr'), lp = aEnv.filter(c => c.mode === 'poste');
+  const recents = all.filter(c => c.statut === 'envoye' && c.envoyeLe && daysSince(c.envoyeLe) <= 30)
+    .sort((a, b) => String(b.envoyeLe).localeCompare(String(a.envoyeLe)));
+  const preorders = all.filter(c => c.statut === 'preorder');
+  const nbArticles = aEnv.reduce((s, c) => s + c.units.length, 0);
+  const cnt = k => mr.filter(c => c.etat === k).length;
+  const mrSub = [
+    cnt('demande') && cnt('demande') + ' à demander', cnt('choisi') && cnt('choisi') + ' chez le client',
+    cnt('paye') && cnt('paye') + ' à payer', cnt('depose') && cnt('depose') + ' à déposer',
+  ].filter(Boolean).join(' · ') || 'rien en cours';
+  const timbres = lp.reduce((s, c) => s + (c.cout || 0), 0);
+  const dernier = all.map(c => c.importeLe).filter(Boolean).sort().pop();
+
+  document.getElementById('exp-summary').innerHTML = `
+    <div class="fin-card"><div class="fin-card-label">À envoyer</div><div class="fin-card-value ${aEnv.length ? 'red' : 'green'}">${aEnv.length}</div>
+      <div class="fin-card-sub">${nbArticles} article${nbArticles > 1 ? 's' : ''}${preorders.length ? ' · ' + preorders.length + ' en preorder' : ''}</div></div>
+    <div class="fin-card"><div class="fin-card-label">Mondial Relay</div><div class="fin-card-value">${mr.length}</div><div class="fin-card-sub">${mrSub}</div></div>
+    <div class="fin-card"><div class="fin-card-label">La Poste</div><div class="fin-card-value">${lp.length}</div><div class="fin-card-sub">${lp.length ? 'affranchissement ≈ ' + fmt(timbres) : 'rien à poster'}</div></div>
+    <div class="fin-card"><div class="fin-card-label">Dernier import</div><div class="fin-card-value" style="font-size:22px">${dernier ? esc(frDay(dernier)) : '—'}</div><div class="fin-card-sub">mails Bigcartel + Mondial Relay, chaque lundi</div></div>`;
+
+  const chip = (k, label) => `<button class="exp-chip${expFilter === k ? ' on' : ''}" onclick="setExpFilter('${k}')">${label}</button>`;
+  document.getElementById('exp-chips').innerHTML =
+    chip('tous', `Tous (${aEnv.length})`) + chip('mr', `Mondial Relay (${mr.length})`) +
+    chip('poste', `La Poste (${lp.length})`) + chip('envoyes', `Envoyés récemment (${recents.length})`);
+
+  const list = expFilter === 'mr' ? mr : expFilter === 'poste' ? lp : expFilter === 'envoyes' ? recents : aEnv;
+  const vide = { tous: 'Rien à expédier pour le moment.', mr: 'Aucun colis Mondial Relay en cours.', poste: 'Aucune lettre à poster.', envoyes: 'Aucun envoi ces 30 derniers jours.' }[expFilter];
+  document.getElementById('exp-list').innerHTML = list.length ? list.map(renderColisCard).join('') : `<div class="exp-empty">${vide}</div>`;
+}
+function setExpFilter(k) { expFilter = k; renderExpedier(); }
+
+function colisContenu(col) {
+  return col.items.map(({ c, p }) => `${c.qty || 1} × ${esc(p.nom || '')} ${esc(p.groupe || '')} — ${esc(p.format || '')}`).join('<br>');
+}
+function colisContenuCourt(col) {
+  return col.items.map(({ c, p }) => `${(c.qty || 1) > 1 ? (c.qty + ' × ') : ''}${esc(p.format || '')} ${esc(p.groupe || '')}`).join(' + ');
+}
+function enveloppeText(col) {
+  const c = col.client || {};
+  const lines = [[c.prenom, c.nom].filter(Boolean).join(' '), c.adr1, c.adr2,
+    [c.cp, String(c.ville || '').toUpperCase()].filter(Boolean).join(' ')];
+  if (col.iso !== 'FR') lines.push(String(col.pays || '').toUpperCase());
+  return lines.filter(Boolean).join('\n');
+}
+function copyBtn(v, label) { return v ? `<button class="exp-copy" data-copy="${esc(v)}" onclick="expCopy(this)" aria-label="Copier ${label}">copier</button>` : '<span></span>'; }
+
+function renderColisCard(col) {
+  const open = col.statut === 'a_envoyer' && (expOpen[col.key] !== undefined ? expOpen[col.key] : !['choisi', 'depose'].includes(col.etat));
+  const e = col.envoi;
+  const badges = `<span class="exp-badge ${col.etatCls}">${col.etatLabel}</span>` +
+    (col.releases > 1 ? '<span class="exp-badge grp">COMMANDE GROUPÉE</span>' : '');
+  const nomClient = [col.client.prenom, col.client.nom].filter(Boolean).join(' ');
+  const suivi = e.suivi ? `<a href="${esc(e.suivi)}" target="_blank" rel="noopener" style="font-size:12px">Suivre ↗</a>` : '';
+  const toggle = col.statut === 'a_envoyer' ? `<button class="exp-toggle" onclick="toggleColis(this)">${open ? 'REPLIER' : 'DÉPLIER'}</button>` : '';
+
+  if (!open) {
+    const extra = e.colis ? `<span class="exp-sum">Colis n° ${esc(e.colis)}${col.coutReel ? ' · réel ' + fmt(col.cout || 0) : ''}</span>` : '';
+    const undo = col.statut === 'envoye' ? `<button class="exp-undo" style="margin-left:auto" onclick="expUndo(this)">annuler l'envoi</button>` : '';
+    return `<article class="exp-card" data-key="${esc(col.key)}"><div class="exp-head">
+      <span class="exp-ref">${esc(col.ref)}</span>
+      <span class="exp-sum">${colisContenuCourt(col)}</span>
+      <span class="exp-sum muted">→ ${esc(col.pays)} · ${esc(col.mode === 'mr' ? 'Mondial Relay' : 'La Poste')}</span>
+      ${badges}${extra}${suivi}
+      ${nomClient ? `<span class="exp-sum muted">${esc(nomClient)}${col.client.ville ? ', ' + esc([col.client.cp, col.client.ville].filter(Boolean).join(' ')) : ''}</span>` : ''}
+      ${toggle}${undo}
+    </div></article>`;
+  }
+
+  const head = `<div class="exp-head">
+      <span class="exp-ref">${esc(col.ref)}</span>
+      <span class="exp-date">commandé le ${esc(frDate(col.date))}</span>
+      ${badges}${toggle}
+    </div>`;
+  const steps = `<ol class="exp-steps" style="--n:${col.steps.length}" aria-label="Étapes de l'envoi">${col.steps.map((s, i) =>
+    `<li class="${s.done ? 'done' : s.k === col.etat ? 'now' : ''}"><b>${i + 1}. ${s.label}</b><br><span>${s.done && s.date ? esc(frDay(s.date)) + ' · ' : ''}${s.how}</span></li>`).join('')}</ol>`;
+
+  const marge = col.cout != null ? col.facture - col.cout : null;
+  const colEnvoi = `<div class="exp-col">
+      <div class="exp-k">Dans le colis</div>
+      <div class="exp-v">${colisContenu(col)}</div>
+      <div class="exp-k" style="margin-top:6px">Envoi</div>
+      <div class="exp-big">${esc(col.label)}</div>
+      <div class="exp-v">Poids ≈ ${col.grams} g · ${col.coutReel ? 'coût réel' : 'coût estimé'} <b>${col.cout != null ? fmt(col.cout) : '?'}</b><br>
+        facturé ${fmt(col.facture)}${marge != null ? ` · marge <b style="color:${marge >= 0 ? 'var(--green)' : 'var(--red)'}">${fmtSigne(marge)}</b>` : ''}</div>
+      ${col.mode === 'mr'
+        ? `<div class="exp-small">${col.domicile ? 'Livraison <b>à domicile</b> : l\'adresse complète sert à créer l\'envoi.' : 'Point relais : <b>choisi par le client</b> via le mail Mondial Relay.'}</div>`
+        : `<div class="exp-small">${/colissimo/i.test(col.label) ? 'Colissimo : garde le n° de suivi.' : 'Lettre sans suivi.'}${HORS_UE.includes(col.iso) ? ' <b>Hors UE : déclaration douane CN22 à remplir.</b>' : ''}</div>`}
+    </div>`;
+
+  let colMid, colNext;
+  const c = col.client;
+  if (col.mode === 'mr') {
+    const f = (lbl, v, label) => `<span class="lbl">${lbl}</span><span>${v ? esc(v) : '<span style="color:var(--muted)">—</span>'}</span>${copyBtn(v, label)}`;
+    colMid = `<div class="exp-col">
+      <div class="exp-k">Destinataire — pour mondialrelay.fr</div>
+      <div class="exp-fields">
+        ${f('Prénom', c.prenom, 'le prénom')}${f('Nom', c.nom, 'le nom')}${f('Email', c.email, "l'email")}${f('Téléphone', c.tel, 'le téléphone')}
+        ${col.domicile || c.adr1 ? f('Adresse', [c.adr1, c.adr2].filter(Boolean).join(', '), "l'adresse") : ''}
+        ${col.domicile || c.cp ? f('CP / Ville', [c.cp, c.ville].filter(Boolean).join(' '), 'code postal et ville') : ''}
+        <span class="lbl">Pays</span><span>${esc(col.pays)}</span><span></span>
+      </div>
+    </div>`;
+    colNext = renderNextMR(col);
+  } else {
+    colMid = `<div class="exp-col">
+      <div class="exp-k">Adresse à écrire sur l'enveloppe</div>
+      <div class="exp-addr">${esc(enveloppeText(col)) || '<span style="color:var(--muted)">Pas d\'adresse : à compléter dans l\'onglet de la release</span>'}</div>
+      <button class="exp-sec" style="align-self:flex-start" data-copy="${esc(enveloppeText(col))}" onclick="expCopy(this, 'ADRESSE COPIÉE')">COPIER L'ADRESSE</button>
+    </div>`;
+    const estime = col.cout != null ? String(col.cout.toFixed(2)).replace('.', ',') : '';
+    colNext = `<div class="exp-col next">
+      <button class="exp-sec" onclick="expPrint(this)">IMPRIMER L'ADRESSE</button>
+      <div class="exp-k" style="margin-top:6px">Une fois postée</div>
+      <label class="exp-cost">Coût réel (€)<input type="text" inputmode="decimal" class="exp-cout" value="${esc(estime)}"></label>
+      ${/colissimo/i.test(col.label) ? '<label class="exp-cost">N° de suivi (facultatif)<input type="text" class="exp-suivi" value=""></label>' : ''}
+      <button class="exp-main green" onclick="expPosteEnvoye(this)">MARQUER ENVOYÉ ✓</button>
+    </div>`;
+  }
+  return `<article class="exp-card open" data-key="${esc(col.key)}">${head}${col.mode === 'mr' ? steps : ''}<div class="exp-body">${colEnvoi}${colMid}${colNext}</div></article>`;
+}
+
+function renderNextMR(col) {
+  const e = col.envoi, c = col.client;
+  const undo = col.steps.filter(s => s.done).length > 1 ? `<button class="exp-undo" onclick="expUndo(this)">↺ revenir à l'étape précédente</button>` : '';
+  const auto = `<div class="exp-k" style="margin-top:8px">Rempli tout seul ensuite</div>
+      <div class="exp-kv">
+        <span>N° de colis</span><span${e.colis ? '' : ' class="pending"'}>${e.colis ? esc(e.colis) : 'après paiement'}</span>
+        <span>Coût réel</span><span${e.coutReel != null ? '' : ' class="pending"'}>${e.coutReel != null ? fmt(Number(e.coutReel)) : 'après paiement'}</span>
+        <span>Suivi</span><span${e.suivi ? '' : ' class="pending"'}>${e.suivi ? `<a href="${esc(e.suivi)}" target="_blank" rel="noopener">ouvrir ↗</a>` : 'après paiement'}</span>
+      </div>`;
+  let body;
+  if (col.etat === 'demande') {
+    body = `<div class="exp-small">Crée l'envoi sur Mondial Relay avec l'email de l'acheteur et colle ton message perso : il choisira lui-même son point relais.</div>
+      <a class="exp-main" href="${MR_URL}" target="_blank" rel="noopener">OUVRIR MONDIAL RELAY ↗</a>
+      <button class="exp-sec" onclick="expCopyMessage()">COPIER LE MESSAGE PERSO (FR+EN)</button>
+      <button class="exp-main green" onclick="expRelaisDemande(this)">J'AI DEMANDÉ LE RELAIS ✓</button>`;
+  } else if (col.etat === 'choisi') {
+    body = `<div class="exp-small">Demandé ${e.relaisDemande ? 'le ' + esc(frDay(e.relaisDemande)) : ''}. Dès que le client choisit, Mondial Relay t'envoie un mail ; l'import du lundi le passe ici avec le lien pour finaliser.</div>
+      ${c.email ? `<button class="exp-sec" onclick="expRelancer(this)">RELANCER LE CLIENT (MAIL)</button>` : ''}
+      <button class="exp-ter" onclick="expClientChoisi(this)">Le client a choisi : saisir à la main</button>`;
+  } else if (col.etat === 'paye') {
+    body = e.mrLien
+      ? `<a class="exp-main" href="${esc(e.mrLien)}" target="_blank" rel="noopener">TERMINER MON ENVOI ↗</a>
+         <div class="exp-small">Lien repris du mail Mondial Relay : il ouvre directement cette commande en attente, il ne reste qu'à payer.</div>`
+      : `<a class="exp-main" href="${MR_URL}" target="_blank" rel="noopener">${col.domicile ? 'CRÉER L\'ENVOI ↗' : 'TERMINER MON ENVOI ↗'}</a>
+         <div class="exp-small">${col.domicile ? 'Envoi à domicile : saisis l\'adresse ci-contre puis paie.' : 'Utilise le lien « Terminer mon envoi » du mail Mondial Relay, ou retrouve l\'envoi en attente dans ton compte.'}</div>`;
+    body += auto + `<button class="exp-ter" onclick="expSaisirMain(this)">Saisir à la main</button>`;
+  } else if (col.etat === 'depose') {
+    body = `<div class="exp-small">Colis n° <b>${esc(e.colis || '—')}</b>${e.coutReel != null ? ' · payé ' + fmt(Number(e.coutReel)) : ''}. Dépose-le dans un Locker ou Point Relais : la preuve de dépôt le passera en « envoyé » à l'import suivant.</div>
+      ${e.suivi ? `<a class="exp-sec" href="${esc(e.suivi)}" target="_blank" rel="noopener">SUIVRE LE COLIS ↗</a>` : ''}
+      ${e.etiquette ? `<a class="exp-sec" href="${esc(e.etiquette)}" target="_blank" rel="noopener">QR CODE / ÉTIQUETTE ↗</a>` : ''}
+      <button class="exp-main green" onclick="expDepose(this)">MARQUER DÉPOSÉ ✓</button>`;
+  } else {
+    body = `<div class="exp-small">Envoyé.</div>`;
+  }
+  return `<div class="exp-col next"><div class="exp-k">Prochaine étape</div>${body}${undo}</div>`;
+}
+
+// Actions
+function expKeyOf(el) { const a = el.closest('[data-key]'); return a ? a.dataset.key : null; }
+function expGet(el) { const k = expKeyOf(el); return k ? buildColis().find(c => c.key === k) : null; }
+function expSave(msg) {
+  saveAll(true);
+  renderExpedier();
+  updateExpBadge();
+  if (currentView === 'release') { updateStats(); renderHistory(); }
+  if (msg) showToast(msg);
+}
+function setColisCout(col, v) {
+  const n = col.items.length;
+  const part = Math.round((v / n) * 100) / 100;
+  col.items.forEach(({ c }) => { c.fdpPayOverride = part; c.fdpPayReel = true; c.envoi = Object.assign(c.envoi || {}, { coutReel: v }); });
+}
+function patchEnvoi(col, patch) { col.items.forEach(({ c }) => { c.envoi = Object.assign(c.envoi || {}, patch); }); }
+function parseEuro(txt) { const v = parseFloat(String(txt || '').trim().replace(',', '.')); return isNaN(v) || v < 0 ? null : v; }
+
+function toggleColis(el) {
+  const col = expGet(el); if (!col) return;
+  const isOpen = el.closest('.exp-card').classList.contains('open');
+  expOpen[col.key] = !isOpen;
+  renderExpedier();
+}
+function expCopy(el, msg) {
+  const txt = el.dataset.copy || '';
+  const done = () => { showToast(msg || 'COPIÉ'); el.textContent === 'copier' && (el.textContent = 'copié ✓'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, done));
+  else fallbackCopy(txt, done);
+}
+function getMessageRelais() { return (allParams._messageRelais && String(allParams._messageRelais).trim()) ? allParams._messageRelais : MESSAGE_RELAIS_DEFAULT; }
+function expCopyMessage() {
+  const txt = getMessageRelais(), done = () => showToast('MESSAGE PERSO COPIÉ');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, done));
+  else fallbackCopy(txt, done);
+}
+function openMessageRelais() { document.getElementById('msg-relais-text').value = getMessageRelais(); document.getElementById('modal-msg-relais').classList.add('open'); }
+function closeMessageRelais() { document.getElementById('modal-msg-relais').classList.remove('open'); }
+function resetMessageRelais() { document.getElementById('msg-relais-text').value = MESSAGE_RELAIS_DEFAULT; }
+function saveMessageRelais() {
+  const v = document.getElementById('msg-relais-text').value.trim();
+  if (!v || v === MESSAGE_RELAIS_DEFAULT.trim()) delete allParams._messageRelais; else allParams._messageRelais = v;
+  try { localStorage.setItem('bdc_all_params', JSON.stringify(allParams)); } catch (e) {}
+  if (window._fbSaveParams) window._fbSaveParams(allParams);
+  closeMessageRelais();
+  showToast('MESSAGE ENREGISTRÉ');
+}
+
+function expRelaisDemande(el) {
+  const col = expGet(el); if (!col) return;
+  patchEnvoi(col, { relaisDemande: isoToday() });
+  expOpen[col.key] = undefined;
+  expSave('RELAIS DEMANDÉ');
+}
+function expClientChoisi(el) {
+  const col = expGet(el); if (!col) return;
+  const lien = prompt('Colle le lien « Terminer mon envoi » du mail Mondial Relay (facultatif) :', '');
+  if (lien === null) return;
+  const patch = { relaisChoisi: isoToday() };
+  if (/^https?:\/\//i.test(lien.trim())) patch.mrLien = lien.trim();
+  patchEnvoi(col, patch);
+  expOpen[col.key] = undefined;
+  expSave('RELAIS CHOISI');
+}
+function expSaisirMain(el) {
+  const col = expGet(el); if (!col) return;
+  const num = prompt('N° de colis Mondial Relay (facultatif) :', col.envoi.colis || '');
+  if (num === null) return;
+  const estime = col.cout != null ? String(col.cout.toFixed(2)).replace('.', ',') : '';
+  const prix = prompt('Prix payé pour ce colis (€) :', estime);
+  if (prix === null) return;
+  const v = parseEuro(prix);
+  if (v === null) { alert('Montant invalide'); return; }
+  const patch = { paye: isoToday() };
+  if (num.trim()) patch.colis = num.trim();
+  patchEnvoi(col, patch);
+  setColisCout(col, v);
+  expOpen[col.key] = undefined;
+  expSave('ÉTIQUETTE ENREGISTRÉE');
+}
+function marquerEnvoye(col) {
+  const d = isoToday();
+  col.items.forEach(({ c }) => { c.statut = 'envoye'; c.envoi = Object.assign(c.envoi || {}, { envoye: (c.envoi && c.envoi.envoye) || d }); });
+}
+function expDepose(el) {
+  const col = expGet(el); if (!col) return;
+  patchEnvoi(col, { depot: isoToday() });
+  marquerEnvoye(col);
+  expSave('COLIS DÉPOSÉ · ENVOYÉ');
+}
+function expPosteEnvoye(el) {
+  const col = expGet(el); if (!col) return;
+  const card = el.closest('.exp-card');
+  const v = parseEuro(card.querySelector('.exp-cout')?.value);
+  if (v === null) { alert('Indique le coût réel (en €)'); return; }
+  const suivi = card.querySelector('.exp-suivi')?.value.trim();
+  setColisCout(col, v);
+  if (suivi) patchEnvoi(col, { colis: suivi });
+  marquerEnvoye(col);
+  expSave('MARQUÉ ENVOYÉ');
+}
+function expUndo(el) {
+  const col = expGet(el); if (!col) return;
+  const e = col.envoi;
+  let msg, fn;
+  if (col.statut === 'envoye') {
+    msg = 'Remettre ce colis dans « à expédier » ?';
+    fn = c => { c.statut = 'en_attente'; delete c.envoi.envoye; delete c.envoi.depot; };
+  } else if (e.colis || e.paye || e.coutReel != null) {
+    msg = 'Effacer l\'étiquette (n° de colis, prix réel) ?';
+    fn = c => { ['colis', 'paye', 'coutReel', 'suivi', 'mrCommande', 'etiquette'].forEach(k => delete c.envoi[k]); c.fdpPayOverride = null; c.fdpPayReel = false; };
+  } else if (e.relaisChoisi || e.mrLien) {
+    msg = 'Revenir à « en attente du choix client » ?';
+    fn = c => { delete c.envoi.relaisChoisi; delete c.envoi.mrLien; };
+  } else if (e.relaisDemande) {
+    msg = 'Revenir à « relais à demander » ?';
+    fn = c => { delete c.envoi.relaisDemande; };
+  } else return;
+  if (!confirm(msg)) return;
+  col.items.forEach(({ c }) => { c.envoi = c.envoi || {}; fn(c); });
+  expOpen[col.key] = undefined;
+  expSave('ÉTAPE ANNULÉE');
+}
+function expRelancer(el) {
+  const col = expGet(el); if (!col || !col.client.email) return;
+  const p = col.client.prenom || '';
+  const sujet = 'Born Dead Collective — Mondial Relay pickup point / point relais (' + col.ref + ')';
+  const corps = `Hi ${p},
+
+Just a quick reminder: before I can ship your order ${col.ref}, please select your Mondial Relay pickup point using the link in the email Mondial Relay sent you (please check your spam folder too).
+
+----------------------------------------------------------------------------------
+
+Bonjour ${p},
+
+Petit rappel : avant que je puisse expédier votre commande ${col.ref}, merci de sélectionner votre point relais via le lien du mail envoyé par Mondial Relay (pensez à vérifier vos spams).
+
+Thanks / Merci !
+Born Dead Collective`;
+  location.href = 'mailto:' + encodeURIComponent(col.client.email) + '?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+}
+function expPrint(el) {
+  const col = expGet(el); if (!col) return;
+  const w = window.open('', '_blank');
+  if (!w) { alert('Impossible d\'ouvrir la fenêtre d\'impression (bloqueur de fenêtres ?)'); return; }
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(col.ref)}</title>
+    <style>body{font-family:Arial,Helvetica,sans-serif;margin:40px}.exp{font-size:11px;color:#444;margin-bottom:28px;white-space:pre-line}
+    .dest{font-size:22px;line-height:1.5;white-space:pre-line;border:1px solid #000;padding:20px 26px;display:inline-block}</style></head>
+    <body><div class="exp">Exp. : Born Dead Collective</div><div class="dest">${esc(enveloppeText(col))}</div>
+    <script>window.onload=function(){window.print();}<\/script></body></html>`);
+  w.document.close();
 }
 
 // ── GO ───────────────────────────────────────────────────────────

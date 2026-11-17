@@ -1,17 +1,37 @@
 #!/usr/bin/env python3
-"""Ajoute des commandes Bigcartel dans le tracker BDC (base Firestore).
+"""Ajoute des commandes Bigcartel dans le tracker BDC (base Firestore)
+et fait avancer les envois Mondial Relay de l'onglet « À EXPÉDIER ».
 
 Utilisé par la tâche planifiée hebdomadaire : l'agent lit les mails
-« You've received a new order! » de Bigcartel, les résume dans un fichier
-JSON, puis lance ce script qui fait le reste (doublons, sortie, écriture).
+« You've received a new order! » de Bigcartel et les mails Mondial Relay,
+les résume dans un fichier JSON, puis lance ce script qui fait le reste
+(doublons, sortie, rapprochement, écriture).
 
-Entrée : un fichier JSON = liste de commandes :
-  [{"num": "BZDR-518062", "date": "2026-09-25", "pays": "France",
-    "fdp_enc": 4.0,
-    "items": [{"texte": "Mozdrill \"Demo 2026\"", "qty": 1}],
-    "client": {"prenom": "", "nom": "", "email": "", "tel": "",
-               "adr1": "", "adr2": "", "ville": "", "cp": ""}}]
+Entrée : un fichier JSON, soit une simple liste de commandes (ancien format),
+soit {"commandes": [...], "mondial_relay": [...]}.
+
+Commande :
+  {"num": "BZDR-518062", "date": "2026-09-25", "pays": "France",
+   "fdp_enc": 4.0,
+   "items": [{"texte": "Mozdrill \"Demo 2026\"", "qty": 1}],
+   "client": {"prenom": "", "nom": "", "email": "", "tel": "",
+              "adr1": "", "adr2": "", "ville": "", "cp": ""}}
   "pays" = le pays tel qu'écrit dans le mail (anglais ou français).
+
+Événements Mondial Relay (un par mail) :
+  {"type": "relais_choisi", "date": "2026-10-29", "destinataire": "Ronald Corazza",
+   "lien": "https://www.mondialrelay.fr/_mvc/fr-FR/EnvoiColis/Reprendre/?idExpeditionEnAttente=..."}
+     mail « Votre destinataire a saisi ses coordonnées - vous pouvez terminer votre envoi »
+  {"type": "confirmation", "date": "2026-11-16", "commande": "CV88729219",
+   "etiquette": "https://www.mondialrelay.fr/envoi-de-colis/recapitulatif-de-commande/?reference=...",
+   "colis": [{"numero": "20671009", "destinataire": "Oliverio Lorenzo", "prix": 6.60,
+              "suivi": "https://www.mondialrelay.fr/suivi-de-colis/?numeroExpedition=...", "cp": "37138"}]}
+     mail « Confirmation de commande Mondial Relay » (une ligne par colis payé)
+  {"type": "depot", "date": "2026-11-18", "colis": "20671009", "destinataire": "..."}
+     mail de preuve de dépôt (colis et/ou destinataire, au moins un des deux)
+Un événement est rapproché d'une commande par le n° de colis, sinon par le nom
+du client (prénom + nom contenus dans le nom du destinataire). Ce qui est
+ambigu ou introuvable est seulement signalé, jamais deviné.
 
 Usage :
   ROBOT_PW=... python3 bigcartel_vers_tracker.py commandes.json          # simulation
@@ -96,6 +116,150 @@ def trouver_release(texte, params):
     return None
 
 
+def transporteur_grille(pays, formats, tarifs):
+    """Mondial Relay ou La Poste selon la grille du tracker (format le plus lourd)."""
+    n = norm(pays)
+    t = next((t for t in tarifs or [] if n in (norm(t.get("pays")), norm(t.get("en")))), None)
+    if not t:
+        return "Mondial Relay"
+    tiers = {"TAPE": "100g", "CD": "250g"}
+    tier = max((tiers.get(str(f).upper(), "500g") for f in formats), key=["100g", "250g", "500g"].index)
+    lbl = str(t.get("transp" + tier) or t.get("transporteur") or "")
+    return "La Poste" if any(k in lbl.lower() for k in ("poste", "lettre", "colissimo")) else "Mondial Relay"
+
+
+# ── Mondial Relay ────────────────────────────────────────────────────
+def mots(s):
+    return {m for m in norm(s).replace("-", " ").replace(",", " ").split() if len(m) > 1}
+
+
+def colis_cle(c):
+    note = c.get("note") or ""
+    i = note.find("GRP-")
+    if i >= 0:
+        j = i + 4
+        while j < len(note) and note[j].isdigit():
+            j += 1
+        return note[i:j]
+    r = str(c.get("ref") or "").strip().lstrip("#").lower()
+    return "ref:" + r if r else "id:" + str(c.get("id"))
+
+
+def colis_en_cours(commandes, params):
+    """Commandes Bigcartel regroupées par colis : {cle: [entrées]}."""
+    res = {}
+    for rid, lst in commandes.items():
+        if rid not in params or not isinstance(lst, list):
+            continue
+        for c in lst:
+            if c.get("type") == "bigcartel" and c.get("transporteur") not in ("Main propre", "Autre"):
+                res.setdefault(colis_cle(c), []).append(c)
+    return res
+
+
+def nom_client(entrees):
+    for c in entrees:
+        cl = c.get("client") or {}
+        m = mots(f"{cl.get('prenom', '')} {cl.get('nom', '')}")
+        if m:
+            return m
+    note = entrees[0].get("note") or ""
+    if "//" in note:
+        return mots(note.split("//", 1)[1].split("[")[0])
+    return set()
+
+
+def rapprocher(ev, colis, etape):
+    """Clé du colis correspondant à l'événement, ou (None, raison)."""
+    num = str(ev.get("colis") or ev.get("numero") or "").strip()
+    if num:
+        hits = [k for k, es in colis.items() if any(str((c.get("envoi") or {}).get("colis") or "") == num for c in es)]
+        if len(hits) == 1:
+            return hits[0], None
+    dest = mots(ev.get("destinataire"))
+    if not dest:
+        return None, "ni n° de colis connu ni destinataire"
+    def ouvert(es):
+        e = {}
+        for c in es:
+            e.update(c.get("envoi") or {})
+        tous_envoyes = all(c.get("statut") == "envoye" for c in es)
+        if etape == "relais_choisi":
+            return not tous_envoyes and not e.get("colis") and not e.get("paye")
+        if etape == "confirmation":
+            return not tous_envoyes and not e.get("colis")
+        return not e.get("depot")
+    hits = [k for k, es in colis.items() if ouvert(es) and nom_client(es) and nom_client(es) <= dest]
+    if len(hits) == 1:
+        return hits[0], None
+    if not hits:
+        return None, "aucune commande en cours à ce nom"
+    cp = norm(ev.get("cp"))
+    if cp:
+        fin = [k for k in hits if any(norm((c.get("client") or {}).get("cp")) == cp for c in colis[k])]
+        if len(fin) == 1:
+            return fin[0], None
+    return None, f"{len(hits)} commandes possibles"
+
+
+def appliquer_mr(evenements, commandes, params, rapport):
+    ordre = {"relais_choisi": 0, "confirmation": 1, "depot": 2}
+    colis = colis_en_cours(commandes, params)
+    change = False
+    for ev in sorted(evenements, key=lambda e: (str(e.get("date") or ""), ordre.get(e.get("type"), 9))):
+        typ, date = ev.get("type"), (ev.get("date") or time.strftime("%Y-%m-%d"))[:10]
+        lignes = ev.get("colis") if typ == "confirmation" else [ev]
+        if typ == "confirmation" and not isinstance(lignes, list):
+            lignes = [lignes]
+        if typ not in ordre:
+            rapport["mr_non_rapproches"].append({"type": typ, "raison": "type inconnu"})
+            continue
+        for ln in lignes or []:
+            if typ == "confirmation":
+                sub = {"colis": ln.get("numero"), "destinataire": ln.get("destinataire"), "cp": ln.get("cp")}
+                k, raison = rapprocher(sub, colis, typ)
+            else:
+                sub = ln
+                k, raison = rapprocher(ln, colis, typ)
+            qui = sub.get("destinataire") or sub.get("colis") or "?"
+            if not k:
+                rapport["mr_non_rapproches"].append({"type": typ, "date": date, "qui": qui, "raison": raison})
+                continue
+            es = colis[k]
+            ref = es[0].get("ref") or k
+            if typ == "relais_choisi":
+                patch = {"relaisChoisi": date}
+                if ev.get("lien"):
+                    patch["mrLien"] = ev["lien"]
+                for c in es:
+                    e = c.setdefault("envoi", {})
+                    e.setdefault("relaisDemande", e.get("relaisDemande") or date)
+                    e.update(patch)
+            elif typ == "confirmation":
+                prix = ln.get("prix")
+                patch = {"colis": str(ln.get("numero") or ""), "paye": date}
+                for key, val in (("suivi", ln.get("suivi")), ("mrCommande", ev.get("commande")), ("etiquette", ev.get("etiquette"))):
+                    if val:
+                        patch[key] = val
+                if prix is not None:
+                    patch["coutReel"] = round(float(prix), 2)
+                part = round(float(prix) / len(es), 2) if prix is not None else None
+                for c in es:
+                    c.setdefault("envoi", {}).update({k2: v for k2, v in patch.items() if v != ""})
+                    if part is not None:
+                        c["fdpPayOverride"] = part
+                        c["fdpPayReel"] = True
+            else:  # depot
+                for c in es:
+                    e = c.setdefault("envoi", {})
+                    e["depot"] = date
+                    e.setdefault("envoye", date)
+                    c["statut"] = "envoye"
+            change = True
+            rapport["mr_appliques"].append({"type": typ, "commande": ref, "qui": qui})
+    return change
+
+
 def deja_la(num, commandes):
     n = num.lstrip("#").lower()
     for lst in commandes.values():
@@ -109,13 +273,19 @@ def main():
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
     ecrire = "--ecrire" in sys.argv
-    entrees = json.load(open(sys.argv[1], encoding="utf-8"))
+    donnees = json.load(open(sys.argv[1], encoding="utf-8"))
+    if isinstance(donnees, list):
+        entrees, evenements = donnees, []
+    else:
+        entrees, evenements = donnees.get("commandes") or [], donnees.get("mondial_relay") or []
     token = login()
-    params, _ = lire("params", token)
-    params = {k: v for k, v in params.items() if not k.startswith("_") and isinstance(v, dict)}  # ignore _tarifs etc.
+    params_bruts, _ = lire("params", token)
+    tarifs = params_bruts.get("_tarifs") or []
+    params = {k: v for k, v in params_bruts.items() if not k.startswith("_") and isinstance(v, dict)}  # ignore _tarifs etc.
     commandes, update_time = lire("commandes", token)
 
-    rapport = {"ajoutees": [], "deja_presentes": [], "non_reconnues": []}
+    rapport = {"ajoutees": [], "deja_presentes": [], "non_reconnues": [], "mr_appliques": [], "mr_non_rapproches": []}
+    aujourdhui = time.strftime("%Y-%m-%d")
     base_id = int(time.time() * 1000)
     k = 0
     for o in entrees:
@@ -135,7 +305,8 @@ def main():
         pays = PAYS_FR.get(norm(o.get("pays")), o.get("pays") or "")
         fdp = o.get("fdp_enc")
         groupe = len(lignes) > 1
-        grp = f" [commande groupée GRP-{base_id}]" if groupe else ""
+        grp = f" [commande groupée GRP-{base_id + k + 1}]" if groupe else ""
+        transporteur = transporteur_grille(pays, [params[rid].get("format", "LP") for rid, _ in lignes], tarifs)
         for rid, it in lignes:
             k += 1
             entry = {
@@ -144,23 +315,27 @@ def main():
                 "ref": num,
                 "qty": int(it.get("qty") or 1),
                 "pays": pays,
-                "transporteur": "Mondial Relay",
+                "transporteur": transporteur,
                 "statut": "en_attente",
                 "fdpEncOverride": (round(fdp / len(lignes), 2) if fdp is not None else None),
                 "fdpPayOverride": None,
                 "note": f"{num} // {nom_client}{grp}" if nom_client else f"{num}{grp}",
                 "date": o.get("date") or time.strftime("%Y-%m-%d"),
                 "client": {key: cl.get(key, "") for key in ["prenom", "nom", "email", "tel", "adr1", "adr2", "ville", "cp"]},
+                "importeLe": aujourdhui,
             }
             commandes.setdefault(rid, []).append(entry)
             rapport["ajoutees"].append({"num": num, "sortie": params[rid].get("nom", rid),
                                         "groupe": params[rid].get("groupe"), "qty": entry["qty"], "pays": pays})
 
-    if rapport["ajoutees"] and ecrire:
+    mr_change = appliquer_mr(evenements, commandes, params, rapport) if evenements else False
+    a_ecrire = bool(rapport["ajoutees"]) or mr_change
+
+    if a_ecrire and ecrire:
         # Écrit seulement si personne n'a modifié la base entre-temps (sinon : erreur, rien n'est écrasé)
         url = f"{DOCS}/commandes?currentDocument.updateTime={urllib.parse.quote(update_time)}"
         http("PATCH", url, {"fields": {"data": {"stringValue": json.dumps(commandes, ensure_ascii=False)}}}, token)
-    rapport["mode"] = "ECRIT" if (ecrire and rapport["ajoutees"]) else ("SIMULATION" if not ecrire else "RIEN A ECRIRE")
+    rapport["mode"] = "ECRIT" if (ecrire and a_ecrire) else ("SIMULATION" if not ecrire else "RIEN A ECRIRE")
     print(json.dumps(rapport, ensure_ascii=False, indent=2))
 
 
